@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ai_app/views/style/Color.dart';
 
 class SignupInputBox  extends StatefulWidget{
   late String content;
@@ -47,6 +48,10 @@ class _SignupInputBoxState extends State<SignupInputBox>{
     txtError = widget.error;
     compare = widget.compare;
   }
+
+  bool isVisibility = false;
+
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -68,6 +73,15 @@ class _SignupInputBoxState extends State<SignupInputBox>{
           },
           decoration: InputDecoration(
             label: Text(content),
+            suffixIcon: (content.contains("Password")) ? (
+              IconButton(
+                onPressed: (){
+                  setState(() {
+                    isVisibility = !isVisibility;
+                  });
+                }, 
+                icon: (isVisibility) ? Icon(Icons.visibility, color: ColorPalette().btnColor,) : Icon(Icons.visibility_off, color: ColorPalette().btnColor,))
+            ) : null,
             helperText: (content.toString().contains("Password")) ? "Password must contain special character!" : null,
             helperStyle: TextStyle(
               fontSize: 10,
@@ -89,6 +103,8 @@ class _SignupInputBoxState extends State<SignupInputBox>{
               )
             ),
           ),
+          keyboardType: TextInputType.visiblePassword,
+          obscureText: (content.contains("Password")) ? !isVisibility : false,
         ),
       )
     );

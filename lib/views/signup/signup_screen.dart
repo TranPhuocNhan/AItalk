@@ -40,8 +40,7 @@ class _SignupState extends State<SignUpScreen>{
     privateCheck = false;
   }
   final colorElements = <Color>[ColorPalette().startLinear, ColorPalette().endLinear];
- 
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -168,7 +167,6 @@ class _SignupState extends State<SignUpScreen>{
                     onPressed: (){
                       //navigate to login screen
                       Navigator.pushNamed(context, '/');
-                      
                     }, 
                     child: Text(
                         "Sign in",

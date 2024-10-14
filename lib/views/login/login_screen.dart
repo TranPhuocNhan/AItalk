@@ -59,7 +59,7 @@ class _LoginState extends State<LoginScreen>{
                   ),
                   SizedBox(height: 50,),
                   LoginInputBox(input: "User name", pre: Icons.person, color: ColorPalette().btnColor, ctr: userNameController, key: _lgUsernameKey,),
-                  LoginInputBox(input: "password", pre: Icons.lock, color: ColorPalette().btnColor,ctr: passwordController, key: _lgPasswordKey,),
+                  LoginInputBox(input: "Password", pre: Icons.lock, color: ColorPalette().btnColor,ctr: passwordController, key: _lgPasswordKey,),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
