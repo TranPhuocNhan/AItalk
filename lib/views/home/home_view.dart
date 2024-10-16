@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ai_app/views/home/chat_content_view.dart';
 import 'package:flutter_ai_app/widgets/ai_selection_dropdown.dart';
+import 'package:flutter_ai_app/widgets/app_drawer.dart';
 
 class HomeView extends StatelessWidget {
   HomeView({super.key});
@@ -227,6 +228,7 @@ class HomeView extends StatelessWidget {
           ],
         ),
       ),
+      drawer: AppDrawer(selected: 0),
     );
   }
 }

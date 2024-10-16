@@ -36,8 +36,7 @@ class _SignupInputBoxState extends State<SignupInputBox>{
   late GlobalKey<FormState> key;
   late String txtError;
   TextEditingController? compare;
-  // final TextEditingController controller = TextEditingController();
-  // final GlobalKey<FormState> formkey = GlobalKey<FormState>();
+
   @override
   void initState() {
     super.initState();
@@ -51,6 +50,17 @@ class _SignupInputBoxState extends State<SignupInputBox>{
 
   bool isVisibility = false;
 
+  String? _validate(String? value){
+    if(value!.isEmpty){
+      return "You must enter a value in this field";
+    }
+    if(content == "Confirm Password"){
+      if(controller.value.text != compare?.value.text){
+        return "Password do not match";
+      }
+    }
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,17 +70,7 @@ class _SignupInputBoxState extends State<SignupInputBox>{
         key: key,
         child: TextFormField(
           controller: controller,
-          validator: (value){
-            if(value!.isEmpty){
-              return "You must enter a value in this field";
-            }
-            if(content == "Confirm Password"){
-              if(controller.value.text != compare?.value.text){
-                return "Password do not match";
-              }
-            }
-            return null;
-          },
+          validator: _validate,
           decoration: InputDecoration(
             label: Text(content),
             suffixIcon: (content.contains("Password")) ? (
@@ -109,39 +109,4 @@ class _SignupInputBoxState extends State<SignupInputBox>{
       )
     );
   }
-  
 }
-
-// class SignupInputBox extends StatelessWidget{
-//   late String content;
-//   late Color mainColor; 
-//   SignupInputBox({
-//     required String data,
-//     required Color color,
-//   }){
-//     this.mainColor = color;
-//     this.content = data;
-//   }
-//   @override
-//   Widget build(BuildContext context) {
-//     return Padding(
-//       padding: EdgeInsets.only(top: 5, bottom: 5),
-//       child: TextFormField(
-//         decoration: InputDecoration(
-//           label: Text(content),
-//           focusedBorder: OutlineInputBorder(
-//             borderSide: BorderSide(
-//               color: mainColor,
-//             )
-//           ),
-//           enabledBorder:  OutlineInputBorder(
-//             borderSide: BorderSide(
-//               color: Colors.black,
-//             )
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-  
-// }

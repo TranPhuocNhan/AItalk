@@ -133,7 +133,7 @@ class _SignupState extends State<SignUpScreen>{
                           bool checkConfirmPass = _reConfirmPassKey.currentState!.validate();
                           if(checkUsername && checkPassword && checkConfirmPass){
                             //REGISTER NEW ACCOUT
-                            //[...]
+                            Navigator.pushNamed(context, "/verification");
                           }
 
                           

@@ -77,7 +77,9 @@ class _LoginState extends State<LoginScreen>{
                         ],
                       ),
                       TextButton(
-                        onPressed: (){}, 
+                        onPressed: (){
+                          Navigator.pushNamed(_lgContext, "/forgot");
+                        }, 
                         child: Text(
                           "Forgot Password",
                           style: TextStyle(color: Colors.red),
@@ -107,6 +109,7 @@ class _LoginState extends State<LoginScreen>{
                           if(checkPassword && checkPassword){
                             //LOGIN EXISTS ACCOUNT 
                             //[...]
+                            Navigator.pushNamed(_lgContext, '/profile');
                           }
                         }, 
                         child: Padding(
