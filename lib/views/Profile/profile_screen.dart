@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ai_app/views/Profile/account_card.dart';
+import 'package:flutter_ai_app/views/Profile/token_usage_card.dart';
 import 'package:flutter_ai_app/views/style/Color.dart';
 import 'package:flutter_ai_app/widgets/ai_selection_dropdown.dart';
 import 'package:flutter_ai_app/widgets/app_drawer.dart';
@@ -9,22 +11,21 @@ class ProfileScreen extends StatefulWidget{
 }
 
 class _ProfileState extends State<ProfileScreen>{
+  final colorElements = <Color>[ColorPalette().startLinear, ColorPalette().endLinear];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const AiSelectionDropdown(),
+        title: Text(
+          "Profile",
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 25,
+          ),
+        ),
         backgroundColor: ColorPalette().btnColor,
-        actions: const [
-          Icon(Icons.whatshot, color: Colors.orange),
-          Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Text(
-              '29',
-              style: TextStyle(color: Colors.white, fontSize: 20),
-            ),
-          )
-        ],
         leading: Builder(builder: (context) {
           return IconButton(
               icon: const Icon(Icons.menu),
@@ -34,7 +35,63 @@ class _ProfileState extends State<ProfileScreen>{
               });
         }),
       ),
-      body: Text(""),
+      body: Center(
+        child: Padding(
+          padding: EdgeInsets.all(10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TokenUsageCard(),
+              Padding(padding: EdgeInsets.all(5),
+                child: Text(
+                  "Account",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              AccountCard(),
+              Container(
+                margin: EdgeInsets.only(top: 20, bottom: 20),
+                width: double.infinity,
+                alignment: Alignment.center,
+                child: Container(
+                  width: double.infinity,
+                  decoration: ShapeDecoration(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    gradient: LinearGradient(
+                      colors: colorElements,
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                    )
+                  ),
+                  child: ElevatedButton(
+                    onPressed: (){
+                      //UPGRADE ACCOUNT
+                    }, 
+                    child: Padding(
+                      padding: EdgeInsets.all(10), 
+                      child: Text(
+                        "Upgrade Account",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.transparent
+                    ),
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
       drawer: AppDrawer(selected: 2),
     );
   }

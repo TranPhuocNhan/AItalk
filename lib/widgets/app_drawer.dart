@@ -113,6 +113,89 @@ class _AppDrawerState extends State<AppDrawer>{
                 Navigator.pushNamed(context, '/profile');
               },
             ),
+          ),
+          Divider(),
+
+          Padding(
+            padding: EdgeInsets.only(left: 10, right: 10,),
+            child: Card(
+              color: Colors.blue.shade50,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ListTile(
+                    leading: Container(
+                      decoration: BoxDecoration(
+                        color: ColorPalette().endLinear.withOpacity(0.5),
+                        borderRadius: BorderRadius.circular(5)
+                      ),
+                      padding: EdgeInsets.all(5),
+                      child: Icon(Icons.person),
+                    ),
+                    title: Text(
+                      "FirstUser",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
+                    subtitle: Text("abc123@gmail.com"),
+                  ),
+                  Padding(padding: EdgeInsets.only(left: 20, right: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Token Usage",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Icon(Icons.whatshot, color: Colors.red.shade500,)
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+                    child: LinearProgressIndicator(
+                      value: 40.0/50.0,
+                      minHeight: 5,
+                      color: ColorPalette().selectedItemOnDrawerColor,
+                      valueColor: AlwaysStoppedAnimation<Color>(ColorPalette().endLinear),
+                      borderRadius: BorderRadius.circular(10),
+                    ),  
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 20, right: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("40"),
+                        Text("50"),
+                      ],
+                    ), 
+                  )
+                ],
+              ),
+            ),
+          ),
+
+          Padding(padding: EdgeInsets.only(left: 10, right: 10),
+            child: ElevatedButton(
+              onPressed: (){}, 
+              child: Text(
+                "Logout",
+                style: TextStyle(
+                  color: Colors.red.shade600
+                ),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red.shade100,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                )
+              ),
+            ),
           )
         ],
       ),
