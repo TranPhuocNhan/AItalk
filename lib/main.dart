@@ -15,23 +15,31 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    // return MaterialApp(
+    //   title: 'Home Screen',
+    //   theme: ThemeData(
+    //     colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+    //     useMaterial3: true,
+    //   ),
+    //   initialRoute: '/',
+    //   routes: {
+    //     '/': (context) => LoginScreen(context: context),
+    //     '/register': (context) => SignUpScreen(context: context),
+
+    //   },
     return MaterialApp(
       title: 'Home Screen',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      initialRoute: '/',
-      routes: {
-        '/': (context) => LoginScreen(context: context),
-        '/register': (context) => SignUpScreen(context: context),
-
-      },
-      // home: 
-      // SignUpScreen(context: context,)
-      // LoginScreen(context: context,)
-      // const HomeScreen(title: 'Home Screen'),
+      home: const HomeScreen(title: 'Home Screen'),
     );
+    // home:
+    // SignUpScreen(context: context,)
+    // LoginScreen(context: context,)
+    // const HomeScreen(title: 'Home Screen'),
+    // );
   }
 }
 
