@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 class ColorPalette{
+  Color mainColor = const Color(0xff448ca4);
   Color btnColor = const Color(0xff53A8DD);
   Color startLinear = const Color(0xff58C7DD);
   Color endLinear = const Color(0xff53A8DD);

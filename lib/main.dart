@@ -9,9 +9,10 @@ import 'package:flutter_ai_app/views/login/login_screen.dart';
 import 'package:flutter_ai_app/views/login/verify_email.dart';
 import 'package:flutter_ai_app/views/signup/signup_screen.dart';
 import 'package:flutter_ai_app/views/signup/verification.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const MyApp() );
 }
 
 class MyApp extends StatelessWidget {

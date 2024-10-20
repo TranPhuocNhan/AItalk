@@ -3,9 +3,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_ai_app/views/login/login_input_box.dart';
-import 'package:flutter_ai_app/views/signup/signup_screen.dart';
-import 'package:flutter_ai_app/views/style/Color.dart';
+import 'package:flutter_ai_app/views/login/login_input_group.dart';
 class LoginScreen extends StatefulWidget{
   late BuildContext loginContext;
   LoginScreen({
@@ -21,19 +19,19 @@ class LoginScreen extends StatefulWidget{
 class _LoginState extends State<LoginScreen>{
 
   late BuildContext _lgContext;
-  final colorElements = <Color>[ColorPalette().startLinear, ColorPalette().endLinear];
-  bool rememberCheck = false;
-  TextEditingController userNameController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  final _lgUsernameKey = GlobalKey<FormState>();
-  final _lgPasswordKey = GlobalKey<FormState>();
+  // final colorElements = <Color>[ColorPalette().startLinear, ColorPalette().endLinear];
+  // bool rememberCheck = false;
+  // TextEditingController userNameController = TextEditingController();
+  // TextEditingController passwordController = TextEditingController();
+  // final _lgUsernameKey = GlobalKey<FormState>();
+  // final _lgPasswordKey = GlobalKey<FormState>();
   
   
   @override
   void initState() {
     super.initState();
     _lgContext = widget.loginContext;
-    rememberCheck = false;
+    // rememberCheck = false;
   }
   
   
@@ -58,76 +56,7 @@ class _LoginState extends State<LoginScreen>{
                     ),
                   ),
                   SizedBox(height: 50,),
-                  LoginInputBox(input: "User name", pre: Icons.person, color: ColorPalette().btnColor, ctr: userNameController, key: _lgUsernameKey,),
-                  LoginInputBox(input: "Password", pre: Icons.lock, color: ColorPalette().btnColor,ctr: passwordController, key: _lgPasswordKey,),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Checkbox(
-                            value: rememberCheck, 
-                            onChanged:(value){
-                              setState(() {
-                                rememberCheck = !rememberCheck;
-                              });
-                            },
-                          ),
-                          Text("Remember Me"),
-                        ],
-                      ),
-                      TextButton(
-                        onPressed: (){
-                          Navigator.pushNamed(_lgContext, "/forgot");
-                        }, 
-                        child: Text(
-                          "Forgot Password",
-                          style: TextStyle(color: Colors.red),
-                        )
-                      )
-                    ],
-                  ),
-                  //BUTTON LOGIN
-                  Container(
-                    margin: EdgeInsets.only(top: 30, bottom: 50),
-                    width: double.infinity,
-                    alignment: Alignment.center,
-                    child: Container(
-                      width: MediaQuery.sizeOf(_lgContext).width/2,
-                      decoration: ShapeDecoration(
-                        shape: StadiumBorder(),
-                        gradient: LinearGradient(
-                          colors: colorElements,
-                          begin: Alignment.centerLeft,
-                          end: Alignment.centerRight,
-                        )
-                      ),
-                      child: ElevatedButton(
-                        onPressed: (){
-                          bool checkUsername = _lgUsernameKey.currentState!.validate();
-                          bool checkPassword = _lgPasswordKey.currentState!.validate();
-                          if(checkPassword && checkPassword){
-                            //LOGIN EXISTS ACCOUNT 
-                            //[...]
-                            Navigator.pushNamed(_lgContext, '/profile');
-                          }
-                        }, 
-                        child: Padding(
-                          padding: EdgeInsets.all(10),
-                          child: Text(
-                            "Login", 
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18
-                            ),
-                          ),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.transparent,
-                        )
-                      ),
-                    )
-                  ),
+                  LoginInputGroup(),
                 ],),
               ),
               // ANOTHER LOGIN TYPE 
@@ -170,8 +99,6 @@ class _LoginState extends State<LoginScreen>{
                 ],
               ),
               SizedBox(height: 20,)
-              
-              
             ],
           ),)
      ), 

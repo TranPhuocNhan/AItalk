@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_ai_app/views/Profile/account_card.dart';
 import 'package:flutter_ai_app/views/Profile/token_usage_card.dart';
 import 'package:flutter_ai_app/views/style/Color.dart';
-import 'package:flutter_ai_app/widgets/ai_selection_dropdown.dart';
 import 'package:flutter_ai_app/widgets/app_drawer.dart';
 
 class ProfileScreen extends StatefulWidget{
@@ -25,7 +24,7 @@ class _ProfileState extends State<ProfileScreen>{
             fontSize: 25,
           ),
         ),
-        backgroundColor: ColorPalette().btnColor,
+        backgroundColor: ColorPalette().mainColor,
         leading: Builder(builder: (context) {
           return IconButton(
               icon: const Icon(Icons.menu),
@@ -59,9 +58,8 @@ class _ProfileState extends State<ProfileScreen>{
                 child: Container(
                   width: double.infinity,
                   decoration: ShapeDecoration(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
+                   
+                    shape: StadiumBorder(),
                     gradient: LinearGradient(
                       colors: colorElements,
                       begin: Alignment.centerLeft,

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter_ai_app/main.dart';
 import 'package:flutter_ai_app/views/login/login_screen.dart';
-import 'package:flutter_ai_app/views/signup/signup_input_box.dart';
+import 'package:flutter_ai_app/views/signup/signup_input_group.dart';
 import 'package:flutter_ai_app/views/style/Color.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -24,12 +24,6 @@ class _SignupState extends State<SignUpScreen>{
   TextStyle linkStyle = TextStyle(color: Colors.blue);
   late BuildContext mainContext ;
   bool privateCheck = false;
-  TextEditingController userNameController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  TextEditingController confirmPassController = TextEditingController();
-  final _reUsernameKey = GlobalKey<FormState>();
-  final _rePasswordKey = GlobalKey<FormState>();
-  final _reConfirmPassKey = GlobalKey<FormState>();
   String userNoti = "";
   String passNoti = "";
   String confirmPassNoti = "";
@@ -61,99 +55,8 @@ class _SignupState extends State<SignUpScreen>{
                       fontSize: 32,
                     ),
                   ),
-                  SizedBox(height: 50,),
-                  SignupInputBox(data: "User name", color: ColorPalette().btnColor, controller: userNameController, globalKey: _reUsernameKey, errText: userNoti,),
-                  SignupInputBox(data: "Password", color: ColorPalette().btnColor, controller: passwordController, globalKey: _rePasswordKey, errText: passNoti,),
-                  SignupInputBox(data: "Confirm Password", color: ColorPalette().btnColor, controller: confirmPassController, globalKey: _reConfirmPassKey, errText: confirmPassNoti, compare: passwordController,),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Checkbox(
-                        value: privateCheck, 
-                        onChanged:(value){
-                          setState(() {
-                            privateCheck = !privateCheck;
-                          });
-                        },
-                      ),
-                      RichText(
-                        text: TextSpan(
-                          style: defaultStyle,
-                          children: <TextSpan>[
-                            TextSpan(text: "I agree with "),
-                            TextSpan(
-                              text: "Policy",
-                              style: linkStyle,
-                              recognizer: TapGestureRecognizer()
-                              ..onTap = (){
-                                print("tap on policy ");
-                                _launchUrl();
-                              }
-                            ),
-                            TextSpan(text: " and "),
-                            TextSpan(
-                              text: "Privacy",
-                              style: linkStyle,
-                              recognizer: TapGestureRecognizer()
-                              ..onTap = (){
-                                print("tap on privacy");
-                                _launchUrl();
-                              }
-                            )
-
-                          ]
-                        ),
-                      )
-                    ],
-                  ),
-                  //BUTTON REGISTER
-                  Container(
-                    margin: EdgeInsets.only(top: 30, bottom: 50),
-                    width: double.infinity,
-                    alignment: Alignment.center,
-                    child: Container(
-                      width: MediaQuery.sizeOf(mainContext).width/2,
-                      decoration: ShapeDecoration(
-                        shape: StadiumBorder(),
-                        gradient: LinearGradient(
-                          colors: colorElements,
-                          begin: Alignment.centerLeft,
-                          end: Alignment.centerRight,
-                        )
-                      ),
-                      child: ElevatedButton(
-                        onPressed: (){
-                          //debug
-                          print(userNameController.value.text);
-                          print(passwordController.value.text);
-                          print(confirmPassController.value.text);
-                          
-                          bool checkUsername = _reUsernameKey.currentState!.validate();
-                          bool checkPassword = _rePasswordKey.currentState!.validate();
-                          bool checkConfirmPass = _reConfirmPassKey.currentState!.validate();
-                          if(checkUsername && checkPassword && checkConfirmPass){
-                            //REGISTER NEW ACCOUT
-                            Navigator.pushNamed(context, "/verification");
-                          }
-
-                          
-                        }, 
-                        child: Padding(
-                          padding: EdgeInsets.all(10),
-                          child: Text(
-                            "Sign Up", 
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18
-                            ),
-                          ),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.transparent,
-                        )
-                      ),
-                    )
-                  ),
+                  SizedBox(height: 20,),
+                  SignupInputGroup(),
                 ],
               )),
               //NAVIGATE TO SIGIN IN 
