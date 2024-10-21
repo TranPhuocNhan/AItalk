@@ -8,6 +8,11 @@ import 'package:flutter_ai_app/views/home/knowledge_unit_view.dart';
 import 'package:flutter_ai_app/views/home/nav_drawer.dart';
 import 'package:flutter_ai_app/views/home/prompt_library_screen.dart';
 import 'package:flutter_ai_app/widgets/unit_knowledge_dialog.dart';
+import 'package:flutter_ai_app/widgets/upload_confluence_dialog.dart';
+import 'package:flutter_ai_app/widgets/upload_drive_dialog.dart';
+import 'package:flutter_ai_app/widgets/upload_file_dialog.dart';
+import 'package:flutter_ai_app/widgets/upload_slack_dialog.dart';
+import 'package:flutter_ai_app/widgets/upload_web_dialog.dart';
 
 class HomeView extends StatefulWidget {
   HomeView({super.key});
@@ -40,6 +45,11 @@ class _HomeViewState extends State<HomeView> {
             child: IndexedStack(
               index: _selectedIndex,
               children: [
+                SlackUploadDialog(),
+                ConfluenceDialog(),
+                UploadDriveDialog(),
+                UploadWebDialog(),
+                UploadFileDialog(),
                 UnitKnowledgeDialog(),
                 KnowledgeUnitView(),
                 ChatView(onChatSelected: () {

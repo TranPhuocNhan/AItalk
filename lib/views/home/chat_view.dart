@@ -4,7 +4,7 @@ import 'package:flutter_ai_app/widgets/ai_section.dart';
 import 'package:flutter_ai_app/widgets/chat_section.dart';
 import 'package:flutter_ai_app/widgets/free_unlimited_section.dart';
 import 'package:flutter_ai_app/widgets/tools_section.dart';
-import 'package:flutter_ai_app/widgets/up_load_and_writing_agent_section.dart';
+import 'package:flutter_ai_app/widgets/upload_and_writing_agent_section.dart';
 
 class ChatView extends StatelessWidget {
   final VoidCallback onChatSelected;
