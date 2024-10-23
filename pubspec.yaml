@@ -38,6 +38,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   url_launcher: ^6.1.11     #open a web from url
   provider: ^6.1.2
+  dropdown_button2: ^2.3.9
 
 dev_dependencies:
   flutter_test:

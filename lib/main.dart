@@ -1,15 +1,14 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
+import 'package:flutter_ai_app/views/EmailResponse/email_resp_view.dart';
 import 'package:flutter_ai_app/views/Profile/profile_screen.dart';
 import 'package:flutter_ai_app/views/home/home_view.dart';
 import 'package:flutter_ai_app/views/login/change_password.dart';
 import 'package:flutter_ai_app/views/login/forgot_password.dart';
 import 'package:flutter_ai_app/views/login/login_screen.dart';
-import 'package:flutter_ai_app/views/login/verify_email.dart';
 import 'package:flutter_ai_app/views/signup/signup_screen.dart';
 import 'package:flutter_ai_app/views/signup/verification.dart';
-import 'package:provider/provider.dart';
 
 void main() {
   runApp(const MyApp() );
@@ -36,6 +35,7 @@ class MyApp extends StatelessWidget {
         '/changePass' : (context) => ChangePasswordScreen(context: context),
         '/home': (context) => HomeView(),
         '/profile': (context) => ProfileScreen(),
+        '/emailRsp': (context) => EmailResponseScreen(),
       },
       // home: 
       // SignUpScreen(context: context,)

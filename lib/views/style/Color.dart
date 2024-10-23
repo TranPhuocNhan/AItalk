@@ -8,4 +8,6 @@ class ColorPalette{
   Color homeBlurColor1 = const Color.fromARGB(179, 200, 217, 230);
   Color iconColor = const Color(0xff699BF7);
   Color selectedItemOnDrawerColor = const Color(0xff3a476a);
+  // Color startLinear = const Color.fromARGB(255, 202, 225, 239);
+
 }

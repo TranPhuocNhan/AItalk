@@ -82,14 +82,14 @@ class _AppDrawerState extends State<AppDrawer>{
               ) : null,
               selectedTileColor: ColorPalette().startLinear.withOpacity(0.1),
               selectedColor: ColorPalette().selectedItemOnDrawerColor,
-              leading: Icon(Icons.token_outlined),
-              title: Text("AI Action"),
+              leading: Icon(Icons.mark_email_read),
+              title: Text("Email Reply"),
               selected: selectedIndex == 1,
               tileColor: (selectedIndex == 1) ? ColorPalette().endLinear : null,
 
               onTap: (){
                 _onItemTapped(1);
-                Navigator.pushNamed(context, '/profile');
+                Navigator.pushNamed(context, '/emailRsp');
               },
             ),
           ),
