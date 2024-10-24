@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ai_app/models/bot.dart';
 
 class AiSelectionDropdown extends StatefulWidget {
   AiSelectionDropdown(
       {super.key,
       required this.selectedAiModel,
-      required this.onAiSelectedChange});
+      required this.onAiSelectedChange,
+      required this.botList});
+  List<Bot> botList;
   String? selectedAiModel;
   final Function(String) onAiSelectedChange;
   @override
@@ -13,14 +16,7 @@ class AiSelectionDropdown extends StatefulWidget {
 
 class _AiSelectionDropdownState extends State<AiSelectionDropdown> {
   String _selectedAiModel = "GPT-3.5 Turbo";
-  final List<Map<String, dynamic>> _aiOptions = [
-    {"name": "GPT-3.5 Turbo", "flame": 1, "icon": Icons.whatshot_rounded},
-    {"name": "GPT-4o", "flame": 5, "icon": Icons.whatshot_rounded},
-    {"name": "GPT-4 Turbo", "flame": 10, "icon": Icons.whatshot_rounded},
-    {"name": "Gemini 1.0 Pro", "flame": 1, "icon": Icons.whatshot_rounded},
-    {"name": "Gemini 1.5 Pro", "flame": 1, "icon": Icons.whatshot_rounded},
-    {"name": "Gemini 1.5 Flash", "flame": 1, "icon": Icons.whatshot_rounded},
-  ];
+
   @override
   void initState() {
     super.initState();
@@ -60,27 +56,26 @@ class _AiSelectionDropdownState extends State<AiSelectionDropdown> {
             ),
             onSelected: (value) {
               setState(() {
-                print("hello");
                 _selectedAiModel = value;
                 widget.selectedAiModel = _selectedAiModel;
                 widget.onAiSelectedChange(_selectedAiModel);
               });
             },
             itemBuilder: (BuildContext context) {
-              return _aiOptions.map((ai) {
-                bool isSelected = ai["name"] == _selectedAiModel;
+              return widget.botList.map((bot) {
+                bool isSelected = bot.name == _selectedAiModel;
                 return PopupMenuItem<String>(
-                  value: ai["name"],
+                  value: bot.name,
                   child: Container(
                     color: isSelected
                         ? Colors.grey.withOpacity(0.5)
                         : Colors.transparent, // Set background color
                     child: Row(
                       children: [
-                        Icon(ai["icon"], color: Colors.red),
+                        Icon(Icons.abc, color: Colors.red),
                         SizedBox(width: 10),
                         Text(
-                          ai["name"],
+                          bot.name,
                           style: TextStyle(
                             color: isSelected
                                 ? Colors.white
@@ -89,7 +84,7 @@ class _AiSelectionDropdownState extends State<AiSelectionDropdown> {
                         ),
                         Spacer(),
                         Icon(Icons.local_fire_department, color: Colors.orange),
-                        Text(" ${ai["flame"]}"),
+                        Text(" "),
                       ],
                     ),
                   ),

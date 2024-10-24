@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 class CreateKnowledgeDialog extends StatefulWidget {
-  const CreateKnowledgeDialog({super.key});
-
+  const CreateKnowledgeDialog(
+      {super.key, required this.onCreatedKnowledgeBase});
+  final Function(String name, String description) onCreatedKnowledgeBase;
   @override
   State<CreateKnowledgeDialog> createState() => _CreateKnowledgeDialogState();
 }
@@ -78,6 +79,10 @@ class _CreateKnowledgeDialogState extends State<CreateKnowledgeDialog> {
       ElevatedButton(
         onPressed: () {
           // Action for creating assistant (handle form submission here)
+          widget.onCreatedKnowledgeBase(
+            _nameController.text,
+            _descriptionController.text,
+          );
           Navigator.of(context).pop(); // Close dialog after submission
         },
         child: Text('OK'),

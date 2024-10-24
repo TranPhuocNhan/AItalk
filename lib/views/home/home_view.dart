@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ai_app/models/bot.dart';
 import 'package:flutter_ai_app/models/thread.dart';
 import 'package:flutter_ai_app/views/home/ai_bot_list_view.dart';
 import 'package:flutter_ai_app/views/home/chat_content_view.dart';
@@ -113,7 +114,27 @@ class _HomeViewState extends State<HomeView> {
             'The central topics in computer science include algorithms and data stru...',
         time: DateTime.now()),
   ];
-  String _selectedAiModel = "Gemini 1.5 Pro";
+  final List<Bot> botList = [
+    Bot(name: 'GPT 4', iconPath: 'assets/gpt4_icon.png', isPinned: false),
+    Bot(name: 'Gemini', iconPath: 'assets/gemini_icon.png', isPinned: true),
+    Bot(
+        name: 'Claude-Instant-100k',
+        iconPath: 'assets/claude_icon.png',
+        isPinned: true),
+    Bot(
+        name: 'Writing Agent',
+        iconPath: 'assets/writing_icon.png',
+        isPinned: false),
+    // Add more bots here
+  ];
+  late String _selectedAiModel;
+  @override
+  void initState() {
+    super.initState();
+    if (botList.isNotEmpty) {
+      _selectedAiModel = botList[0].name;
+    }
+  }
 
   final List<Widget> _widgetOptions = <Widget>[
     const Text("Read Content"),
@@ -178,6 +199,7 @@ class _HomeViewState extends State<HomeView> {
             child: IndexedStack(
               index: _selectedIndex,
               children: [
+                AiBotListView(),
                 _isChatContentView
                     ? ChatContentView(
                         onAddPressed: () {
@@ -187,7 +209,7 @@ class _HomeViewState extends State<HomeView> {
                         },
                         selectedThread: _selectedThread,
                         selectedAiModel: _selectedAiModel,
-                        onAiSelectedChange: _onAiModelChanged,
+                        onAiSelectedChange: _onAiModelChanged, botList: botList,
 
                         // chatHistory: _chatHistory,
                         // onSendMessage: _addNewChat
@@ -196,8 +218,8 @@ class _HomeViewState extends State<HomeView> {
                         onSendMessage: _onSendMessage, // Xử lý gửi tin nhắn
                         selectedAiModel:
                             _selectedAiModel, // Truyền model AI đã chọn
-                        onAiSelectedChange:
-                            _onAiModelChanged, // Callback khi thay đổi model AI
+                        onAiSelectedChange: _onAiModelChanged,
+                        botList: botList, // Callback khi thay đổi model AI
                       ),
                 ThreadChatHistory(
                     threadChat: _threadChat,

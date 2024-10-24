@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ai_app/models/bot.dart';
 import 'package:flutter_ai_app/models/thread.dart';
 import 'package:flutter_ai_app/views/home/home_view.dart';
 import 'package:flutter_ai_app/widgets/ai_selection_dropdown.dart';
@@ -10,11 +11,13 @@ class ChatContentView extends StatefulWidget {
       required this.onAddPressed,
       required this.onAiSelectedChange,
       required this.selectedThread,
-      required this.selectedAiModel});
+      required this.selectedAiModel,
+      required this.botList});
   final Function(String) onAiSelectedChange;
   final VoidCallback onAddPressed;
   ThreadChat? selectedThread;
   String? selectedAiModel;
+  List<Bot> botList;
   @override
   State<ChatContentView> createState() => _ChatContentViewState();
 }
@@ -64,6 +67,7 @@ class _ChatContentViewState extends State<ChatContentView> {
             selectedAiModel: widget.selectedAiModel,
             onAiSelectedChange: (newModel) =>
                 widget.onAiSelectedChange(newModel),
+            botList: widget.botList,
           ),
           _buildInputArea(),
         ],

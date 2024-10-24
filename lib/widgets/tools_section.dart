@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ai_app/models/bot.dart';
 import 'package:flutter_ai_app/widgets/ai_selection_dropdown.dart';
 
 class ToolsSection extends StatelessWidget {
   ToolsSection(
       {super.key,
       required this.selectedAiModel,
-      required this.onAiSelectedChange});
+      required this.onAiSelectedChange,
+      required this.botList});
+  List<Bot> botList;
   String? selectedAiModel;
   final Function(String) onAiSelectedChange;
   @override
@@ -47,6 +50,7 @@ class ToolsSection extends StatelessWidget {
     return AiSelectionDropdown(
       selectedAiModel: selectedAiModel,
       onAiSelectedChange: (newModel) => onAiSelectedChange(newModel),
+      botList: botList,
     );
   }
 }

@@ -28,6 +28,16 @@ class _BotDashBoardState extends State<BotDashBoard>
       'type': 'SEO',
     },
   ];
+  // New knowledge list
+  List<Map<String, String>> knowledgeList = [
+    {
+      'knowledge': 'KB knowledge',
+      'units': '2',
+      'size': '994.80 KB',
+      'editTime': '7/13/2024 9:51:44 PM',
+    },
+  ];
+
   String _selectedType = "All";
   final List<String> _types = ['All', 'AI', 'Chatbot', 'Marketing', 'SEO'];
 
@@ -38,11 +48,33 @@ class _BotDashBoardState extends State<BotDashBoard>
     _tabController = TabController(length: 2, vsync: this);
   }
 
+  void _addAiBot(String name, String description) {
+    setState(() {
+      botList.add({
+        'title': name,
+        'description': description,
+        'date': '19/10/2024',
+        'type': 'Chatbot',
+      });
+    });
+  }
+
+  void _addKnowledge(String knowledge, String units, String size) {
+    setState(() {
+      knowledgeList.add({
+        'knowledge': knowledge,
+        'units': units,
+        'size': size,
+        'editTime': DateTime.now().toString(), // Adding current time for edit
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Personal'),
+        title: Text('Create Bot'),
         bottom: TabBar(
           controller: _tabController,
           tabs: [
@@ -206,7 +238,11 @@ class _BotDashBoardState extends State<BotDashBoard>
     showDialog(
         context: context,
         builder: (builder) {
-          return CreateAssistantDialog();
+          return CreateAssistantDialog(
+            onCreatedBot: (String name, String description) {
+              _addAiBot(name, description);
+            },
+          );
         });
   }
 
@@ -231,8 +267,8 @@ class _BotDashBoardState extends State<BotDashBoard>
             DataColumn(label: Text('Edit time')),
             DataColumn(label: Text('Action')),
           ],
-          rows: [
-            DataRow(
+          rows: knowledgeList.map((knowledge) {
+            return DataRow(
                 cells: [
                   DataCell(
                     Row(
@@ -242,23 +278,23 @@ class _BotDashBoardState extends State<BotDashBoard>
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('KB knowledge',
+                            Text(knowledge['knowledge'] ?? 'No knowledge',
                                 style: TextStyle(fontWeight: FontWeight.bold)),
-                            Text(
-                                'The knowledge set about the Knowledge Base system'),
+                            Text(knowledge['description'] ?? 'No description'),
                           ],
                         ),
                       ],
                     ),
                   ),
-                  DataCell(Text('2')),
-                  DataCell(Text('994.80 KB')),
-                  DataCell(Text('7/13/2024 9:51:44 PM')),
+                  DataCell(Text(knowledge['units'] ?? '')),
+                  DataCell(Text(knowledge['size'] ?? '')),
+                  DataCell(Text(knowledge['editTime'] ?? '')),
                   DataCell(
                     IconButton(
                       icon: Icon(Icons.delete),
                       onPressed: () {
                         // Action to delete knowledge
+                        knowledgeList.remove(knowledge);
                       },
                     ),
                   ),
@@ -268,8 +304,8 @@ class _BotDashBoardState extends State<BotDashBoard>
                       context,
                       MaterialPageRoute(
                           builder: (context) => KnowledgeUnitView()));
-                }),
-          ],
+                });
+          }).toList(),
         ),
       ),
     );
@@ -334,7 +370,11 @@ class _BotDashBoardState extends State<BotDashBoard>
     showDialog(
         context: context,
         builder: (builder) {
-          return CreateKnowledgeDialog();
+          return CreateKnowledgeDialog(
+            onCreatedKnowledgeBase: (String name, String description) {
+              _addKnowledge(name, description, '994.80 KB');
+            },
+          );
         });
   }
 }

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class CreateAssistantDialog extends StatefulWidget {
-  const CreateAssistantDialog({super.key});
-
+  const CreateAssistantDialog({super.key, required this.onCreatedBot});
+  final Function(String name, String description) onCreatedBot;
   @override
   State<CreateAssistantDialog> createState() => _CreateAssistantDialogState();
 }
@@ -106,6 +106,8 @@ class _CreateAssistantDialogState extends State<CreateAssistantDialog> {
       ElevatedButton(
         onPressed: () {
           // Action for creating assistant (handle form submission here)
+          widget.onCreatedBot(
+              _nameController.text, _descriptionController.text);
           Navigator.of(context).pop(); // Close dialog after submission
         },
         child: Text('OK'),
