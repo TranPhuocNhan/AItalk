@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ai_app/views/home/knowledge_unit_view.dart';
 import 'package:flutter_ai_app/widgets/asisstance_dialog.dart';
+import 'package:flutter_ai_app/widgets/knowledge_dialog.dart';
+import 'package:flutter_ai_app/widgets/unit_knowledge_dialog.dart';
 
 class BotDashBoard extends StatefulWidget {
   const BotDashBoard({super.key});
@@ -95,11 +98,15 @@ class _BotDashBoardState extends State<BotDashBoard>
   Widget _buildToolSection() {
     return Card(
       margin: EdgeInsets.symmetric(horizontal: 6.0),
-      child: Row(
+      child: Column(
         children: [
-          _buildTypeDropdown(),
-          // _buildSearchBar(), // Lỗi gì ở đây chưa sửa được
-          _buildCreateBotButton(),
+          _buildSearchBar(),
+          Row(
+            children: [
+              _buildTypeDropdown(),
+              _buildCreateBotButton(),
+            ],
+          ),
         ],
       ),
     );
@@ -160,6 +167,8 @@ class _BotDashBoardState extends State<BotDashBoard>
       padding: const EdgeInsets.all(8.0),
       child: TextField(
         decoration: InputDecoration(
+          filled: true,
+          fillColor: Colors.white,
           hintText: 'Search',
           prefixIcon: Icon(Icons.search),
           border: OutlineInputBorder(
@@ -223,31 +232,43 @@ class _BotDashBoardState extends State<BotDashBoard>
             DataColumn(label: Text('Action')),
           ],
           rows: [
-            DataRow(cells: [
-              DataCell(Row(
-                children: [
-                  Icon(Icons.storage, color: Colors.orange),
-                  SizedBox(width: 10),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('KB knowledge',
-                          style: TextStyle(fontWeight: FontWeight.bold)),
-                      Text('The knowledge set about the Knowledge Base system'),
-                    ],
+            DataRow(
+                cells: [
+                  DataCell(
+                    Row(
+                      children: [
+                        Icon(Icons.storage, color: Colors.orange),
+                        SizedBox(width: 10),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('KB knowledge',
+                                style: TextStyle(fontWeight: FontWeight.bold)),
+                            Text(
+                                'The knowledge set about the Knowledge Base system'),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  DataCell(Text('2')),
+                  DataCell(Text('994.80 KB')),
+                  DataCell(Text('7/13/2024 9:51:44 PM')),
+                  DataCell(
+                    IconButton(
+                      icon: Icon(Icons.delete),
+                      onPressed: () {
+                        // Action to delete knowledge
+                      },
+                    ),
                   ),
                 ],
-              )),
-              DataCell(Text('2')),
-              DataCell(Text('994.80 KB')),
-              DataCell(Text('7/13/2024 9:51:44 PM')),
-              DataCell(IconButton(
-                icon: Icon(Icons.delete),
-                onPressed: () {
-                  // Action to delete knowledge
-                },
-              )),
-            ]),
+                onSelectChanged: (selected) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => KnowledgeUnitView()));
+                }),
           ],
         ),
       ),
@@ -313,7 +334,7 @@ class _BotDashBoardState extends State<BotDashBoard>
     showDialog(
         context: context,
         builder: (builder) {
-          return CreateAssistantDialog();
+          return CreateKnowledgeDialog();
         });
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ai_app/views/home/create_bot_view.dart';
 
 class NavDrawer extends StatefulWidget {
   const NavDrawer({super.key});
@@ -56,6 +57,12 @@ class _NavDrawerState extends State<NavDrawer> {
       selected: _selectedIndex == index,
       onTap: () {
         Navigator.pop(context);
+
+        showDialog(
+            context: context,
+            builder: (builder) {
+              return BotDashBoard();
+            });
       },
     );
   }

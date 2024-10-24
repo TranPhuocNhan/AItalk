@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_ai_app/widgets/ai_selection_dropdown.dart';
 
 class ToolsSection extends StatelessWidget {
-  const ToolsSection({super.key});
-
+  ToolsSection(
+      {super.key,
+      required this.selectedAiModel,
+      required this.onAiSelectedChange});
+  String? selectedAiModel;
+  final Function(String) onAiSelectedChange;
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -40,6 +44,9 @@ class ToolsSection extends StatelessWidget {
   }
 
   Widget _buildAISelectionDropdownButton() {
-    return AiSelectionDropdown();
+    return AiSelectionDropdown(
+      selectedAiModel: selectedAiModel,
+      onAiSelectedChange: (newModel) => onAiSelectedChange(newModel),
+    );
   }
 }

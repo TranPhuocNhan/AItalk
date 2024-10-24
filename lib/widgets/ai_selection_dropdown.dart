@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 
 class AiSelectionDropdown extends StatefulWidget {
-  const AiSelectionDropdown({super.key});
-
+  AiSelectionDropdown(
+      {super.key,
+      required this.selectedAiModel,
+      required this.onAiSelectedChange});
+  String? selectedAiModel;
+  final Function(String) onAiSelectedChange;
   @override
   State<AiSelectionDropdown> createState() => _AiSelectionDropdownState();
 }
 
 class _AiSelectionDropdownState extends State<AiSelectionDropdown> {
-  String _selectedAi = "GPT-3.5 Turbo";
+  String _selectedAiModel = "GPT-3.5 Turbo";
   final List<Map<String, dynamic>> _aiOptions = [
     {"name": "GPT-3.5 Turbo", "flame": 1, "icon": Icons.whatshot_rounded},
     {"name": "GPT-4o", "flame": 5, "icon": Icons.whatshot_rounded},
@@ -17,6 +21,22 @@ class _AiSelectionDropdownState extends State<AiSelectionDropdown> {
     {"name": "Gemini 1.5 Pro", "flame": 1, "icon": Icons.whatshot_rounded},
     {"name": "Gemini 1.5 Flash", "flame": 1, "icon": Icons.whatshot_rounded},
   ];
+  @override
+  void initState() {
+    super.initState();
+    _selectedAiModel = widget.selectedAiModel ?? _selectedAiModel;
+  }
+
+  @override
+  void didUpdateWidget(covariant AiSelectionDropdown oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.selectedAiModel != oldWidget.selectedAiModel) {
+      setState(() {
+        _selectedAiModel = widget.selectedAiModel ?? _selectedAiModel;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -31,7 +51,7 @@ class _AiSelectionDropdownState extends State<AiSelectionDropdown> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    _selectedAi,
+                    _selectedAiModel,
                     style: TextStyle(fontSize: 16, color: Colors.white),
                   ),
                   Icon(Icons.arrow_drop_down, color: Colors.white),
@@ -40,12 +60,15 @@ class _AiSelectionDropdownState extends State<AiSelectionDropdown> {
             ),
             onSelected: (value) {
               setState(() {
-                _selectedAi = value;
+                print("hello");
+                _selectedAiModel = value;
+                widget.selectedAiModel = _selectedAiModel;
+                widget.onAiSelectedChange(_selectedAiModel);
               });
             },
             itemBuilder: (BuildContext context) {
               return _aiOptions.map((ai) {
-                bool isSelected = ai["name"] == _selectedAi;
+                bool isSelected = ai["name"] == _selectedAiModel;
                 return PopupMenuItem<String>(
                   value: ai["name"],
                   child: Container(

@@ -44,8 +44,8 @@ class _CreateKnowledgeDialogState extends State<CreateKnowledgeDialog> {
     return TextField(
       controller: _nameController,
       decoration: InputDecoration(
-        labelText: 'Assistant name',
-        hintText: 'Enter assistant name',
+        labelText: 'Knowledge name',
+        hintText: 'Enter knowledge name',
         counterText: '${_nameController.text.length}/50',
         border: OutlineInputBorder(),
       ),
@@ -57,8 +57,8 @@ class _CreateKnowledgeDialogState extends State<CreateKnowledgeDialog> {
     return TextField(
       controller: _descriptionController,
       decoration: InputDecoration(
-        labelText: 'Assistant description',
-        hintText: 'Enter assistant description',
+        labelText: 'Knowledge description',
+        hintText: 'Enter Knowledge description',
         border: OutlineInputBorder(),
         counterText: '${_descriptionController.text.length}/2000',
       ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ai_app/widgets/unit_knowledge_dialog.dart';
 
 class KnowledgeUnitView extends StatefulWidget {
   const KnowledgeUnitView({super.key});
@@ -10,17 +11,44 @@ class KnowledgeUnitView extends StatefulWidget {
 class _KnowledgeUnitViewState extends State<KnowledgeUnitView> {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildHeader(),
-          SizedBox(height: 20),
-          _buildUnitTable(),
-          Spacer(),
-          _buildPagination(),
+    return Scaffold(
+      appBar: AppBar(
+        actions: [
+          ElevatedButton.icon(
+            onPressed: () {
+              showDialog(
+                  context: context,
+                  builder: (context) => UnitKnowledgeDialog());
+            },
+            label: Text(
+              "Add Unit",
+              style: TextStyle(color: Colors.white),
+            ),
+            icon: Icon(
+              Icons.add,
+              color: Colors.white,
+            ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blue,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+              ),
+            ),
+          )
         ],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildHeader(),
+            SizedBox(height: 20),
+            _buildUnitTable(),
+            Spacer(),
+            _buildPagination(),
+          ],
+        ),
       ),
     );
   }

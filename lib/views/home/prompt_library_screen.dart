@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ai_app/widgets/create_prompt.dart';
 
 class PromptLibraryScreen extends StatefulWidget {
   @override
@@ -20,7 +21,7 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
   }
 
   @override
@@ -33,6 +34,7 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
           tabs: [
             Tab(text: 'My Prompt'),
             Tab(text: 'Public Prompt'),
+            Tab(text: 'Favorite Prompt'),
           ],
         ),
       ),
@@ -44,14 +46,15 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
 
           // Tab Public Prompt
           _buildPublicPromptList(),
-          Center(
-            child: Text('Public Prompt Section (Coming Soon)'),
-          ),
+
+          // Tab Favorite Prompt
+          _buildFavoritePromptList(),
         ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           // Add new prompt action
+          showDialog(context: context, builder: (context) => PromptForm());
         },
         child: Icon(Icons.add),
         backgroundColor: Colors.purple,
@@ -243,6 +246,67 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
           });
         },
       ),
+    );
+  }
+
+  Widget _buildFavoritePromptList() {
+    final prompts = [
+      {
+        'title': 'Grammar corrector',
+        'description':
+            'Improve your spelling and grammar by correcting errors in your writing.',
+        'isFavorite': true,
+      },
+      {
+        'title': 'Learn Code FAST!',
+        'description':
+            'Teach you the code with the most understandable knowledge.',
+        'isFavorite': false,
+      },
+      {
+        'title': 'Story generator',
+        'description': 'Write your own beautiful story.',
+        'isFavorite': false,
+      },
+      {
+        'title': 'Essay improver',
+        'description': 'Improve your content\'s effectiveness with ease.',
+        'isFavorite': false,
+      },
+      {
+        'title': 'Pro tips generator',
+        'description': 'Get perfect tips and advice tailored to your field.',
+        'isFavorite': false,
+      },
+      {
+        'title': 'Resume Editing',
+        'description':
+            'Provide suggestions on how to improve your resume to make it stand out.',
+        'isFavorite': false,
+      },
+      {
+        'title': 'AI Painting Prompt Generator',
+        'description':
+            'Input your keywords and style to generate creative prompts.',
+        'isFavorite': false,
+      },
+    ];
+    return Column(
+      children: [
+        _buildSearchBar(),
+        Expanded(
+          child: ListView.builder(
+            padding: EdgeInsets.all(16),
+            itemCount: prompts.length,
+            itemBuilder: (context, index) {
+              final prompt = prompts[index];
+              if (prompt['isFavorite'] == true) {
+                return _buildPublicPromptItem(prompt);
+              }
+            },
+          ),
+        )
+      ],
     );
   }
 }

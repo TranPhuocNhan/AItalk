@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ai_app/widgets/upload_confluence_dialog.dart';
+import 'package:flutter_ai_app/widgets/upload_drive_dialog.dart';
+import 'package:flutter_ai_app/widgets/upload_file_dialog.dart';
+import 'package:flutter_ai_app/widgets/upload_slack_dialog.dart';
+import 'package:flutter_ai_app/widgets/upload_web_dialog.dart';
 
 class UnitKnowledgeDialog extends StatefulWidget {
   const UnitKnowledgeDialog({super.key});
@@ -30,8 +35,8 @@ class _UnitKnowledgeDialogState extends State<UnitKnowledgeDialog> {
                   'Connect Website to get data'),
               _buildUnitOption(context, Icons.code, 'Github repositories',
                   'Connect Github repositories to get data'),
-              _buildUnitOption(context, Icons.code_off, 'Gitlab repositories',
-                  'Connect Gitlab repositories to get data'),
+              _buildUnitOption(context, Icons.code_off, 'Confluence',
+                  'Connect Confluence to get data'),
               _buildUnitOption(context, Icons.cloud, 'Google drive',
                   'Connect Google drive to get data'),
               _buildUnitOption(
@@ -71,7 +76,47 @@ class _UnitKnowledgeDialogState extends State<UnitKnowledgeDialog> {
       subtitle: Text(subtitle),
       onTap: () {
         // Xử lý khi nhấn vào từng mục tùy chọn
+        switch (title) {
+          case 'Local files':
+            _handleLocalFiles(context);
+            break;
+          case 'Website':
+            _handleWebsite(context);
+            break;
+          case 'Google drive':
+            _handleGoogleDrive(context);
+            break;
+          case 'Slack':
+            _handleSlack(context);
+            break;
+          case 'Confluence':
+            _handleConfluence(context);
+            break;
+          default:
+            print('Unknown option selected');
+        }
       },
     );
+  }
+
+  void _handleLocalFiles(BuildContext context) {
+    print("Dialog");
+    showDialog(context: context, builder: (context) => UploadFileDialog());
+  }
+
+  void _handleWebsite(BuildContext context) {
+    showDialog(context: context, builder: (context) => UploadWebDialog());
+  }
+
+  void _handleGoogleDrive(BuildContext context) {
+    showDialog(context: context, builder: (context) => UploadDriveDialog());
+  }
+
+  void _handleSlack(BuildContext context) {
+    showDialog(context: context, builder: (context) => UploadSlackDialog());
+  }
+
+  void _handleConfluence(BuildContext context) {
+    showDialog(context: context, builder: (context) => ConfluenceDialog());
   }
 }

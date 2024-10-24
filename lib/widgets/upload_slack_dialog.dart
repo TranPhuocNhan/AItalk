@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class SlackUploadDialog extends StatefulWidget {
+class UploadSlackDialog extends StatefulWidget {
   @override
   _SlackUploadDialogState createState() => _SlackUploadDialogState();
 }
 
-class _SlackUploadDialogState extends State<SlackUploadDialog> {
+class _SlackUploadDialogState extends State<UploadSlackDialog> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;

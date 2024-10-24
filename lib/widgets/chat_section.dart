@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class ChatSection extends StatefulWidget {
-  final VoidCallback onChatSelected;
+  final VoidCallback onSendMessage;
 
-  const ChatSection({super.key, required this.onChatSelected});
+  const ChatSection({super.key, required this.onSendMessage});
 
   @override
   State<ChatSection> createState() => _ChatSectionState();
@@ -21,7 +21,7 @@ class _ChatSectionState extends State<ChatSection> {
           'isSender': true,
         });
         _controller.clear();
-        widget.onChatSelected();
+        widget.onSendMessage();
       });
     }
   }
