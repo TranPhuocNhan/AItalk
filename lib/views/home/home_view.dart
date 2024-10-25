@@ -32,89 +32,75 @@ class _HomeViewState extends State<HomeView> {
   ThreadChat? _selectedThread;
   List<ThreadChat> _threadChat = [
     ThreadChat(
-        threadId: '1',
-        title: 'Resumen del uso de Lorem Ipsum en d...',
-        messages: [
-          {
-            'user': 'User Message 1',
-            'ai': 'AI Response 1',
-          },
-          {
-            'user': 'User Message 11',
-            'ai': 'AI Response 11',
-          },
-        ],
-        status: 'current',
-        description:
-            'I\'m unable to retrieve a random picture from the PDF as the content sha...',
-        time: DateTime.now()),
+      threadId: '1',
+      title: 'Resumen del uso de Lorem Ipsum en d...',
+      messages: [
+        {'user': 'User Message 1'},
+        {'ai': 'AI Response 1'},
+        {'user': 'User Message 11'},
+        {'ai': 'AI Response 11'},
+      ],
+      status: 'current',
+      description:
+          'I\'m unable to retrieve a random picture from the PDF as the content sha...',
+      time: DateTime.now(),
+    ),
     ThreadChat(
-        threadId: '2',
-        title: 'Transformer Network Architecture Advantages',
-        messages: [
-          {
-            'user': 'User Message 2',
-            'ai': 'AI Response 2',
-          },
-          {
-            'user': 'User Message 22',
-            'ai': 'AI Response 22',
-          },
-        ],
-        status: '',
-        description:
-            'The article introduces a new network architecture called the Transfo...',
-        time: DateTime.now()),
+      threadId: '2',
+      title: 'Transformer Network Architecture Advantages',
+      messages: [
+        {'user': 'User Message 2'},
+        {'ai': 'AI Response 2'},
+        {'user': 'User Message 22'},
+        {'ai': 'AI Response 22'},
+      ],
+      status: '',
+      description:
+          'The article introduces a new network architecture called the Transfo...',
+      time: DateTime.now(),
+    ),
     ThreadChat(
-        threadId: '3',
-        title: 'Assistance Offered',
-        messages: [
-          {
-            'user': 'User Message 3',
-            'ai': 'AI Response 3',
-          },
-          {
-            'user': 'User Message 33',
-            'ai': 'AI Response 33',
-          },
-        ],
-        status: '',
-        description: 'Hello! How can I assist you today?',
-        time: DateTime.now()),
+      threadId: '3',
+      title: 'Assistance Offered',
+      messages: [
+        {'user': 'User Message 3'},
+        {'ai': 'AI Response 3'},
+        {'user': 'User Message 33'},
+        {'ai': 'AI Response 33'},
+      ],
+      status: '',
+      description: 'Hello! How can I assist you today?',
+      time: DateTime.now(),
+    ),
     ThreadChat(
-        threadId: '4',
-        title: 'Nhận dạng văn bản thành "CÔNG ĐỨC VÔ LƯỢN...',
-        messages: [
-          {
-            'user': 'User Message 4',
-            'ai': 'AI Response 4',
-          },
-          {
-            'user': 'User Message 44',
-            'ai': 'AI Response 44',
-          },
-        ],
-        status: '',
-        description: 'Hình ảnh này không chứa hình ảnh động vật.',
-        time: DateTime.now()),
+      threadId: '4',
+      title: 'Nhận dạng văn bản thành "CÔNG ĐỨC VÔ LƯỢN...',
+      messages: [
+        {'user': 'User Message 4'},
+        {'ai': 'AI Response 4'},
+        {'user': 'User Message 44'},
+        {'ai': 'AI Response 44'},
+      ],
+      status: '',
+      description: 'Hình ảnh này không chứa hình ảnh động vật.',
+      time: DateTime.now(),
+    ),
     ThreadChat(
-        threadId: '5',
-        title: 'Resumen de la ciencia de la computación',
-        messages: [
-          {
-            'user': 'User Message 5',
-            'ai': 'AI Response 5',
-          },
-          {
-            'user': 'User Message 55',
-            'ai': 'AI Response 55',
-          },
-        ],
-        status: '',
-        description:
-            'The central topics in computer science include algorithms and data stru...',
-        time: DateTime.now()),
+      threadId: '5',
+      title: 'Resumen de la ciencia de la computación',
+      messages: [
+        {'user': 'User Message 5'},
+        {'ai': 'AI Response 5'},
+        {'user': 'User Message 55'},
+        {'ai': 'AI Response 55'},
+      ],
+      status: '',
+      description:
+          'The central topics in computer science include algorithms and data stru...',
+      time: DateTime.now(),
+    ),
   ];
+
   final List<Bot> botList = [
     Bot(name: 'GPT 4', iconPath: 'assets/gpt4_icon.png', isPinned: false),
     Bot(name: 'Gemini', iconPath: 'assets/gemini_icon.png', isPinned: true),
@@ -146,39 +132,51 @@ class _HomeViewState extends State<HomeView> {
     const Text("Memo Content"),
   ];
 
-  void _addNewThread(
+  ThreadChat _addNewThread(
       String threadId,
       String title,
       List<Map<String, String>> messages,
       String status,
       String description,
       DateTime time) {
+    final newThread = ThreadChat(
+      threadId: threadId,
+      title: title,
+      messages: messages,
+      status: status,
+      description: description,
+      time: time,
+    );
+
     setState(() {
-      _threadChat.add(ThreadChat(
-          threadId: threadId,
-          title: title,
-          messages: messages,
-          status: status,
-          description: description,
-          time: time));
+      _threadChat.add(newThread);
     });
+
+    // Trả về thread vừa được thêm
+    return newThread;
   }
 
   void _onSendMessage() {
-    // Thêm thread mới
-    _addNewThread(
-      "thread_${DateTime.now().millisecondsSinceEpoch}",
+    // Lưu lại threadId của thread mới
+    final newThreadId = "thread_${DateTime.now().millisecondsSinceEpoch}";
+
+    // Thêm thread mới và lưu lại threadId
+    final newThread = _addNewThread(
+      newThreadId,
       "New Thread Title",
       [
-        {"user": "Sample Message", "ai": "Sample AI Response"},
+        {"user": "hi"},
+        {"ai": "Sample AI Response"},
       ],
       "new",
       "This is a new thread",
       DateTime.now(),
     );
 
-    // Chuyển sang màn hình ChatContentView và đảm bảo giữ lại model AI
+    // Cập nhật _selectedThread với thread vừa được thêm
     setState(() {
+      _selectedThread =
+          newThread; // Hoặc sử dụng `newThreadId` nếu bạn chỉ lưu `threadId`
       _isChatContentView = true; // Chuyển sang màn hình nội dung chat
     });
   }
@@ -200,8 +198,6 @@ class _HomeViewState extends State<HomeView> {
             child: IndexedStack(
               index: _selectedIndex,
               children: [
-                BotContentView(),
-                AiBotListView(),
                 _isChatContentView
                     ? ChatContentView(
                         onAddPressed: () {
@@ -233,17 +229,7 @@ class _HomeViewState extends State<HomeView> {
                       });
                     }),
                 PromptLibraryScreen(),
-
-                // PublishScreen(),
-                // PromptForm(),
-                // SlackUploadDialog(),
-                // ConfluenceDialog(),
-                // UploadDriveDialog(),
-                // UploadWebDialog(),
-                // UploadFileDialog(),
-                // UnitKnowledgeDialog(),
-                // KnowledgeUnitView(),
-
+                BotDashBoard(),
                 ..._widgetOptions.skip(2)
               ],
             ),
@@ -266,9 +252,9 @@ class _HomeViewState extends State<HomeView> {
       child: Column(
         children: [
           _buildIconButtonWithLabel(Icons.chat, 'Chat', 0),
-          _buildIconButtonWithLabel(Icons.book, 'Read', 1),
-          _buildIconButtonWithLabel(Icons.search, 'Search', 2),
-          _buildIconButtonWithLabel(Icons.edit, 'Write', 3),
+          _buildIconButtonWithLabel(Icons.book, 'Thread', 1),
+          _buildIconButtonWithLabel(Icons.search, 'Prompt', 2),
+          _buildIconButtonWithLabel(Icons.edit, 'AI Bot', 3),
           _buildIconButtonWithLabel(Icons.translate, 'Translate', 4),
           _buildIconButtonWithLabel(Icons.campaign, 'Toolkit', 5),
           _buildIconButtonWithLabel(Icons.note, 'Memo', 6),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ai_app/views/home/chat_bot_content_view.dart';
 import 'package:flutter_ai_app/views/home/knowledge_unit_view.dart';
 import 'package:flutter_ai_app/widgets/asisstance_dialog.dart';
 import 'package:flutter_ai_app/widgets/knowledge_dialog.dart';
@@ -39,8 +40,8 @@ class _BotDashBoardState extends State<BotDashBoard>
   ];
 
   String _selectedType = "All";
+  String _searchQuery = "";
   final List<String> _types = ['All', 'AI', 'Chatbot', 'Marketing', 'SEO'];
-
   late TabController _tabController;
   @override
   void initState() {
@@ -145,9 +146,18 @@ class _BotDashBoardState extends State<BotDashBoard>
   }
 
   Widget _buildBotListSection() {
-    final filterBots = _selectedType == "All"
-        ? botList
-        : botList.where((bot) => bot['type'] == _selectedType).toList();
+    final filterBots = botList.where((bot) {
+      final title = bot['title']?.toLowerCase() ?? '';
+      final description = bot['description']?.toLowerCase() ?? '';
+      final type = bot['type'] ?? '';
+
+      // Kiểm tra nếu searchQuery nằm trong title hoặc description và loại bot phù hợp với _selectedType
+      final matchesSearchQuery =
+          title.contains(_searchQuery) || description.contains(_searchQuery);
+      final matchesType = _selectedType == "All" || type == _selectedType;
+
+      return matchesSearchQuery && matchesType;
+    }).toList();
     return Expanded(
       child: ListView.builder(
           itemCount: filterBots.length,
@@ -162,6 +172,9 @@ class _BotDashBoardState extends State<BotDashBoard>
                 trailing: Text(bot['date'] ?? 'No date'),
                 onTap: () {
                   // Navigate to bot detail page
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return BotContentView();
+                  }));
                 },
               ),
             );
@@ -201,6 +214,11 @@ class _BotDashBoardState extends State<BotDashBoard>
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: TextField(
+        onChanged: (value) {
+          setState(() {
+            _searchQuery = value;
+          });
+        },
         decoration: InputDecoration(
           filled: true,
           fillColor: Colors.white,
