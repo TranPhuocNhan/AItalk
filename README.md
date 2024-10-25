@@ -1,16 +1,15 @@
-# AItalk
+# Dự Án AITalk
 
-A chat bot AI Flutter project.
+## Mô Tả Dự Án
 
-## Getting Started
+Dự án này phát triển một hệ thống chat với AI mang tên AITalk chủ yếu khai thác yếu tố ứng dụng sức mạnh của cac AI hiện nay và cung cấp 1 giao diện thân thiện cho người dùng. Người dùng có thể sử dụng tạo các Prompt và các Knowledge Base cung cấp cho các AI bot.
 
-This project is a starting point for a Flutter application.
+## Thành viên dự án
 
-A few resources to get you started if this is your first Flutter project:
+- **Nguyễn Thị Như Ý - 21120600**
+- **Trần Phước Nhân - 21120515**
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Link demo dự án:
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- Youtube: https://youtu.be/5isu0DL1f0o
+
