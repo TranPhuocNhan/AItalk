@@ -1,6 +1,6 @@
-# flutter_ai_app
+# AItalk
 
-A new Flutter project.
+A chat bot AI Flutter project.
 
 ## Getting Started
 
