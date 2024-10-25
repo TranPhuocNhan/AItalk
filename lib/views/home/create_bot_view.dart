@@ -160,6 +160,9 @@ class _BotDashBoardState extends State<BotDashBoard>
                 title: Text(bot['title'] ?? 'No tile'),
                 subtitle: Text(bot['description'] ?? 'No description'),
                 trailing: Text(bot['date'] ?? 'No date'),
+                onTap: () {
+                  // Navigate to bot detail page
+                },
               ),
             );
           }),

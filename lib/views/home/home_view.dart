@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_ai_app/models/bot.dart';
 import 'package:flutter_ai_app/models/thread.dart';
 import 'package:flutter_ai_app/views/home/ai_bot_list_view.dart';
+import 'package:flutter_ai_app/views/home/chat_bot_content_view.dart';
 import 'package:flutter_ai_app/views/home/chat_content_view.dart';
 import 'package:flutter_ai_app/views/home/chat_view.dart';
 import 'package:flutter_ai_app/views/home/create_bot_view.dart';
@@ -199,6 +200,7 @@ class _HomeViewState extends State<HomeView> {
             child: IndexedStack(
               index: _selectedIndex,
               children: [
+                BotContentView(),
                 AiBotListView(),
                 _isChatContentView
                     ? ChatContentView(
