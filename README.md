@@ -11,5 +11,5 @@ Dự án này phát triển một hệ thống chat với AI mang tên AITalk c
 
 ## Link demo dự án:
 
-- Youtube: https://youtu.be/5isu0DL1f0o
+- Youtube: https://youtu.be/7HI0C9jVQ5w
 
