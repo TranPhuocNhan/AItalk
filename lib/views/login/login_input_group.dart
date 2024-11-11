@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ai_app/views/style/Color.dart';
+import 'package:flutter_ai_app/core/AuthService.dart';
+import 'package:flutter_ai_app/core/UserDataService.dart';
+import 'package:flutter_ai_app/utils/providers/manageTokenProvider.dart';
+import 'package:flutter_ai_app/utils/providers/processingProvider.dart';
+import 'package:flutter_ai_app/views/constant/Color.dart';
+import 'package:get_it/get_it.dart';
+import 'package:provider/provider.dart';
 
 class LoginInputGroup extends StatefulWidget{
   @override
@@ -7,9 +13,12 @@ class LoginInputGroup extends StatefulWidget{
 }
 
 class _LoginInputState extends State<LoginInputGroup>{
+  final AuthService authService = GetIt.instance<AuthService>();
+  final UserDataService userDataService = GetIt.instance<UserDataService>();
+
   final usernameKey = GlobalKey<FormState>();
   final passwordKey = GlobalKey<FormState>();
-  TextEditingController usernameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   final colorElements = <Color>[ColorPalette().startLinear, ColorPalette().endLinear];
   bool rememberCheck = false;
@@ -22,19 +31,21 @@ class _LoginInputState extends State<LoginInputGroup>{
   }
   @override
   Widget build(BuildContext context) {
+    final processing = Provider.of<ProcessingProvider>(context);
+    final tokenManage = Provider.of<Managetokenprovider>(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        //USERNAME TEXTFIELD
+        //EMAIL TEXTFIELD
         Padding(
           padding: EdgeInsets.only(top: 5, bottom: 5),
           child: Form(
             key: usernameKey,
             child: TextFormField(
-              controller: usernameController,
+              controller:emailController,
               validator: _validate,
               decoration: InputDecoration(
-                label: Text("Username"),
+                label: Text("Email"),
                 prefixIcon: Icon(Icons.person, color: ColorPalette().btnColor,),
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(
@@ -153,13 +164,16 @@ class _LoginInputState extends State<LoginInputGroup>{
               )
             ),
             child: ElevatedButton(
-              onPressed: (){
+              onPressed: () async{
                 bool checkUsername = usernameKey.currentState!.validate();
                 bool checkPassword = passwordKey.currentState!.validate();
                 if(checkPassword && checkPassword){
                   //LOGIN EXISTS ACCOUNT 
                   //[...]
-                  Navigator.pushNamed(context, '/profile');
+                  // Navigator.pushNamed(context, '/profile');
+                  processing.UpdateLoadingProcess();
+                  await handleActionLogin(tokenManage);
+                  processing.UpdateLoadingProcess();
                 }
               }, 
               child: Padding(
@@ -178,10 +192,44 @@ class _LoginInputState extends State<LoginInputGroup>{
               ),
             )
         ),
+        processing.getProcessState() ? 
+        CircularProgressIndicator() : Text(""),
 
 
       ],
     );
   }
 
+  Future<void> handleActionLogin(Managetokenprovider tokenManage) async{
+    bool result = await authService.signInAccount(emailController.value.text, passwordController.value.text);
+    if(result == true){
+      List<int> token = await userDataService.getTokenUsage();
+      tokenManage.updateTotalToken(token[1]);
+      tokenManage.updateRemainToken(token[0]);
+      Navigator.pushNamed(context, '/home');
+    }else{
+      showLoginDialog(context, "");
+    }
+  }
+
+  void showLoginDialog(BuildContext context, String message){
+    showDialog(
+      context: context, 
+      builder: (BuildContext context){
+        return AlertDialog(
+          title: Text("NOTIFICATION"),
+          content: Text("Message"),
+          actions: [
+            TextButton(
+              onPressed: (){
+                Navigator.pop(context);
+              }, 
+              child: Text("Ok"),
+            )
+          ],
+        );
+      }
+      
+    );
+  }
 }

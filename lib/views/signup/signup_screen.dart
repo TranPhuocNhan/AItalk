@@ -5,7 +5,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter_ai_app/main.dart';
 import 'package:flutter_ai_app/views/login/login_screen.dart';
 import 'package:flutter_ai_app/views/signup/signup_input_group.dart';
-import 'package:flutter_ai_app/views/style/Color.dart';
+import 'package:flutter_ai_app/views/constant/Color.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -69,7 +69,7 @@ class _SignupState extends State<SignUpScreen>{
                   TextButton(
                     onPressed: (){
                       //navigate to login screen
-                      Navigator.pushNamed(context, '/');
+                      Navigator.pushNamed(context, '/login');
                     }, 
                     child: Text(
                         "Sign in",
@@ -86,12 +86,12 @@ class _SignupState extends State<SignUpScreen>{
     );
   }
 
-  void _launchUrl() async{
-    final Uri url = Uri.parse('https://flutter.dev');
-    if (!await launchUrl(url)) {
-      throw Exception('Could not launch $url');
-    }
-  }
+  // void _launchUrl() async{
+  //   final Uri url = Uri.parse('https://flutter.dev');
+  //   if (!await launchUrl(url)) {
+  //     throw Exception('Could not launch $url');
+  //   }
+  // }
 
   
 }

@@ -9,6 +9,7 @@ import 'package:flutter_ai_app/views/home/nav_drawer.dart';
 import 'package:flutter_ai_app/views/home/prompt_library_screen.dart';
 import 'package:flutter_ai_app/views/home/publish_screen.dart';
 import 'package:flutter_ai_app/views/home/thread_chat_history_view.dart';
+import 'package:flutter_ai_app/widgets/app_drawer.dart';
 import 'package:flutter_ai_app/widgets/create_prompt.dart';
 import 'package:flutter_ai_app/widgets/unit_knowledge_dialog.dart';
 import 'package:flutter_ai_app/widgets/upload_confluence_dialog.dart';
@@ -171,7 +172,7 @@ class _HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      drawer: NavDrawer(),
+      drawer: AppDrawer(selected: 0),
       body: Row(
         children: [
           Expanded(

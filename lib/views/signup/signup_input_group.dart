@@ -1,6 +1,13 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_ai_app/views/style/Color.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_ai_app/core/AuthService.dart';
+import 'package:flutter_ai_app/core/UserDataService.dart';
+import 'package:flutter_ai_app/models/user.dart';
+import 'package:flutter_ai_app/utils/providers/manageTokenProvider.dart';
+import 'package:flutter_ai_app/views/constant/Color.dart';
+import 'package:get_it/get_it.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SignupInputGroup extends StatefulWidget{
@@ -24,6 +31,9 @@ class _SignupInputState extends State<SignupInputGroup>{
 
   TextStyle defaultStyle = TextStyle(color: Colors.grey);
   TextStyle linkStyle = TextStyle(color: Colors.blue);
+
+  final AuthService authService = GetIt.instance<AuthService>();
+  final UserDataService userDataService = GetIt.instance<UserDataService>();
 
   String? _validate(String? input){
     if(input!.isEmpty){
@@ -49,6 +59,7 @@ class _SignupInputState extends State<SignupInputGroup>{
   }
   @override
   Widget build(BuildContext context) {
+    final tokenManage = Provider.of<Managetokenprovider>(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -265,7 +276,8 @@ class _SignupInputState extends State<SignupInputGroup>{
                 bool checkPass = passwordKey.currentState!.validate();
                 bool checkConfirmPass = confirmPassKey.currentState!.validate();
                 if(checkUsername && checkEmail && checkPass && checkConfirmPass){
-                  Navigator.pushNamed(context, "/verification");
+                  // Navigator.pushNamed(context, "/verification");             // chưa có api cho chức năng này 
+                  handleActionRegister(tokenManage);
                 }
               }, 
               child: Padding(
@@ -294,4 +306,60 @@ class _SignupInputState extends State<SignupInputGroup>{
     }
   }
   
+  void handleActionRegister(Managetokenprovider tokenManage) async{
+    // ignore: unused_local_variable
+    try{
+      User result = await authService.signUpAccount(emailController.value.text,passwordController.value.text,usernameController.value.text);
+      bool signinResult = await authService.signInAccount(emailController.value.text, passwordController.value.text);
+      if(signinResult){
+        List<int> token = await userDataService.getTokenUsage();
+        tokenManage.updateTotalToken(token[1]);
+        tokenManage.updateRemainToken(token[0]);
+        Navigator.pushNamed(context, '/home');
+      }else{
+        showLoginResultDialog(context, "Register Sucessful! Failed to login. Please enter email and password to login again!!");       
+      }
+    }catch(e) {
+      showMyDialog(context, e.toString());  
+    }
+  }
+
+  void showLoginResultDialog(BuildContext content, String message){
+    showDialog(
+      context: context, 
+      builder: (BuildContext context){
+        return AlertDialog(
+          title: Text("NOTIFICATION"),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: (){  
+                Navigator.pushNamed(context, '/login');
+              }, 
+              child: Text("Ok"),
+            )
+          ],
+        );
+      }
+    );
+  }
+  void showMyDialog(BuildContext context, String message){
+    showDialog(
+      context: context, 
+      builder: (BuildContext context){
+        return AlertDialog(
+          title: Text("NOTIFICATION"),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: (){  
+                Navigator.pop(context);
+              }, 
+              child: Text("Ok"),
+            )
+          ],
+        );
+      }
+    );
+  }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ai_app/views/Profile/account_card.dart';
 import 'package:flutter_ai_app/views/Profile/token_usage_card.dart';
-import 'package:flutter_ai_app/views/style/Color.dart';
+import 'package:flutter_ai_app/views/constant/Color.dart';
 import 'package:flutter_ai_app/widgets/app_drawer.dart';
 
 class ProfileScreen extends StatefulWidget{
