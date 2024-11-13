@@ -29,6 +29,7 @@ class _VerificationState extends State<VerificationScreen>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: ColorPalette().bgColor,
       body: Center(
         child: Padding(
           padding: EdgeInsets.all(20),
@@ -41,6 +42,7 @@ class _VerificationState extends State<VerificationScreen>{
                 style: TextStyle(
                   fontSize: 32,
                   fontWeight: FontWeight.bold,
+                  color: ColorPalette().headerColor
                 ),
               ),
               SizedBox(height: 30,),
@@ -78,7 +80,7 @@ class _VerificationState extends State<VerificationScreen>{
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(
-                              color: ColorPalette().btnColor,
+                              color: ColorPalette().iconColor,
                             )
                           )
                         ),
@@ -105,15 +107,7 @@ class _VerificationState extends State<VerificationScreen>{
                 width: double.infinity,
                 alignment: Alignment.center,
                 child: Container(
-                  width: MediaQuery.sizeOf(verContext).width/2,
-                  decoration: ShapeDecoration(
-                    shape: StadiumBorder(),
-                    gradient: LinearGradient(
-                      colors: colorElements,
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                    )
-                  ),
+                  width: MediaQuery.sizeOf(verContext).width * 2 / 3,
                   child: ElevatedButton(
                     onPressed: (){}, 
                     child: Padding(
@@ -127,7 +121,7 @@ class _VerificationState extends State<VerificationScreen>{
                       ),
                     ),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.transparent,
+                      backgroundColor: ColorPalette().btnColor,
                     ),
                     
                   ),

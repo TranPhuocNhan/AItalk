@@ -24,7 +24,7 @@ class _AccountCardState extends State<AccountCard>{
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Colors.blue.shade50,
+      color: Colors.lightGreen.shade50,
       child: Padding(
         padding: EdgeInsets.all(0),
         child: Column(

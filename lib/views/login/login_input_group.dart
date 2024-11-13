@@ -46,10 +46,10 @@ class _LoginInputState extends State<LoginInputGroup>{
               validator: _validate,
               decoration: InputDecoration(
                 label: Text("Email"),
-                prefixIcon: Icon(Icons.person, color: ColorPalette().btnColor,),
+                prefixIcon: Icon(Icons.person, color: ColorPalette().iconColor,),
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(
-                    color: ColorPalette().btnColor,
+                    color: ColorPalette().iconColor,
                   )
                 ),
                 enabledBorder:  OutlineInputBorder(
@@ -82,7 +82,7 @@ class _LoginInputState extends State<LoginInputGroup>{
               validator: _validate,
               decoration: InputDecoration(
                 label: Text("Password"),
-                prefixIcon: Icon(Icons.lock, color: ColorPalette().btnColor,),
+                prefixIcon: Icon(Icons.lock, color: ColorPalette().iconColor,),
                 suffixIcon:(
                   IconButton(
                     onPressed: (){
@@ -90,11 +90,11 @@ class _LoginInputState extends State<LoginInputGroup>{
                         isVisibility = !isVisibility;
                       });
                     }, 
-                    icon: ((!isVisibility)? Icon(Icons.visibility_off, color: ColorPalette().btnColor,) : Icon(Icons.visibility,color: ColorPalette().btnColor,)))
+                    icon: ((!isVisibility)? Icon(Icons.visibility_off, color: ColorPalette().iconColor,) : Icon(Icons.visibility,color: ColorPalette().iconColor,)))
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(
-                    color: ColorPalette().btnColor,
+                    color: ColorPalette().iconColor,
                   )
                 ),
                 enabledBorder:  OutlineInputBorder(
@@ -154,23 +154,15 @@ class _LoginInputState extends State<LoginInputGroup>{
           width: double.infinity,
           alignment: Alignment.center,
           child: Container(
-            width: MediaQuery.sizeOf(context).width/2,
+            width: MediaQuery.sizeOf(context).width * 2 / 3,
             decoration: ShapeDecoration(
               shape: StadiumBorder(),
-              gradient: LinearGradient(
-                colors: colorElements,
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-              )
             ),
             child: ElevatedButton(
               onPressed: () async{
                 bool checkUsername = usernameKey.currentState!.validate();
                 bool checkPassword = passwordKey.currentState!.validate();
                 if(checkPassword && checkPassword){
-                  //LOGIN EXISTS ACCOUNT 
-                  //[...]
-                  // Navigator.pushNamed(context, '/profile');
                   processing.UpdateLoadingProcess();
                   await handleActionLogin(tokenManage);
                   processing.UpdateLoadingProcess();
@@ -182,12 +174,14 @@ class _LoginInputState extends State<LoginInputGroup>{
                   "Login", 
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 18
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 2.0,
                     ),
                   ),
                 ),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.transparent,
+                  backgroundColor: ColorPalette().btnColor
                 )
               ),
             )

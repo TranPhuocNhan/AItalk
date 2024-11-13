@@ -75,7 +75,7 @@ class _SignupInputState extends State<SignupInputGroup>{
                 label: Text("Username"),
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(
-                    color: ColorPalette().btnColor,
+                    color: ColorPalette().iconColor,
                   )
                 ),
                 enabledBorder:  OutlineInputBorder(
@@ -105,7 +105,7 @@ class _SignupInputState extends State<SignupInputGroup>{
                 label: Text("Email"),
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(
-                    color: ColorPalette().btnColor,
+                    color: ColorPalette().iconColor,
                   )
                 ),
                 enabledBorder:  OutlineInputBorder(
@@ -139,7 +139,7 @@ class _SignupInputState extends State<SignupInputGroup>{
                         passwordVisibility = !passwordVisibility;
                       });
                     }, 
-                    icon: (passwordVisibility) ? Icon(Icons.visibility, color: ColorPalette().btnColor,) : Icon(Icons.visibility_off, color: ColorPalette().btnColor,))
+                    icon: (passwordVisibility) ? Icon(Icons.visibility, color: ColorPalette().iconColor,) : Icon(Icons.visibility_off, color: ColorPalette().iconColor,))
                 ),
                 helperText:  "Password must contain special character!" ,
                 helperStyle: TextStyle(
@@ -148,7 +148,7 @@ class _SignupInputState extends State<SignupInputGroup>{
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(
-                    color: ColorPalette().btnColor,
+                    color: ColorPalette().iconColor,
                   )
                 ),
                 enabledBorder:  OutlineInputBorder(
@@ -184,7 +184,7 @@ class _SignupInputState extends State<SignupInputGroup>{
                         confirmPassVisibility = !confirmPassVisibility;
                       });
                     }, 
-                    icon: (confirmPassVisibility) ? Icon(Icons.visibility, color: ColorPalette().btnColor,) : Icon(Icons.visibility_off, color: ColorPalette().btnColor,))
+                    icon: (confirmPassVisibility) ? Icon(Icons.visibility, color: ColorPalette().iconColor,) : Icon(Icons.visibility_off, color: ColorPalette().iconColor,))
                 ),
                 helperText:  "Password must contain special character!" ,
                 helperStyle: TextStyle(
@@ -193,7 +193,7 @@ class _SignupInputState extends State<SignupInputGroup>{
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(
-                    color: ColorPalette().btnColor,
+                    color: ColorPalette().iconColor,
                   )
                 ),
                 enabledBorder:  OutlineInputBorder(
@@ -260,15 +260,7 @@ class _SignupInputState extends State<SignupInputGroup>{
           width: double.infinity,
           alignment: Alignment.center,
           child: Container(
-            width: MediaQuery.sizeOf(context).width/2,
-            decoration: ShapeDecoration(
-              shape: StadiumBorder(),
-              gradient: LinearGradient(
-                colors: colorElements,
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-              )
-            ),
+            width: MediaQuery.sizeOf(context).width * 2 / 3,
             child: ElevatedButton(
               onPressed: (){
                 bool checkUsername = usernameKey.currentState!.validate();
@@ -276,7 +268,6 @@ class _SignupInputState extends State<SignupInputGroup>{
                 bool checkPass = passwordKey.currentState!.validate();
                 bool checkConfirmPass = confirmPassKey.currentState!.validate();
                 if(checkUsername && checkEmail && checkPass && checkConfirmPass){
-                  // Navigator.pushNamed(context, "/verification");             // chưa có api cho chức năng này 
                   handleActionRegister(tokenManage);
                 }
               }, 
@@ -291,7 +282,7 @@ class _SignupInputState extends State<SignupInputGroup>{
                 ),
               ),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.transparent,
+                backgroundColor: ColorPalette().btnColor,
               )
             ),
           )

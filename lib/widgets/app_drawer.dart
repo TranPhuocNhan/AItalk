@@ -39,6 +39,7 @@ class _AppDrawerState extends State<AppDrawer>{
   Widget build(BuildContext context) {
     final tokenManage = Provider.of<Managetokenprovider>(context);
     return Drawer(
+      backgroundColor: ColorPalette().bgColor,
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
@@ -48,7 +49,7 @@ class _AppDrawerState extends State<AppDrawer>{
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Image(image: AssetImage("images/logo.png"), height: 60,),
+                Image(image: AssetImage("images/full_logo.png"), height: 60,),
                 IconButton(
                   onPressed: (){
                     //DISPOSE DRAWER
@@ -129,7 +130,7 @@ class _AppDrawerState extends State<AppDrawer>{
           Padding(
             padding: EdgeInsets.only(left: 10, right: 10,),
             child: Card(
-              color: Colors.blue.shade50,
+              color: Colors.lightGreen.shade50,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -171,7 +172,7 @@ class _AppDrawerState extends State<AppDrawer>{
                       value: tokenManage.getPercentage().toDouble(),
                       minHeight: 5,
                       color: ColorPalette().selectedItemOnDrawerColor,
-                      valueColor: AlwaysStoppedAnimation<Color>(ColorPalette().endLinear),
+                      valueColor: AlwaysStoppedAnimation<Color>(ColorPalette().btnColor),
                       borderRadius: BorderRadius.circular(10),
                     ),  
                   ),

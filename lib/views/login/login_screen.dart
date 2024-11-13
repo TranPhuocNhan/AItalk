@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_ai_app/utils/providers/processingProvider.dart';
+import 'package:flutter_ai_app/views/constant/Color.dart';
 import 'package:flutter_ai_app/views/login/login_input_group.dart';
 import 'package:provider/provider.dart';
 class LoginScreen extends StatefulWidget{
@@ -21,13 +22,6 @@ class LoginScreen extends StatefulWidget{
 class _LoginState extends State<LoginScreen>{
 
   late BuildContext _lgContext;
-  // final colorElements = <Color>[ColorPalette().startLinear, ColorPalette().endLinear];
-  // bool rememberCheck = false;
-  // TextEditingController userNameController = TextEditingController();
-  // TextEditingController passwordController = TextEditingController();
-  // final _lgUsernameKey = GlobalKey<FormState>();
-  // final _lgPasswordKey = GlobalKey<FormState>();
-  
   
   @override
   void initState() {
@@ -39,14 +33,12 @@ class _LoginState extends State<LoginScreen>{
   
   @override
   Widget build(BuildContext context) {
-    // final processing = Provider.of<ProcessingProvider>(context);
     return Scaffold(
+      backgroundColor: ColorPalette().bgColor,
      body: Center(
       child: Padding(padding: EdgeInsets.all(20),
         child: Stack(
           children: [
-            // processing.getProcessState() ? 
-            // CircularProgressIndicator():
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -60,7 +52,8 @@ class _LoginState extends State<LoginScreen>{
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 32,
-                      ),
+                        color: ColorPalette().headerColor
+                      )
                     ),
                     SizedBox(height: 50,),
                     LoginInputGroup(),
@@ -110,7 +103,6 @@ class _LoginState extends State<LoginScreen>{
             ),
           ],
         )
-        
       )
      ), 
     );

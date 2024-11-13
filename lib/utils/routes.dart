@@ -8,10 +8,11 @@ import 'package:flutter_ai_app/views/login/login_screen.dart';
 import 'package:flutter_ai_app/views/signup/signup_input_group.dart';
 import 'package:flutter_ai_app/views/signup/signup_screen.dart';
 import 'package:flutter_ai_app/views/signup/verification.dart';
+import 'package:flutter_ai_app/views/splash/splash_screen.dart';
 
 class Routes {
   Routes._();
-
+  static const String splash = '/';
   static const String login ='/login';
   static const String register = '/register';
   static const String verification = '/verification';
@@ -21,6 +22,7 @@ class Routes {
   static const String profile = '/profile';
   static const String emailResponse = '/emailRsp';
   static final routes = <String, WidgetBuilder>{
+    splash: (BuildContext context) => SplashScreen(),
     login: (BuildContext context) => LoginScreen(context: context),
     register: (BuildContext context) => SignUpScreen(context: context),
     verification: (BuildContext context) => VerificationScreen(context: context),

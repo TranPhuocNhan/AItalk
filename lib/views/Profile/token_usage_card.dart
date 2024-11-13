@@ -13,7 +13,7 @@ class _TokenUsageState extends State<TokenUsageCard>{
   Widget build(BuildContext context) {
     final tokenManage = Provider.of<Managetokenprovider>(context);
     return Card(
-      color: Colors.blue.shade50,
+      color: Colors.lightGreen.shade50 ,
       child: Padding(
         padding: EdgeInsets.all(10),
         child: Column(
@@ -49,7 +49,7 @@ class _TokenUsageState extends State<TokenUsageCard>{
               value: tokenManage.getPercentage().toDouble(),
               minHeight: 5,
               color: ColorPalette().selectedItemOnDrawerColor,
-              valueColor: AlwaysStoppedAnimation<Color>(ColorPalette().endLinear),
+              valueColor: AlwaysStoppedAnimation<Color>(ColorPalette().btnColor),
               borderRadius: BorderRadius.circular(10),
             ),
             SizedBox(height: 10,),

@@ -52,7 +52,7 @@ class _ResponseTypeState extends State<ResponseTypeDropdown> {
     buttonStyleData: ButtonStyleData(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5),
-        color: ColorPalette().btnColor.withOpacity(0.2),
+        color: ColorPalette().iconColor.withOpacity(0.2),
         
       )
 

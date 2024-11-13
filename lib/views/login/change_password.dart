@@ -16,7 +16,6 @@ class _ChangePasswordState extends State<ChangePasswordScreen>{
   late BuildContext changeContext;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     this.changeContext = widget.changeContext;
   }
@@ -25,22 +24,27 @@ class _ChangePasswordState extends State<ChangePasswordScreen>{
   TextEditingController confirmPassController = TextEditingController();
   GlobalKey<FormState> newPassKey  = GlobalKey<FormState>();
   GlobalKey<FormState> confirmKey = GlobalKey<FormState>();
-  final colorElements = <Color>[ColorPalette().startLinear, ColorPalette().endLinear];
 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: ColorPalette().bgColor,
       appBar: AppBar(
+        backgroundColor: ColorPalette().bgColor,
         leading: IconButton(
           onPressed: (){
             Navigator.pop(context);
           }, 
-          icon: Icon(Icons.arrow_back_ios_new_rounded)),
+          icon: Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: ColorPalette().headerColor,  
+          )),
         title: Text(
           "Create New Password",
           style: TextStyle(
             fontWeight: FontWeight.bold,
+            color: ColorPalette().headerColor
           ),
         ),
       ),
@@ -62,14 +66,14 @@ class _ChangePasswordState extends State<ChangePasswordScreen>{
                       width: 200, height: 200,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: ColorPalette().startLinear.withOpacity(0.1)
+                        color: ColorPalette().bigIcon.withOpacity(0.1)
                       ),
                     ),
                     Container(
                       width: 200, height: 200,
                       child: Icon(
                         Icons.lock_reset_rounded,
-                        color: ColorPalette().endLinear,
+                        color: ColorPalette().bigIcon,
                         size: 100,
                       ),
                     )
@@ -103,15 +107,7 @@ class _ChangePasswordState extends State<ChangePasswordScreen>{
                 width: double.infinity,
                 alignment: Alignment.center,
                 child: Container(
-                  width: MediaQuery.sizeOf(changeContext).width/2,
-                  decoration: ShapeDecoration(
-                    shape: StadiumBorder(),
-                    gradient: LinearGradient(
-                      colors: colorElements,
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                    )
-                  ),
+                  width: MediaQuery.sizeOf(changeContext).width * 2 / 3,
                   child: ElevatedButton(
                     onPressed: (){
                       bool checkNewPass = newPassKey.currentState!.validate();
@@ -127,11 +123,13 @@ class _ChangePasswordState extends State<ChangePasswordScreen>{
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 2.0
                         ),
                       ),  
                     ),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.transparent,
+                      backgroundColor: ColorPalette().btnColor,
                     ),
                   )
                 ),

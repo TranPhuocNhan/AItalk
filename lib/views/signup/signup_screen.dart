@@ -1,13 +1,7 @@
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/gestures.dart';
-import 'package:flutter_ai_app/main.dart';
-import 'package:flutter_ai_app/views/login/login_screen.dart';
 import 'package:flutter_ai_app/views/signup/signup_input_group.dart';
 import 'package:flutter_ai_app/views/constant/Color.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 
 
 class SignUpScreen extends StatefulWidget{
@@ -38,6 +32,7 @@ class _SignupState extends State<SignUpScreen>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: ColorPalette().bgColor,
       body: Center(
         child: Padding(
           padding: EdgeInsets.all(20),
@@ -53,13 +48,14 @@ class _SignupState extends State<SignUpScreen>{
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 32,
+                      color: ColorPalette().headerColor
                     ),
                   ),
                   SizedBox(height: 20,),
                   SignupInputGroup(),
                 ],
               )),
-              //NAVIGATE TO SIGIN IN 
+              //NAVIGATE TO SIGN IN 
               Row(
                 mainAxisAlignment:MainAxisAlignment.spaceBetween,
                 children: [
@@ -85,14 +81,6 @@ class _SignupState extends State<SignUpScreen>{
         ),)
     );
   }
-
-  // void _launchUrl() async{
-  //   final Uri url = Uri.parse('https://flutter.dev');
-  //   if (!await launchUrl(url)) {
-  //     throw Exception('Could not launch $url');
-  //   }
-  // }
-
-  
+ 
 }
   
