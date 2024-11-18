@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ai_app/views/home/chat_bot_content_view.dart';
-import 'package:flutter_ai_app/views/home/knowledge_unit_view.dart';
+import 'package:flutter_ai_app/views/chat/chat_bot_content_view.dart';
+import 'package:flutter_ai_app/views/prompt/knowledge_unit_view.dart';
 import 'package:flutter_ai_app/widgets/asisstance_dialog.dart';
 import 'package:flutter_ai_app/widgets/knowledge_dialog.dart';
 import 'package:flutter_ai_app/widgets/unit_knowledge_dialog.dart';

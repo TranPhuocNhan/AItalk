@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ai_app/models/bot.dart';
-import 'package:flutter_ai_app/views/home/create_bot_view.dart';
+import 'package:flutter_ai_app/views/ai_bot/create_bot_view.dart';
 
 class AiBotListView extends StatefulWidget {
   AiBotListView({super.key});

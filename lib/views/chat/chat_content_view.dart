@@ -131,7 +131,7 @@ class _ChatContentViewState extends State<ChatContentView> {
                 : CrossAxisAlignment.start,
             children: [
               Text(
-                isUserMessage ? "You" : "Jarvis",
+                isUserMessage ? "You" : "AiTalk",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
@@ -180,7 +180,7 @@ class _ChatContentViewState extends State<ChatContentView> {
                 _userInput = value;
               },
               decoration: InputDecoration(
-                hintText: "Chat anything with Jarvis...",
+                hintText: "Chat anything with AiTalk...",
                 filled: true,
                 fillColor: Colors.black12,
                 border: OutlineInputBorder(
@@ -196,7 +196,7 @@ class _ChatContentViewState extends State<ChatContentView> {
               if (_userInput.isNotEmpty) {
                 setState(() {
                   _chatContent.add({"user": _userInput});
-                  _chatContent.add({"ai": "This is a response from Jarvis."});
+                  _chatContent.add({"ai": "This is a response from AiTalk."});
                 });
                 _controller.clear();
                 _userInput = "";

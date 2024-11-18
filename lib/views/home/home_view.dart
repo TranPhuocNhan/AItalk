@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ai_app/models/bot.dart';
 import 'package:flutter_ai_app/models/thread.dart';
-import 'package:flutter_ai_app/views/home/ai_bot_list_view.dart';
-import 'package:flutter_ai_app/views/home/chat_bot_content_view.dart';
-import 'package:flutter_ai_app/views/home/chat_content_view.dart';
-import 'package:flutter_ai_app/views/home/chat_view.dart';
-import 'package:flutter_ai_app/views/home/create_bot_view.dart';
-import 'package:flutter_ai_app/views/home/knowledge_unit_view.dart';
-import 'package:flutter_ai_app/views/home/nav_drawer.dart';
-import 'package:flutter_ai_app/views/home/prompt_library_screen.dart';
-import 'package:flutter_ai_app/views/home/publish_screen.dart';
-import 'package:flutter_ai_app/views/home/thread_chat_history_view.dart';
+import 'package:flutter_ai_app/views/ai_bot/ai_bot_list_view.dart';
+import 'package:flutter_ai_app/views/chat/chat_bot_content_view.dart';
+import 'package:flutter_ai_app/views/chat/chat_content_view.dart';
+import 'package:flutter_ai_app/views/chat/chat_view.dart';
+import 'package:flutter_ai_app/views/ai_bot/create_bot_view.dart';
+import 'package:flutter_ai_app/views/prompt/knowledge_unit_view.dart';
+import 'package:flutter_ai_app/widgets/nav_drawer.dart';
+import 'package:flutter_ai_app/views/prompt/prompt_library_screen.dart';
+import 'package:flutter_ai_app/views/prompt/publish_screen.dart';
+import 'package:flutter_ai_app/views/thread/thread_chat_history_view.dart';
+import 'package:flutter_ai_app/widgets/app_drawer.dart';
 import 'package:flutter_ai_app/widgets/create_prompt.dart';
 import 'package:flutter_ai_app/widgets/unit_knowledge_dialog.dart';
 import 'package:flutter_ai_app/widgets/upload_confluence_dialog.dart';
@@ -191,7 +192,9 @@ class _HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      drawer: NavDrawer(),
+      drawer: AppDrawer(
+        selected: 0,
+      ),
       body: Row(
         children: [
           Expanded(
