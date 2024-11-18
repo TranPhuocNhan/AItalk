@@ -1,6 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_ai_app/views/style/Color.dart';
+import 'package:flutter_ai_app/core/AuthService.dart';
+import 'package:flutter_ai_app/utils/providers/manageTokenProvider.dart';
+import 'package:flutter_ai_app/views/constant/Color.dart';
+import 'package:get_it/get_it.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AppDrawer extends StatefulWidget{
   late int selected ;
@@ -13,6 +18,9 @@ class AppDrawer extends StatefulWidget{
 
 class _AppDrawerState extends State<AppDrawer>{
   int selectedIndex = 2;
+  final AuthService authService = GetIt.instance<AuthService>();
+  var username = "";
+  var email = "";
 
   @override
   void initState() {
@@ -20,6 +28,7 @@ class _AppDrawerState extends State<AppDrawer>{
     super.initState();
     this.selectedIndex = widget.selected;
     print(selectedIndex);
+    setUserInformation();
   }
   void _onItemTapped(int index){
     setState(() {
@@ -28,7 +37,9 @@ class _AppDrawerState extends State<AppDrawer>{
   }
   @override
   Widget build(BuildContext context) {
+    final tokenManage = Provider.of<Managetokenprovider>(context);
     return Drawer(
+      backgroundColor: ColorPalette().bgColor,
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
@@ -38,7 +49,7 @@ class _AppDrawerState extends State<AppDrawer>{
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Image(image: AssetImage("images/logo.png"), height: 60,),
+                Image(image: AssetImage("images/full_logo.png"), height: 60,),
                 IconButton(
                   onPressed: (){
                     //DISPOSE DRAWER
@@ -115,11 +126,11 @@ class _AppDrawerState extends State<AppDrawer>{
             ),
           ),
           Divider(),
-
+          //USER INFORMATION
           Padding(
             padding: EdgeInsets.only(left: 10, right: 10,),
             child: Card(
-              color: Colors.blue.shade50,
+              color: Colors.lightGreen.shade50,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -133,13 +144,13 @@ class _AppDrawerState extends State<AppDrawer>{
                       child: Icon(Icons.person),
                     ),
                     title: Text(
-                      "FirstUser",
+                      username,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
                       ),
                     ),
-                    subtitle: Text("abc123@gmail.com"),
+                    subtitle: Text(email),
                   ),
                   Padding(padding: EdgeInsets.only(left: 20, right: 10),
                     child: Row(
@@ -158,10 +169,10 @@ class _AppDrawerState extends State<AppDrawer>{
                   Padding(
                     padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
                     child: LinearProgressIndicator(
-                      value: 40.0/50.0,
+                      value: tokenManage.getPercentage().toDouble(),
                       minHeight: 5,
                       color: ColorPalette().selectedItemOnDrawerColor,
-                      valueColor: AlwaysStoppedAnimation<Color>(ColorPalette().endLinear),
+                      valueColor: AlwaysStoppedAnimation<Color>(ColorPalette().btnColor),
                       borderRadius: BorderRadius.circular(10),
                     ),  
                   ),
@@ -170,8 +181,8 @@ class _AppDrawerState extends State<AppDrawer>{
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text("40"),
-                        Text("50"),
+                        Text(tokenManage.getRemainToken().toString()),
+                        Text(tokenManage.getTotalToken().toString()),
                       ],
                     ), 
                   )
@@ -180,9 +191,15 @@ class _AppDrawerState extends State<AppDrawer>{
             ),
           ),
 
+          //LOGOUT BUTTON
           Padding(padding: EdgeInsets.only(left: 10, right: 10),
             child: ElevatedButton(
-              onPressed: (){}, 
+              onPressed: () async{
+                var logoutResult = await authService.logoutAccount();
+                if(logoutResult){
+                  Navigator.pushNamed(context, '/login');
+                }
+              }, 
               child: Text(
                 "Logout",
                 style: TextStyle(
@@ -200,6 +217,28 @@ class _AppDrawerState extends State<AppDrawer>{
         ],
       ),
     );
+  }
+
+  void setUserInformation() async{
+    print("ENTER SET USER INFORMATION");
+    //get user name and email and remain token 
+    final prefs = await SharedPreferences.getInstance();
+    var name = await prefs.getString('currentUser');
+    var mail = await prefs.getString('currentEmail');
+    setState(() {
+      username = name!;
+      email = mail!;
+    });
+
+  }
+
+  void handleLogoutAction() async{
+    var result = await authService.logoutAccount();
+    if(result == true){
+      Navigator.pushNamed(context, "/login");
+    }else{
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Failed to logout")));
+    }
   }
   
 }

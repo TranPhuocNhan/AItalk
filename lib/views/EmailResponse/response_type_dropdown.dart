@@ -2,7 +2,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ai_app/views/EmailResponse/type_item.dart';
-import 'package:flutter_ai_app/views/style/Color.dart';
+import 'package:flutter_ai_app/views/constant/Color.dart';
 
 class ResponseTypeDropdown extends StatefulWidget{
   @override
@@ -52,7 +52,7 @@ class _ResponseTypeState extends State<ResponseTypeDropdown> {
     buttonStyleData: ButtonStyleData(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5),
-        color: ColorPalette().btnColor.withOpacity(0.2),
+        color: ColorPalette().iconColor.withOpacity(0.2),
         
       )
 

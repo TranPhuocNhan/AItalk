@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_ai_app/views/style/Color.dart';
+import 'package:flutter_ai_app/views/constant/Color.dart';
 
 class VerifyEmailScreen extends StatefulWidget{
   late BuildContext verContext;
@@ -17,7 +17,6 @@ class _VerifyEmailState extends State<VerifyEmailScreen>{
   late BuildContext verContext;
   late String sentEmail ;
   List<TextEditingController> controllers = List.generate(4, (index) => TextEditingController());
-  final colorElements = <Color>[ColorPalette().startLinear, ColorPalette().endLinear];
 
   @override
   void initState() {
@@ -29,16 +28,23 @@ class _VerifyEmailState extends State<VerifyEmailScreen>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: ColorPalette().bgColor,
       appBar: AppBar(
+        backgroundColor: ColorPalette().bgColor,
         leading: IconButton(
           onPressed: (){
             Navigator.pop(context);
           }, 
-          icon: Icon(Icons.arrow_back_ios_new_rounded)),
+          icon: Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: ColorPalette().headerColor,
+          )
+        ),
         title: Text(
           "Verify Email",
           style: TextStyle(
             fontWeight: FontWeight.bold,
+            color: ColorPalette().headerColor
           ),
         ),
       ),
@@ -60,7 +66,7 @@ class _VerifyEmailState extends State<VerifyEmailScreen>{
                       height: 200,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: ColorPalette().startLinear.withOpacity(0.1)
+                        color: ColorPalette().bigIcon.withOpacity(0.1)
                       ),
                     ),
                     Container(
@@ -68,7 +74,7 @@ class _VerifyEmailState extends State<VerifyEmailScreen>{
                       height: 200,
                       child: Icon(
                         Icons.mark_email_read_rounded,
-                        color: ColorPalette().endLinear,
+                        color: ColorPalette().bigIcon,
                         size: 100,  
                       ),
                     )
@@ -113,7 +119,7 @@ class _VerifyEmailState extends State<VerifyEmailScreen>{
                           counterText: '',
                           border: OutlineInputBorder(
                             borderSide: BorderSide(
-                              color: ColorPalette().btnColor,
+                              color: ColorPalette().iconColor,
                             )
                           )
                         ),
@@ -140,15 +146,7 @@ class _VerifyEmailState extends State<VerifyEmailScreen>{
                 width: double.infinity,
                 alignment: Alignment.center,
                 child: Container(
-                  width: MediaQuery.sizeOf(context).width/2,
-                  decoration: ShapeDecoration(
-                    shape: StadiumBorder(),
-                    gradient: LinearGradient(
-                      colors: colorElements,
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                    )
-                  ),
+                  width: MediaQuery.sizeOf(context).width * 2 / 3,
                   child: ElevatedButton(
                     onPressed: (){
                       Navigator.pushNamed(context, '/changePass');
@@ -160,11 +158,13 @@ class _VerifyEmailState extends State<VerifyEmailScreen>{
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 2.0
                         ),
                       ),
                     ),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.transparent,
+                      backgroundColor: ColorPalette().btnColor,
                     ),
                   ),
                 ),
