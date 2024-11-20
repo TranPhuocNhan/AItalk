@@ -1,55 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ai_app/models/bot.dart';
-import 'package:flutter_ai_app/models/thread.dart';
+import 'package:flutter_ai_app/core/models/chat/conversation.dart';
+import 'package:flutter_ai_app/utils/providers/chatProvider.dart';
 import 'package:flutter_ai_app/views/home/home_view.dart';
-import 'package:flutter_ai_app/widgets/ai_selection_dropdown.dart';
 import 'package:flutter_ai_app/widgets/tools_section.dart';
+import 'package:provider/provider.dart';
 
 class ChatContentView extends StatefulWidget {
-  ChatContentView(
-      {super.key,
-      required this.onAddPressed,
-      required this.onAiSelectedChange,
-      required this.selectedThread,
-      required this.selectedAiModel,
-      required this.botList});
-  final Function(String) onAiSelectedChange;
+  ChatContentView({super.key, required this.onAddPressed});
   final VoidCallback onAddPressed;
-  ThreadChat? selectedThread;
-  String? selectedAiModel;
-  List<Bot> botList;
+
   @override
   State<ChatContentView> createState() => _ChatContentViewState();
 }
 
 class _ChatContentViewState extends State<ChatContentView> {
-  String _userInput = "";
   final TextEditingController _controller = TextEditingController();
-  late List<Map<String, String>> _chatContent = widget.selectedThread!.messages;
-
-  @override
-  void initState() {
-    super.initState();
-    if (widget.selectedThread != null) {
-      _chatContent = widget.selectedThread!.messages;
-    } else {
-      _chatContent = [];
-    }
-  }
-
-  @override
-  void didUpdateWidget(ChatContentView oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    // Cập nhật nội dung chat khi selectedThread thay đổi
-    if (widget.selectedThread != oldWidget.selectedThread) {
-      setState(() {
-        _chatContent = widget.selectedThread?.messages ?? [];
-      });
-    }
-  }
+  List<Conversation>? _listConversationContent;
 
   @override
   Widget build(BuildContext context) {
+    final chatProvider = Provider.of<ChatProvider>(context);
+
+    _listConversationContent = chatProvider.listConversationContent;
+
     return Scaffold(
       appBar: AppBar(),
       body: Column(
@@ -60,16 +33,11 @@ class _ChatContentViewState extends State<ChatContentView> {
                 color: Colors.white,
                 borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
               ),
-              child: _buildMessageList(),
+              child: _buildMessageList(chatProvider),
             ),
           ),
-          ToolsSection(
-            selectedAiModel: widget.selectedAiModel,
-            onAiSelectedChange: (newModel) =>
-                widget.onAiSelectedChange(newModel),
-            botList: widget.botList,
-          ),
-          _buildInputArea(),
+          ToolsSection(),
+          _buildInputArea(chatProvider),
         ],
       ),
     );
@@ -105,54 +73,77 @@ class _ChatContentViewState extends State<ChatContentView> {
     );
   }
 
-  Widget _buildMessageList() {
+  Widget _buildMessageList(ChatProvider chatProvider) {
+    if (_listConversationContent == null || _listConversationContent!.isEmpty) {
+      return Center(child: Text("No conversations available."));
+    }
+
     return ListView.builder(
-      itemCount: _chatContent.length,
+      itemCount: _listConversationContent?.length ?? 0,
       itemBuilder: (context, index) {
-        return _buildChatItem(index);
+        return _buildChatItem(index, chatProvider);
       },
     );
   }
 
-  Widget _buildChatItem(int index) {
-    bool isUserMessage = _chatContent[index].containsKey('user');
+  Widget _buildChatItem(int index, ChatProvider chatProvider) {
+    final conversation = _listConversationContent![index];
+
+    return Column(
+      children: [
+        if (conversation.query != null)
+          _buildMessageCard("You", conversation.query ?? "", true),
+        if (conversation.answer != null)
+          _buildMessageCard(chatProvider.selectedAssistant ?? "AiTalk",
+              conversation.answer ?? "", false),
+      ],
+    );
+  }
+
+  Widget _buildMessageCard(String role, String content, bool isUserMessage) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-      child: Card(
-        color: isUserMessage ? Colors.grey[200] : Colors.grey[200],
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Column(
-            crossAxisAlignment: isUserMessage
-                ? CrossAxisAlignment.start
-                : CrossAxisAlignment.start,
-            children: [
-              Text(
-                isUserMessage ? "You" : "AiTalk",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
+      padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 16.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Flexible(
+            child: Card(
+              color: isUserMessage ? Colors.grey[200] : Colors.grey[300],
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Container(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      role,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      content,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(height: 4),
-              Text(
-                _chatContent[index][isUserMessage ? 'user' : 'ai']!,
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 16,
-                ),
-              ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
 
-  Widget _buildInputArea() {
+  Widget _buildInputArea(ChatProvider chatProvider) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Row(
@@ -161,7 +152,7 @@ class _ChatContentViewState extends State<ChatContentView> {
               icon: const Icon(Icons.add, color: Colors.grey),
               onSelected: (value) {
                 if (value == 'Add') {
-                  widget.onAddPressed();
+                  chatProvider.newChat();
                 }
               },
               itemBuilder: (BuildContext context) => [
@@ -176,9 +167,7 @@ class _ChatContentViewState extends State<ChatContentView> {
           Expanded(
             child: TextField(
               controller: _controller,
-              onChanged: (value) {
-                _userInput = value;
-              },
+              onChanged: (value) {},
               decoration: InputDecoration(
                 hintText: "Chat anything with AiTalk...",
                 filled: true,
@@ -193,15 +182,8 @@ class _ChatContentViewState extends State<ChatContentView> {
           IconButton(
             icon: const Icon(Icons.send, color: Colors.grey),
             onPressed: () {
-              if (_userInput.isNotEmpty) {
-                setState(() {
-                  _chatContent.add({"user": _userInput});
-                  _chatContent.add({"ai": "This is a response from AiTalk."});
-                });
-                _controller.clear();
-                _userInput = "";
-                print("Send Message is pressed!");
-              }
+              print("Send Message is pressed!");
+              chatProvider.sendMessage(_controller.text);
             },
           ),
         ],

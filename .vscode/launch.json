@@ -4,13 +4,13 @@
     
     {
       "name": "C/C++ Runner: Debug Session",
-      "type": "cppdbg",
+      "type": "dart",
       "request": "launch",
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
       "cwd": ".",
-      "program": "build/Debug/outDebug",
+      "program": "lib/main.dart",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [

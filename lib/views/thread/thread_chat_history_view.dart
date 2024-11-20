@@ -1,17 +1,37 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ai_app/models/thread.dart';
+import 'package:flutter_ai_app/core/models/chat/conversation_thread.dart';
+import 'package:flutter_ai_app/utils/providers/chatProvider.dart';
+import 'package:provider/provider.dart';
 
 class ThreadChatHistory extends StatefulWidget {
-  final List<ThreadChat> threadChat;
-  final Function(ThreadChat) onThreadSelected;
-  const ThreadChatHistory(
-      {super.key, required this.threadChat, required this.onThreadSelected});
+  const ThreadChatHistory({super.key});
   @override
   State<ThreadChatHistory> createState() => _ThreadChatHistoryState();
 }
 
 class _ThreadChatHistoryState extends State<ThreadChatHistory> {
+  List<ConversationThread>? conversationThreads;
+
+  @override
+  void initState() {
+    super.initState();
+    // Gọi hàm getConversationThread khi widget khởi tạo
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      print("Fetching conversation threads..."); // Debug
+      _fetchConversationThreads();
+    });
+  }
+
+  void _fetchConversationThreads() async {
+    final chatProvider = Provider.of<ChatProvider>(context, listen: false);
+    await chatProvider.getConversationThread(); // Gọi hàm
+  }
+
+  @override
   Widget build(BuildContext context) {
+    ChatProvider chatProvider = Provider.of<ChatProvider>(context);
+    conversationThreads = chatProvider.conversationThreads;
+
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -21,13 +41,17 @@ class _ThreadChatHistoryState extends State<ThreadChatHistory> {
 
           // Conversation list
           Expanded(
-            child: ListView.builder(
-              itemCount: widget.threadChat.length,
-              itemBuilder: (context, index) {
-                final thread = widget.threadChat[index];
-                return _buildConversationItem(thread);
-              },
-            ),
+            child: conversationThreads == null
+                ? Center(
+                    child:
+                        CircularProgressIndicator()) // Hiển thị loading khi đang fetch
+                : ListView.builder(
+                    itemCount: conversationThreads?.length ?? 0,
+                    itemBuilder: (context, index) {
+                      final thread = conversationThreads?[index];
+                      return _buildConversationItem(thread!, chatProvider);
+                    },
+                  ),
           ),
         ],
       ),
@@ -54,40 +78,45 @@ class _ThreadChatHistoryState extends State<ThreadChatHistory> {
   }
 
   // Conversation item
-  Widget _buildConversationItem(ThreadChat thread) {
+  Widget _buildConversationItem(
+      ConversationThread thread, ChatProvider chatProvider) {
+    String formattedDate = '';
+    final isSelected = thread.id == chatProvider.selectedThreadId;
+
+    if (thread.createdAt != null) {
+      DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(
+        thread.createdAt! * 1000, // Convert seconds to milliseconds
+        isUtc: true,
+      );
+
+      // Tự định dạng ngày giờ
+      formattedDate =
+          '${dateTime.year}-${_twoDigits(dateTime.month)}-${_twoDigits(dateTime.day)} '
+          '${_twoDigits(dateTime.hour)}:${_twoDigits(dateTime.minute)}:${_twoDigits(dateTime.second)}';
+    }
     return Card(
-      color: Colors.white,
+      color: isSelected
+          ? Colors.blue[50]
+          : Colors.white, // Highlight nếu được chọn
       child: ListTile(
         contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-        leading: thread.status == 'current'
-            ? Container(
-                padding: EdgeInsets.all(6),
-                decoration: BoxDecoration(
-                  color: Colors.black,
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                child: Text(
-                  'Current',
-                  style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold),
-                ),
-              )
-            : null,
-        title: Text(thread.title ?? ''),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(thread.description ?? ''),
-            SizedBox(height: 5),
-            // Text(conversation['file'] ?? '',
-            //     style: TextStyle(color: Colors.blue)),
-          ],
+        title: Text(
+          thread.title ?? '',
+          style: TextStyle(
+            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+            color: isSelected ? Colors.blue : Colors.black,
+          ),
         ),
-        trailing: Text(thread.time.toString() ?? DateTime.now().toString()),
+        trailing: Text(formattedDate),
         onTap: () {
-          widget.onThreadSelected(thread);
+          chatProvider.onThreadSelected(thread.id ?? '');
+          print("Current selectedThreadId: ${thread.id}");
         },
       ),
     );
+  }
+
+  String _twoDigits(int n) {
+    return n.toString().padLeft(2, '0');
   }
 }

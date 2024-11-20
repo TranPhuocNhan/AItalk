@@ -1,40 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ai_app/models/bot.dart';
+import 'package:flutter_ai_app/utils/providers/chatProvider.dart';
+import 'package:provider/provider.dart';
 
 class AiSelectionDropdown extends StatefulWidget {
-  AiSelectionDropdown(
-      {super.key,
-      required this.selectedAiModel,
-      required this.onAiSelectedChange,
-      required this.botList});
-  List<Bot> botList;
-  String? selectedAiModel;
-  final Function(String) onAiSelectedChange;
+  AiSelectionDropdown({super.key});
+
   @override
   State<AiSelectionDropdown> createState() => _AiSelectionDropdownState();
 }
 
 class _AiSelectionDropdownState extends State<AiSelectionDropdown> {
-  String _selectedAiModel = "GPT-3.5 Turbo";
-
-  @override
-  void initState() {
-    super.initState();
-    _selectedAiModel = widget.selectedAiModel ?? _selectedAiModel;
-  }
-
-  @override
-  void didUpdateWidget(covariant AiSelectionDropdown oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.selectedAiModel != oldWidget.selectedAiModel) {
-      setState(() {
-        _selectedAiModel = widget.selectedAiModel ?? _selectedAiModel;
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
+    final chatProvider = Provider.of<ChatProvider>(context);
+    final selectedAssistant = chatProvider.selectedAssistant;
+    final assistants = chatProvider.assistants;
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -47,7 +28,7 @@ class _AiSelectionDropdownState extends State<AiSelectionDropdown> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    _selectedAiModel,
+                    selectedAssistant ?? "gpt-4o",
                     style: TextStyle(fontSize: 16, color: Colors.white),
                   ),
                   Icon(Icons.arrow_drop_down, color: Colors.white),
@@ -55,17 +36,13 @@ class _AiSelectionDropdownState extends State<AiSelectionDropdown> {
               ),
             ),
             onSelected: (value) {
-              setState(() {
-                _selectedAiModel = value;
-                widget.selectedAiModel = _selectedAiModel;
-                widget.onAiSelectedChange(_selectedAiModel);
-              });
+              chatProvider.selectAssistant(value);
             },
             itemBuilder: (BuildContext context) {
-              return widget.botList.map((bot) {
-                bool isSelected = bot.name == _selectedAiModel;
+              return assistants.map((assistant) {
+                bool isSelected = assistant.name == selectedAssistant;
                 return PopupMenuItem<String>(
-                  value: bot.name,
+                  value: assistant.name,
                   child: Container(
                     color: isSelected
                         ? Colors.grey.withOpacity(0.5)
@@ -75,7 +52,7 @@ class _AiSelectionDropdownState extends State<AiSelectionDropdown> {
                         Icon(Icons.abc, color: Colors.red),
                         SizedBox(width: 10),
                         Text(
-                          bot.name,
+                          assistant.name,
                           style: TextStyle(
                             color: isSelected
                                 ? Colors.white

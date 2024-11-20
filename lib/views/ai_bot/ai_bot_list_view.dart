@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ai_app/models/bot.dart';
+import 'package:flutter_ai_app/core/models/assistant.dart';
+import 'package:flutter_ai_app/utils/providers/chatProvider.dart';
 import 'package:flutter_ai_app/views/ai_bot/create_bot_view.dart';
+import 'package:provider/provider.dart';
 
 class AiBotListView extends StatefulWidget {
   AiBotListView({super.key});
@@ -11,21 +13,8 @@ class AiBotListView extends StatefulWidget {
 
 class AiBotListViewState extends State<AiBotListView> {
   TextEditingController _controller = TextEditingController();
-
-  final List<Bot> botList = [
-    Bot(name: 'GPT 4', iconPath: 'assets/gpt4_icon.png', isPinned: false),
-    Bot(name: 'Gemini', iconPath: 'assets/gemini_icon.png', isPinned: true),
-    Bot(
-        name: 'Claude-Instant-100k',
-        iconPath: 'assets/claude_icon.png',
-        isPinned: true),
-    Bot(
-        name: 'Writing Agent',
-        iconPath: 'assets/writing_icon.png',
-        isPinned: false),
-    // Add more bots here
-  ];
-  List<Bot> _filterBotList = [];
+  List<Assistant> _assistants = [];
+  List<Assistant> _filterAssistants = [];
   String selectedCategory = "All";
   final List<String> categories = [
     'All',
@@ -39,9 +28,9 @@ class AiBotListViewState extends State<AiBotListView> {
   void _onSearchChanged(String value) {
     setState(() {
       if (value.isEmpty) {
-        _filterBotList = botList;
+        _filterAssistants = _assistants;
       } else {
-        _filterBotList = botList
+        _filterAssistants = _assistants
             .where(
                 (bot) => bot.name.toLowerCase().contains(value.toLowerCase()))
             .toList();
@@ -53,11 +42,12 @@ class AiBotListViewState extends State<AiBotListView> {
   void initState() {
     super.initState();
     // Initialize the filtered list with all bots at first
-    _filterBotList = botList;
+    _filterAssistants = _assistants;
   }
 
   @override
   Widget build(BuildContext context) {
+    ChatProvider chatProvider = Provider.of<ChatProvider>(context);
     return Scaffold(
         floatingActionButton: FloatingActionButton(
           onPressed: () {
@@ -77,10 +67,10 @@ class AiBotListViewState extends State<AiBotListView> {
             _buildCategoryList(),
             Expanded(
               child: ListView.builder(
-                  itemCount: _filterBotList.length,
+                  itemCount: _filterAssistants.length,
                   itemBuilder: (context, index) {
-                    final bot = _filterBotList[index];
-                    return _buildBotItem(bot);
+                    final assistant = _filterAssistants[index];
+                    return _buildBotItem(assistant);
                   }),
             ),
           ],
@@ -122,22 +112,22 @@ class AiBotListViewState extends State<AiBotListView> {
     );
   }
 
-  Widget _buildBotItem(Bot bot) {
+  Widget _buildBotItem(Assistant assistant) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
       child: Card(
         margin: EdgeInsets.symmetric(vertical: 8),
         child: ListTile(
-          leading: CircleAvatar(
-            backgroundImage: AssetImage(bot.iconPath),
-          ),
-          title: Text(bot.name),
-          trailing: bot.isPinned
-              ? Icon(
-                  Icons.push_pin,
-                  color: Colors.blue,
-                )
-              : Icon(Icons.check_circle),
+          // leading: CircleAvatar(
+          //   backgroundImage: AssetImage(bot.iconPath),
+          // ),
+          title: Text(assistant.name),
+          // trailing: assistant.isPinned
+          //     ? Icon(
+          //         Icons.push_pin,
+          //         color: Colors.blue,
+          //       )
+          //     : Icon(Icons.check_circle),
         ),
       ),
     );

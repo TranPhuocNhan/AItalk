@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ai_app/models/bot.dart';
 import 'package:flutter_ai_app/widgets/ai_search_section.dart';
 import 'package:flutter_ai_app/widgets/ai_section.dart';
 import 'package:flutter_ai_app/widgets/chat_section.dart';
@@ -8,16 +7,7 @@ import 'package:flutter_ai_app/widgets/tools_section.dart';
 import 'package:flutter_ai_app/widgets/upload_and_writing_agent_section.dart';
 
 class ChatView extends StatelessWidget {
-  final VoidCallback onSendMessage;
-  String? selectedAiModel;
-  final Function(String) onAiSelectedChange;
-  List<Bot> botList;
-  ChatView(
-      {super.key,
-      required this.onSendMessage,
-      required this.selectedAiModel,
-      required this.onAiSelectedChange,
-      required this.botList});
+  ChatView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -42,12 +32,8 @@ class ChatView extends StatelessWidget {
                 AISearchSection(),
                 UpLoadAndWritingAgentSection(),
                 FreeUnlimitedSection(),
-                ToolsSection(
-                  selectedAiModel: selectedAiModel,
-                  onAiSelectedChange: onAiSelectedChange,
-                  botList: botList,
-                ),
-                ChatSection(onSendMessage: onSendMessage),
+                ToolsSection(),
+                ChatSection(),
               ],
             ),
           ),

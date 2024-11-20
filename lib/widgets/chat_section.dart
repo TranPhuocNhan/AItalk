@@ -1,44 +1,51 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ai_app/core/models/chat/assistant_dto.dart';
+import 'package:flutter_ai_app/core/models/chat/chat_message.dart';
+import 'package:flutter_ai_app/utils/assistant_map.dart';
+import 'package:flutter_ai_app/utils/providers/chatProvider.dart';
+import 'package:provider/provider.dart';
 
 class ChatSection extends StatefulWidget {
-  final VoidCallback onSendMessage;
-
-  const ChatSection({super.key, required this.onSendMessage});
+  const ChatSection({super.key});
 
   @override
   State<ChatSection> createState() => _ChatSectionState();
 }
 
 class _ChatSectionState extends State<ChatSection> {
-  final List<Map<String, dynamic>> _message = [];
   final TextEditingController _controller = TextEditingController();
 
-  void _sendMessage() {
-    if (_controller.text.isNotEmpty) {
-      setState(() {
-        _message.add({
-          'message': _controller.text,
-          'isSender': true,
-        });
-        _controller.clear();
-        widget.onSendMessage();
-      });
+  void _sendMessage(ChatProvider chatProvider) {
+    final messageContent = _controller.text;
+    if (messageContent.isNotEmpty) {
+      final message = ChatMessage(
+        assistant: AssistantDTO(
+            id: assistantMap[chatProvider.selectedAssistant] ?? "gpt-4o-mini",
+            model: 'dify',
+            name: chatProvider.selectedAssistant),
+        role: "user",
+        content: messageContent,
+      );
+      chatProvider.sendFirstMessage(message);
+      _controller.clear();
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final chatProvider = Provider.of<ChatProvider>(context);
+
     return Column(
       children: [
         // Expanded(
         //   child: _buildMessageList(),
         // ),
-        _buildInputArea(),
+        _buildInputArea(chatProvider),
       ],
     );
   }
 
-  Widget _buildInputArea() {
+  Widget _buildInputArea(ChatProvider chatProvider) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       child: Row(
@@ -70,7 +77,7 @@ class _ChatSectionState extends State<ChatSection> {
           IconButton(
             onPressed:
                 // Handle Send Icon
-                _sendMessage,
+                () => _sendMessage(chatProvider),
             icon: const Icon(Icons.send),
           ),
         ],
