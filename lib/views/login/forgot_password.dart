@@ -1,6 +1,8 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_ai_app/views/login/verify_email.dart';
-import 'package:flutter_ai_app/views/style/Color.dart';
+import 'package:flutter_ai_app/views/constant/Color.dart';
 
 class ForgotPasswordScreen extends StatefulWidget{
   late BuildContext forgotCtx;
@@ -28,17 +30,23 @@ class _ForgotPasswordState extends State<ForgotPasswordScreen>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: ColorPalette().bgColor,
       appBar: AppBar(
+        backgroundColor: ColorPalette().bgColor,
         leading: IconButton(
           onPressed: (){
             Navigator.pop(context);
           }, 
-          icon: Icon(Icons.arrow_back_ios_new_rounded)
+          icon: Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: ColorPalette().headerColor,  
+          )
         ),
         title: Text(
           "Forgot Password",
           style: TextStyle(
             fontWeight: FontWeight.bold,
+            color: ColorPalette().headerColor,
           ),  
         ),
       ),
@@ -60,7 +68,7 @@ class _ForgotPasswordState extends State<ForgotPasswordScreen>{
                       height: 200,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: ColorPalette().startLinear.withOpacity(0.1)
+                        color: ColorPalette().bigIcon.withOpacity(0.1)
                       ),
                     ),
                     Container(
@@ -68,7 +76,7 @@ class _ForgotPasswordState extends State<ForgotPasswordScreen>{
                       height: 200,
                       child: Icon(
                         Icons.lock_clock_outlined,
-                        color: ColorPalette().endLinear,
+                        color: ColorPalette().bigIcon,
                         size: 100,  
                       ),
                     )
@@ -98,7 +106,7 @@ class _ForgotPasswordState extends State<ForgotPasswordScreen>{
                     label: Text("Email Address"),
                     focusedBorder: UnderlineInputBorder(
                       borderSide: BorderSide(
-                        color: ColorPalette().btnColor
+                        color: ColorPalette().iconColor
                       )  
                     )
                   ),
@@ -110,19 +118,10 @@ class _ForgotPasswordState extends State<ForgotPasswordScreen>{
                 width: double.infinity,
                 alignment: Alignment.center,
                 child: Container(
-                  width: MediaQuery.sizeOf(forgotContext).width/2,
-                  decoration: ShapeDecoration(
-                    shape: StadiumBorder(),
-                    gradient: LinearGradient(
-                      colors: colorElements,
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                    )
-                  ),
+                  width: MediaQuery.sizeOf(forgotContext).width * 2 / 3 ,
                   child: ElevatedButton(
                     onPressed: (){
                       //HANDLE SEND EMAIL ACTION
-                      // Navigator.pushNamed(context, "/verifyEmail");
                       Navigator.push(context, MaterialPageRoute(builder: (forgotContext) => VerifyEmailScreen(context: context, email: controller.value.text)));
                     }, 
                     child: Padding(
@@ -132,11 +131,13 @@ class _ForgotPasswordState extends State<ForgotPasswordScreen>{
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 2.0
                         ),
                       ),
                     ),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.transparent,
+                      backgroundColor: ColorPalette().btnColor,
                     ),
                     ),
                 ),

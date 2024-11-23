@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_ai_app/views/style/Color.dart';
+import 'package:flutter_ai_app/views/constant/Color.dart';
 
 class GroupTypeButton extends StatefulWidget{
   @override
@@ -23,7 +23,7 @@ class _GroupTypeState extends State<GroupTypeButton> {
         children: [
           ToggleButtons(
               isSelected: selectedRow1,
-              selectedColor: ColorPalette().btnColor,
+              selectedColor: ColorPalette().iconColor,
               onPressed: (int index){
                 setState(() {
                   for(int i = 0; i < selectedRow1.length; ++i){
@@ -52,7 +52,7 @@ class _GroupTypeState extends State<GroupTypeButton> {
             ),
             ToggleButtons(
               isSelected: selectedRow2,
-              selectedColor: ColorPalette().btnColor,
+              selectedColor: ColorPalette().iconColor,
 
               onPressed: (int index){
                 setState(() {
@@ -111,7 +111,7 @@ class _GroupTypeState extends State<GroupTypeButton> {
       }, 
       style: OutlinedButton.styleFrom(
         padding: EdgeInsets.all(8),
-        backgroundColor: (group == 1) ? (selectedRow1[index] == true ? ColorPalette().btnColor : Colors.white) : (selectedRow2[index] == true ? ColorPalette().btnColor : Colors.white),
+        backgroundColor: (group == 1) ? (selectedRow1[index] == true ? ColorPalette().iconColor : Colors.white) : (selectedRow2[index] == true ? ColorPalette().iconColor : Colors.white),
         foregroundColor: (group == 1) ? (selectedRow1[index] == true ? Colors.white : Colors.black) : (selectedRow2[index] == true ? Colors.white : Colors.black)
       ),
       child: Row(

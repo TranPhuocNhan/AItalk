@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ai_app/views/style/Color.dart';
+import 'package:flutter_ai_app/views/constant/Color.dart';
 
 class ResetInputBox extends StatefulWidget{
   late TextEditingController resetController ;
@@ -69,8 +69,8 @@ class _ResetInputState extends State<ResetInputBox>{
                   isVisibility = !isVisibility;
                 });
               },
-              icon: (!isVisibility ? Icon(Icons.visibility_off, color: ColorPalette().btnColor,) : Icon(Icons.visibility, color: ColorPalette().btnColor,))),
-            focusColor: ColorPalette().btnColor,
+              icon: (!isVisibility ? Icon(Icons.visibility_off, color: ColorPalette().iconColor,) : Icon(Icons.visibility, color: ColorPalette().iconColor,))),
+            focusColor: ColorPalette().iconColor,
           ),
           keyboardType: TextInputType.visiblePassword,
           obscureText: !isVisibility,

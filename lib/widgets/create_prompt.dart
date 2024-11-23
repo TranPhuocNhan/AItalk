@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ai_app/features/prompt/presentation/prompt_provider.dart';
+import 'package:provider/provider.dart';
 
 class PromptForm extends StatefulWidget {
   @override
@@ -11,19 +13,28 @@ class _PromptFormState extends State<PromptForm> {
   final TextEditingController promptController = TextEditingController();
   final TextEditingController languageController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
-  String? selectedCategory;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildToggleButton(),
-          SizedBox(height: 10),
-          isPublicPrompt ? _buildPublicPrompt() : _buildPrivatePrompt(),
-        ],
+    final promptProvider = Provider.of<PromptProvider>(context);
+
+    return AlertDialog(
+      contentPadding: EdgeInsets.all(16),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+      title: Text('Create Prompt'),
+      content: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildToggleButton(),
+            SizedBox(height: 10),
+            isPublicPrompt
+                ? _buildPublicPrompt(promptProvider)
+                : _buildPrivatePrompt(promptProvider),
+          ],
+        ),
       ),
     );
   }
@@ -59,11 +70,11 @@ class _PromptFormState extends State<PromptForm> {
     );
   }
 
-  Widget _buildPublicPrompt() {
-    return _buildPromptFields();
+  Widget _buildPublicPrompt(PromptProvider promptProvider) {
+    return _buildPromptFields(promptProvider);
   }
 
-  Widget _buildPrivatePrompt() {
+  Widget _buildPrivatePrompt(PromptProvider promptProvider) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -87,19 +98,18 @@ class _PromptFormState extends State<PromptForm> {
           ),
         ),
         SizedBox(height: 20),
-        _buildPromptFields(), // Reuse prompt fields
+        _buildPromptFields(promptProvider),
       ],
     );
   }
 
-  Widget _buildPromptFields() {
+  Widget _buildPromptFields(PromptProvider promptProvider) {
     return Column(
       children: [
         TextFormField(
-          controller: isPublicPrompt ? languageController : nameController,
+          controller: languageController,
           decoration: InputDecoration(
-            labelText:
-                isPublicPrompt ? "Prompt Language" : "Name of the prompt",
+            labelText: "Prompt Language",
             border: OutlineInputBorder(),
           ),
         ),
@@ -117,16 +127,14 @@ class _PromptFormState extends State<PromptForm> {
             labelText: "Category",
             border: OutlineInputBorder(),
           ),
-          items: ["Other", "Story", "Essay", "Pro tips"]
+          items: promptProvider.categories
               .map((category) => DropdownMenuItem(
                     value: category,
                     child: Text(category),
                   ))
               .toList(),
           onChanged: (value) {
-            setState(() {
-              selectedCategory = value as String?;
-            });
+            promptProvider.updateSelectedCategory(value as String);
           },
         ),
         SizedBox(height: 20),
@@ -155,6 +163,7 @@ class _PromptFormState extends State<PromptForm> {
             TextButton(
               onPressed: () {
                 // Handle Cancel action
+                Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text("Cancelled")),
                 );
@@ -164,6 +173,15 @@ class _PromptFormState extends State<PromptForm> {
             SizedBox(width: 10),
             ElevatedButton(
               onPressed: () {
+                final data = {
+                  "category": promptProvider.selectedCategory,
+                  "content": promptController.text,
+                  "description": descriptionController.text,
+                  "isPublic": isPublicPrompt,
+                  "language": languageController.text,
+                  "title": nameController.text,
+                };
+                Navigator.pop(context, data);
                 // Handle Save action
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text("Saved")),

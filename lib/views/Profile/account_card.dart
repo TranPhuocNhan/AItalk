@@ -1,16 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ai_app/core/AuthService.dart';
 import 'package:flutter_ai_app/views/login/verify_email.dart';
-import 'package:flutter_ai_app/views/style/Color.dart';
+import 'package:flutter_ai_app/views/constant/Color.dart';
+import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AccountCard extends StatefulWidget{
   @override
   State<StatefulWidget> createState() => _AccountCardState();
 }
 class _AccountCardState extends State<AccountCard>{
+  
+  final AuthService authService = GetIt.instance<AuthService>();
+  var username = "";
+  var email = "";
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setUserInformation();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Colors.blue.shade50,
+      color: Colors.lightGreen.shade50,
       child: Padding(
         padding: EdgeInsets.all(0),
         child: Column(
@@ -25,13 +39,13 @@ class _AccountCardState extends State<AccountCard>{
                 child: Icon(Icons.person),
               ),
               title: Text(
-                "FirstUser",
+                username,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
                 ),
               ),
-              subtitle: Text("abc123@gmail.com"),
+              subtitle: Text(email),
             ),
             Divider(),
             GestureDetector(
@@ -61,9 +75,11 @@ class _AccountCardState extends State<AccountCard>{
             ),
             Divider(),
             GestureDetector(
-              onTap: (){
-                //LOGOUT ACCOUNT
-                //[...]
+              onTap: () async{
+                var logoutResult = await authService.logoutAccount();
+                if(logoutResult){
+                  Navigator.pushNamed(context, '/login');
+                }
               },
               child: ListTile(
                 leading: Container(
@@ -91,6 +107,19 @@ class _AccountCardState extends State<AccountCard>{
         ),  
       ),
     );
+  }
+  
+  void setUserInformation() async{
+    print("ENTER SET USER INFORMATION");
+    //get user name and email and remain token 
+    final prefs = await SharedPreferences.getInstance();
+    var name = await prefs.getString('currentUser');
+    var mail = await prefs.getString('currentEmail');
+    setState(() {
+      username = name!;
+      email = mail!;
+    });
+
   }
   
 }

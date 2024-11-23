@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ai_app/views/Profile/account_card.dart';
 import 'package:flutter_ai_app/views/Profile/token_usage_card.dart';
-import 'package:flutter_ai_app/views/style/Color.dart';
+import 'package:flutter_ai_app/views/constant/Color.dart';
 import 'package:flutter_ai_app/widgets/app_drawer.dart';
 
 class ProfileScreen extends StatefulWidget{
@@ -15,6 +15,7 @@ class _ProfileState extends State<ProfileScreen>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: ColorPalette().bgColor,
       appBar: AppBar(
         title: Text(
           "Profile",
@@ -22,6 +23,7 @@ class _ProfileState extends State<ProfileScreen>{
             color: Colors.white,
             fontWeight: FontWeight.bold,
             fontSize: 25,
+            letterSpacing: 2.0
           ),
         ),
         backgroundColor: ColorPalette().mainColor,
@@ -57,15 +59,6 @@ class _ProfileState extends State<ProfileScreen>{
                 alignment: Alignment.center,
                 child: Container(
                   width: double.infinity,
-                  decoration: ShapeDecoration(
-                   
-                    shape: StadiumBorder(),
-                    gradient: LinearGradient(
-                      colors: colorElements,
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                    )
-                  ),
                   child: ElevatedButton(
                     onPressed: (){
                       //UPGRADE ACCOUNT
@@ -77,11 +70,13 @@ class _ProfileState extends State<ProfileScreen>{
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 1.0
                         ),
                       ),
                     ),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.transparent
+                      backgroundColor: ColorPalette().btnColor
                     ),
                   ),
                 ),

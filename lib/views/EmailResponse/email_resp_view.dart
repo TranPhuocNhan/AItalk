@@ -1,10 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ai_app/views/EmailResponse/card_box_chat.dart';
 import 'package:flutter_ai_app/views/EmailResponse/group_type_button.dart';
 import 'package:flutter_ai_app/views/EmailResponse/response_type_dropdown.dart';
 import 'package:flutter_ai_app/views/EmailResponse/test_data.dart';
-import 'package:flutter_ai_app/views/style/Color.dart';
+import 'package:flutter_ai_app/views/constant/Color.dart';
 import 'package:flutter_ai_app/widgets/app_drawer.dart';
 
 class EmailResponseScreen extends StatefulWidget{
@@ -17,6 +16,7 @@ class _EmailResponseState extends State<EmailResponseScreen>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: ColorPalette().bgColor,
       appBar: AppBar(
         title: Row(
           children: [
@@ -81,7 +81,7 @@ class _EmailResponseState extends State<EmailResponseScreen>{
                           onPressed: (){
                             print("sent message");
                           }, 
-                          icon: Icon(Icons.send, color: ColorPalette().endLinear,),
+                          icon: Icon(Icons.send, color: ColorPalette().iconColor,),
                         ), 
                       ),
                       

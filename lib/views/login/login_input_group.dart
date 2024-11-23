@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ai_app/views/style/Color.dart';
+import 'package:flutter_ai_app/core/AuthService.dart';
+import 'package:flutter_ai_app/core/UserDataService.dart';
+import 'package:flutter_ai_app/utils/providers/manageTokenProvider.dart';
+import 'package:flutter_ai_app/utils/providers/processingProvider.dart';
+import 'package:flutter_ai_app/views/constant/Color.dart';
+import 'package:get_it/get_it.dart';
+import 'package:provider/provider.dart';
 
 class LoginInputGroup extends StatefulWidget{
   @override
@@ -7,9 +13,12 @@ class LoginInputGroup extends StatefulWidget{
 }
 
 class _LoginInputState extends State<LoginInputGroup>{
+  final AuthService authService = GetIt.instance<AuthService>();
+  final UserDataService userDataService = GetIt.instance<UserDataService>();
+
   final usernameKey = GlobalKey<FormState>();
   final passwordKey = GlobalKey<FormState>();
-  TextEditingController usernameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   final colorElements = <Color>[ColorPalette().startLinear, ColorPalette().endLinear];
   bool rememberCheck = false;
@@ -22,23 +31,25 @@ class _LoginInputState extends State<LoginInputGroup>{
   }
   @override
   Widget build(BuildContext context) {
+    final processing = Provider.of<ProcessingProvider>(context);
+    final tokenManage = Provider.of<Managetokenprovider>(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        //USERNAME TEXTFIELD
+        //EMAIL TEXTFIELD
         Padding(
           padding: EdgeInsets.only(top: 5, bottom: 5),
           child: Form(
             key: usernameKey,
             child: TextFormField(
-              controller: usernameController,
+              controller:emailController,
               validator: _validate,
               decoration: InputDecoration(
-                label: Text("Username"),
-                prefixIcon: Icon(Icons.person, color: ColorPalette().btnColor,),
+                label: Text("Email"),
+                prefixIcon: Icon(Icons.person, color: ColorPalette().iconColor,),
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(
-                    color: ColorPalette().btnColor,
+                    color: ColorPalette().iconColor,
                   )
                 ),
                 enabledBorder:  OutlineInputBorder(
@@ -71,7 +82,7 @@ class _LoginInputState extends State<LoginInputGroup>{
               validator: _validate,
               decoration: InputDecoration(
                 label: Text("Password"),
-                prefixIcon: Icon(Icons.lock, color: ColorPalette().btnColor,),
+                prefixIcon: Icon(Icons.lock, color: ColorPalette().iconColor,),
                 suffixIcon:(
                   IconButton(
                     onPressed: (){
@@ -79,11 +90,11 @@ class _LoginInputState extends State<LoginInputGroup>{
                         isVisibility = !isVisibility;
                       });
                     }, 
-                    icon: ((!isVisibility)? Icon(Icons.visibility_off, color: ColorPalette().btnColor,) : Icon(Icons.visibility,color: ColorPalette().btnColor,)))
+                    icon: ((!isVisibility)? Icon(Icons.visibility_off, color: ColorPalette().iconColor,) : Icon(Icons.visibility,color: ColorPalette().iconColor,)))
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(
-                    color: ColorPalette().btnColor,
+                    color: ColorPalette().iconColor,
                   )
                 ),
                 enabledBorder:  OutlineInputBorder(
@@ -143,23 +154,18 @@ class _LoginInputState extends State<LoginInputGroup>{
           width: double.infinity,
           alignment: Alignment.center,
           child: Container(
-            width: MediaQuery.sizeOf(context).width/2,
+            width: MediaQuery.sizeOf(context).width * 2 / 3,
             decoration: ShapeDecoration(
               shape: StadiumBorder(),
-              gradient: LinearGradient(
-                colors: colorElements,
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-              )
             ),
             child: ElevatedButton(
-              onPressed: (){
+              onPressed: () async{
                 bool checkUsername = usernameKey.currentState!.validate();
                 bool checkPassword = passwordKey.currentState!.validate();
                 if(checkPassword && checkPassword){
-                  //LOGIN EXISTS ACCOUNT 
-                  //[...]
-                  Navigator.pushNamed(context, '/profile');
+                  processing.UpdateLoadingProcess();
+                  await handleActionLogin(tokenManage);
+                  processing.UpdateLoadingProcess();
                 }
               }, 
               child: Padding(
@@ -168,20 +174,56 @@ class _LoginInputState extends State<LoginInputGroup>{
                   "Login", 
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 18
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 2.0,
                     ),
                   ),
                 ),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.transparent,
+                  backgroundColor: ColorPalette().btnColor
                 )
               ),
             )
         ),
+        processing.getProcessState() ? 
+        CircularProgressIndicator() : Text(""),
 
 
       ],
     );
   }
 
+  Future<void> handleActionLogin(Managetokenprovider tokenManage) async{
+    bool result = await authService.signInAccount(emailController.value.text, passwordController.value.text);
+    if(result == true){
+      List<int> token = await userDataService.getTokenUsage();
+      tokenManage.updateTotalToken(token[1]);
+      tokenManage.updateRemainToken(token[0]);
+      Navigator.pushNamed(context, '/home');
+    }else{
+      showLoginDialog(context, "");
+    }
+  }
+
+  void showLoginDialog(BuildContext context, String message){
+    showDialog(
+      context: context, 
+      builder: (BuildContext context){
+        return AlertDialog(
+          title: Text("NOTIFICATION"),
+          content: Text("Message"),
+          actions: [
+            TextButton(
+              onPressed: (){
+                Navigator.pop(context);
+              }, 
+              child: Text("Ok"),
+            )
+          ],
+        );
+      }
+      
+    );
+  }
 }

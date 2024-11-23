@@ -1,44 +1,83 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ai_app/core/models/chat/assistant_dto.dart';
+import 'package:flutter_ai_app/core/models/chat/chat_message.dart';
+import 'package:flutter_ai_app/utils/assistant_map.dart';
+import 'package:flutter_ai_app/features/ai_chat/presentation/chat_provider.dart';
+import 'package:flutter_ai_app/widgets/prompt_library_bottom_sheet.dart';
+import 'package:provider/provider.dart';
 
 class ChatSection extends StatefulWidget {
-  final VoidCallback onSendMessage;
-
-  const ChatSection({super.key, required this.onSendMessage});
+  const ChatSection({super.key});
 
   @override
   State<ChatSection> createState() => _ChatSectionState();
 }
 
 class _ChatSectionState extends State<ChatSection> {
-  final List<Map<String, dynamic>> _message = [];
   final TextEditingController _controller = TextEditingController();
 
-  void _sendMessage() {
-    if (_controller.text.isNotEmpty) {
-      setState(() {
-        _message.add({
-          'message': _controller.text,
-          'isSender': true,
-        });
+  @override
+  void initState() {
+    super.initState();
+
+    // Add listener to detect '/' input
+    _controller.addListener(() {
+      if (_controller.text.startsWith('/')) {
+        _showBottomSheet();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _showBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => PromptLibraryBottomDialog(),
+    );
+  }
+
+  void _sendMessage(ChatProvider chatProvider) async {
+    final messageContent = _controller.text;
+
+    if (messageContent.isNotEmpty) {
+      final message = ChatMessage(
+        assistant: AssistantDTO(
+          id: assistantMap[chatProvider.selectedAssistant] ?? "gpt-4o-mini",
+          model: 'dify',
+          name: chatProvider.selectedAssistant,
+        ),
+        role: "user",
+        content: messageContent,
+      );
+
+      chatProvider.addUserMessage(message);
+
+      try {
+        await chatProvider.sendFirstMessage(message);
         _controller.clear();
-        widget.onSendMessage();
-      });
+      } catch (e) {
+        print("Error sending first message: $e");
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final chatProvider = Provider.of<ChatProvider>(context);
+
     return Column(
       children: [
-        // Expanded(
-        //   child: _buildMessageList(),
-        // ),
-        _buildInputArea(),
+        _buildInputArea(chatProvider),
       ],
     );
   }
 
-  Widget _buildInputArea() {
+  Widget _buildInputArea(ChatProvider chatProvider) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       child: Row(
@@ -68,44 +107,10 @@ class _ChatSectionState extends State<ChatSection> {
             ),
           )),
           IconButton(
-            onPressed:
-                // Handle Send Icon
-                _sendMessage,
+            onPressed: () => _sendMessage(chatProvider),
             icon: const Icon(Icons.send),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildMessageList() {
-    return ListView(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        children: [
-          _buildChatBubble('Hello, How can I help you today?', true),
-          _buildChatBubble('I need some information about AI.', false),
-          _buildChatBubble(
-              'Sure, What specifically you would like to know?', true),
-        ]);
-  }
-
-  Widget _buildChatBubble(String message, bool isSender) {
-    return Align(
-      alignment: isSender ? Alignment.centerRight : Alignment.centerLeft,
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        margin: const EdgeInsets.symmetric(vertical: 5),
-        decoration: BoxDecoration(
-          color: isSender ? Colors.blue : Colors.grey[200],
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Text(
-          message,
-          style: TextStyle(
-            color: isSender ? Colors.white : Colors.black,
-          ),
-        ),
       ),
     );
   }

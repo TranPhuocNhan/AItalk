@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ai_app/views/style/Color.dart';
+import 'package:flutter_ai_app/utils/providers/manageTokenProvider.dart';
+import 'package:flutter_ai_app/views/constant/Color.dart';
+import 'package:provider/provider.dart';
 
 class TokenUsageCard extends StatefulWidget{
   @override
@@ -9,8 +11,9 @@ class TokenUsageCard extends StatefulWidget{
 class _TokenUsageState extends State<TokenUsageCard>{
   @override
   Widget build(BuildContext context) {
+    final tokenManage = Provider.of<Managetokenprovider>(context);
     return Card(
-      color: Colors.blue.shade50,
+      color: Colors.lightGreen.shade50 ,
       child: Padding(
         padding: EdgeInsets.all(10),
         child: Column(
@@ -43,10 +46,10 @@ class _TokenUsageState extends State<TokenUsageCard>{
             ),
             SizedBox(height: 10,),
             LinearProgressIndicator(
-              value: 40.0/50.0,
+              value: tokenManage.getPercentage().toDouble(),
               minHeight: 5,
               color: ColorPalette().selectedItemOnDrawerColor,
-              valueColor: AlwaysStoppedAnimation<Color>(ColorPalette().endLinear),
+              valueColor: AlwaysStoppedAnimation<Color>(ColorPalette().btnColor),
               borderRadius: BorderRadius.circular(10),
             ),
             SizedBox(height: 10,),
@@ -54,13 +57,13 @@ class _TokenUsageState extends State<TokenUsageCard>{
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "40",
+                  tokenManage.getRemainToken().toString(),
                   style: TextStyle(
                     fontSize: 16
                   ),
                 ),
                 Text(
-                  "50",
+                  tokenManage.getTotalToken().toString(),
                   style: TextStyle(
                     fontSize: 16
                   ),
