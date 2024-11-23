@@ -195,15 +195,21 @@ class _LoginInputState extends State<LoginInputGroup>{
   }
 
   Future<void> handleActionLogin(Managetokenprovider tokenManage) async{
-    bool result = await authService.signInAccount(emailController.value.text, passwordController.value.text);
-    if(result == true){
-      List<int> token = await userDataService.getTokenUsage();
-      tokenManage.updateTotalToken(token[1]);
-      tokenManage.updateRemainToken(token[0]);
-      Navigator.pushNamed(context, '/home');
-    }else{
-      showLoginDialog(context, "");
+    try{
+      bool result = await authService.signInAccount(emailController.value.text, passwordController.value.text);
+      if(result){
+        List<int> token = await userDataService.getTokenUsage();
+        tokenManage.updateTotalToken(token[1]);
+        tokenManage.updateRemainToken(token[0]);
+        Navigator.pushNamed(context, '/home');
+      }else{
+        showLoginDialog(context, "Fail to login!!!");
+      }
+    }catch(e){
+      print("LOGIN INPUT GROUP ${e.toString()}");
+      showLoginDialog(context, e.toString());
     }
+    
   }
 
   void showLoginDialog(BuildContext context, String message){
@@ -212,7 +218,7 @@ class _LoginInputState extends State<LoginInputGroup>{
       builder: (BuildContext context){
         return AlertDialog(
           title: Text("NOTIFICATION"),
-          content: Text("Message"),
+          content: Text(message.replaceAll("Exception: ", "")),
           actions: [
             TextButton(
               onPressed: (){

@@ -9,7 +9,7 @@ class GroupTypeButton extends StatefulWidget{
 
 class _GroupTypeState extends State<GroupTypeButton> {
   List<String> title = <String>["Thanks","Sorry","Yes","No","Follow Up","Request for more information"];
-  List<String> icon = <String>["images/thanks.png","images/sorry.png","images/yes.png","images/no.png","images/followup.png","images/request.png"];
+  List<String> icon = <String>["assets/images/thanks.png","assets/images/sorry.png","assets/images/yes.png","assets/images/no.png","assets/images/followup.png","assets/images/request.png"];
   // List<bool> isSelected = [false,false,false,false,false,false];
   List<bool> selectedRow1 = [false, false, false, false];
   List<bool> selectedRow2 = [false, false]; 

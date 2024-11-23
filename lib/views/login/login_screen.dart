@@ -35,19 +35,18 @@ class _LoginState extends State<LoginScreen>{
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorPalette().bgColor,
-     body: Center(
+     body: SingleChildScrollView(
+      child: Center(
       child: Padding(padding: EdgeInsets.all(20),
-        child: Stack(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 30,),
-                        Text(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 30,),
+                    Text(
                       "Log in",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
@@ -55,56 +54,60 @@ class _LoginState extends State<LoginScreen>{
                         color: ColorPalette().headerColor
                       )
                     ),
-                    SizedBox(height: 50,),
-                    LoginInputGroup(),
-                  ],),
-                ),
-                // ANOTHER LOGIN TYPE 
+                  SizedBox(height: 50,),
+                  LoginInputGroup(),
+                  SizedBox(height: 100,),
+                ],
+              ),
+            // ANOTHER LOGIN TYPE 
+            Column(
+              children: [
                 Row(
-                  children: [
-                    Expanded(child: Divider(color: Colors.black,)),
-                    Padding(
-                      padding: EdgeInsets.only(left: 10, right: 10),
-                      child: Text("Or Sign In With"),
-                    ),
-                    Expanded(child: Divider(color: Colors.black,))
-                  ],
+              children: [
+                Expanded(child: Divider(color: Colors.black,)),
+                Padding(
+                  padding: EdgeInsets.only(left: 10, right: 10),
+                  child: Text("Or Sign In With"),
                 ),
-                Container(
-                  width: double.infinity,
-                  alignment: Alignment.center,
-                  margin: EdgeInsets.only(top: 10, bottom: 10),
-                  child: IconButton(
-                    onPressed: (){}, 
-                    icon: Image.asset("images/gmail.png", width: 40, height: 40,),
-                    iconSize: 20,
-                  ),          
-                ),
-                Row(
-                  mainAxisAlignment:MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Don't have an account?",
-                    ),
-                    TextButton(
-                      onPressed: (){
-                        Navigator.pushNamed(_lgContext,'/register');                   
-                      }, 
-                      child: Text(
-                          "Sign up",
-                          style: TextStyle(
-                            color: Colors.red
-                          ),
-                        ))
-                  ],
-                ),
-                SizedBox(height: 20,)
+                Expanded(child: Divider(color: Colors.black,))
               ],
             ),
+            Container(
+              width: double.infinity,
+              alignment: Alignment.center,
+              margin: EdgeInsets.only(top: 10, bottom: 10),
+              child: IconButton(
+                onPressed: (){}, 
+                icon: Image.asset("assets/images/gmail.png", width: 40, height: 40,),
+                iconSize: 20,
+              ),          
+            ),
+            Row(
+              mainAxisAlignment:MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Don't have an account?",
+                ),
+                TextButton(
+                  onPressed: (){
+                    Navigator.pushNamed(_lgContext,'/register');                   
+                  }, 
+                  child: Text(
+                    "Sign up",
+                      style: TextStyle(
+                        color: Colors.red
+                      ),
+                    ))
+              ],
+            ),
+            SizedBox(height: 20,)
+              ],
+            )
           ],
-        )
+        ),
       )
-     ), 
+     ),
+     ) 
     );
   }
   }

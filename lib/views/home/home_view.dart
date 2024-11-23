@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ai_app/core/UserDataService.dart';
 import 'package:flutter_ai_app/models/thread.dart';
+import 'package:flutter_ai_app/utils/providers/manageTokenProvider.dart';
 import 'package:flutter_ai_app/views/home/ai_bot_list_view.dart';
 import 'package:flutter_ai_app/views/home/chat_content_view.dart';
 import 'package:flutter_ai_app/views/home/chat_view.dart';
@@ -17,6 +19,8 @@ import 'package:flutter_ai_app/widgets/upload_drive_dialog.dart';
 import 'package:flutter_ai_app/widgets/upload_file_dialog.dart';
 import 'package:flutter_ai_app/widgets/upload_slack_dialog.dart';
 import 'package:flutter_ai_app/widgets/upload_web_dialog.dart';
+import 'package:get_it/get_it.dart';
+import 'package:provider/provider.dart';
 
 class HomeView extends StatefulWidget {
   HomeView({super.key});
@@ -170,6 +174,7 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(),
       drawer: AppDrawer(selected: 0),

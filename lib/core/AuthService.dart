@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/gestures.dart';
 import 'package:flutter_ai_app/models/user.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -47,9 +48,14 @@ class AuthService {
         await saveAccessToken(token['accessToken'], token['refreshToken']);
         await getCurrentUser();
         return true;
-      }else return false;
+      }
+      else 
+        return false;
     }else{
-      return false;
+      print("STATUS CODE IS NOT 200");
+      var issue = handleResponse(response.body);
+      print("ISSUE IS $issue");
+      throw Exception(handleResponse(response.body));
     }
   }
 
@@ -76,7 +82,7 @@ class AuthService {
     }else return false;
   }
 
-  //FAILED
+ 
   Future<bool> logoutAccount() async{
     final prefs = await SharedPreferences.getInstance();
     var refreshToken = await prefs.getString("refreshToken");

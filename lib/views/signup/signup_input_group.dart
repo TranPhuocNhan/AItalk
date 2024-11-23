@@ -41,9 +41,27 @@ class _SignupInputState extends State<SignupInputGroup>{
     }
     return null;
   }
+
+  String? _emailValidate(String? input){
+    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+    if(input!.isEmpty){
+      return "You must enter a value in this field";
+    }
+    if(!emailRegex.hasMatch(input)){
+      return "You must enter an email format";
+    }
+  }
+
   String? _passwordValidate(String? input){
     if(input!.isEmpty){
       return "You must enter a value in this field";
+    }
+    if(input.length < 6){
+      return "Password must be longer than or equal to 6 characters";
+    }
+    final regex = RegExp(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).+$');
+    if(!regex.hasMatch(input)){
+      return "Password must contain at least one digit and one uppercase letter";
     }
     //check password valid 
     return null;
@@ -100,7 +118,7 @@ class _SignupInputState extends State<SignupInputGroup>{
             key: emailKey,
             child: TextFormField(
               controller: emailController,
-              validator: _validate,
+              validator: _emailValidate,
               decoration: InputDecoration(
                 label: Text("Email"),
                 focusedBorder: OutlineInputBorder(
@@ -141,7 +159,7 @@ class _SignupInputState extends State<SignupInputGroup>{
                     }, 
                     icon: (passwordVisibility) ? Icon(Icons.visibility, color: ColorPalette().iconColor,) : Icon(Icons.visibility_off, color: ColorPalette().iconColor,))
                 ),
-                helperText:  "Password must contain special character!" ,
+                helperText:  "Password must be longer than or equal to 6 characters" ,
                 helperStyle: TextStyle(
                   fontSize: 10,
                   color: Colors.green
@@ -186,7 +204,7 @@ class _SignupInputState extends State<SignupInputGroup>{
                     }, 
                     icon: (confirmPassVisibility) ? Icon(Icons.visibility, color: ColorPalette().iconColor,) : Icon(Icons.visibility_off, color: ColorPalette().iconColor,))
                 ),
-                helperText:  "Password must contain special character!" ,
+                helperText:  "Password must be longer than or equal to 6 characters" ,
                 helperStyle: TextStyle(
                   fontSize: 10,
                   color: Colors.green
@@ -308,7 +326,7 @@ class _SignupInputState extends State<SignupInputGroup>{
         tokenManage.updateRemainToken(token[0]);
         Navigator.pushNamed(context, '/home');
       }else{
-        showLoginResultDialog(context, "Register Sucessful! Failed to login. Please enter email and password to login again!!");       
+        showLoginResultDialog(context, "Register Sucessfull! Failed to login. Please enter email and password to login again!!");       
       }
     }catch(e) {
       showMyDialog(context, e.toString());  
@@ -320,8 +338,8 @@ class _SignupInputState extends State<SignupInputGroup>{
       context: context, 
       builder: (BuildContext context){
         return AlertDialog(
-          title: Text("NOTIFICATION"),
-          content: Text(message),
+          // title: Text("NOTIFICATION"),
+          content: Text(message.replaceAll("Exception:", "")),
           actions: [
             TextButton(
               onPressed: (){  

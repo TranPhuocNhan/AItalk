@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ai_app/core/AuthService.dart';
+import 'package:flutter_ai_app/core/UserDataService.dart';
+import 'package:flutter_ai_app/utils/providers/manageTokenProvider.dart';
 import 'package:flutter_ai_app/views/splash/PageContent.dart';
+import 'package:get_it/get_it.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget{
   @override
@@ -9,6 +15,7 @@ class SplashScreen extends StatefulWidget{
 class _SplashState extends State<SplashScreen>{
   var _currentIndex = 0;
   final PageController _pageController = PageController();
+  final UserDataService userDataService = GetIt.instance<UserDataService>();
   final List<PageContent> pages = [
     PageContent(
       image: "assets/images/splash_chat.png", 
@@ -45,6 +52,13 @@ class _SplashState extends State<SplashScreen>{
       });
     });
   }
+  void checkLoginStatus() async{
+    final prefs = await SharedPreferences.getInstance();
+    if(prefs.containsKey("accessToken")){
+      Navigator.pushNamed(context, '/home');
+    }
+  }
+
   @override
   void dispose() {
     // TODO: implement dispose
@@ -53,6 +67,7 @@ class _SplashState extends State<SplashScreen>{
   }
   @override
   Widget build(BuildContext context) {
+    checkLoginStatus();
     return Scaffold(
       body: PageView.builder(
         itemCount: pages.length,
@@ -63,6 +78,9 @@ class _SplashState extends State<SplashScreen>{
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                SizedBox(
+                  height: 20,
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -150,35 +168,6 @@ class _SplashState extends State<SplashScreen>{
                     )
                   )
                 )
-                  // Container(
-                  // margin: EdgeInsets.only(top: 30, bottom: 50),
-                  // width: 500,
-                  //   alignment: Alignment.center,
-                  //   child: Container(
-                  //     width: MediaQuery.sizeOf(context).width/2,
-                  //     decoration: ShapeDecoration(
-                  //       shape: StadiumBorder(),
-                  //       color: Color(0xff5cd8c9)
-                  //     ),
-                  //     child: ElevatedButton(
-                  //       onPressed: () async{
-                  //       }, 
-                  //       child: Padding(
-                  //         padding: EdgeInsets.all(10),
-                  //         child: Text(
-                  //           "Started", 
-                  //             style: TextStyle(
-                  //               color: Colors.white,
-                  //               fontSize: 18
-                  //             ),
-                  //           ),
-                  //         ),
-                  //         style: ElevatedButton.styleFrom(
-                  //           backgroundColor: Colors.transparent,
-                  //         )
-                  //       ),
-                  //     )
-                  // )
                 : Text(""),
                 // thanh chỉ dẫn 
                 Row(

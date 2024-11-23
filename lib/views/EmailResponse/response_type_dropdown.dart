@@ -11,9 +11,9 @@ class ResponseTypeDropdown extends StatefulWidget{
 
 class _ResponseTypeState extends State<ResponseTypeDropdown> {
   List<String> title = <String>["Thanks","Sorry","Yes","No","Follow Up","Request for more information"];
-  List<String> icon = <String>["images/thanks.png","images/sorry.png","images/yes.png","images/no.png","images/followup.png","image/request.png"];
+  List<String> icon = <String>["assets/images/thanks.png","assets/images/sorry.png","assets/images/yes.png","assets/images/no.png","assets/images/followup.png","assets/image/request.png"];
   String selectedTitle = "Thanks";
-  String selectedIcon = "images/thanks.png";
+  String selectedIcon = "assets/images/thanks.png";
   @override
   Widget build(BuildContext context) {
    return DropdownButton2(

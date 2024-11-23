@@ -38,6 +38,7 @@ class _AppDrawerState extends State<AppDrawer>{
   @override
   Widget build(BuildContext context) {
     final tokenManage = Provider.of<Managetokenprovider>(context);
+    
     return Drawer(
       backgroundColor: ColorPalette().bgColor,
       child: ListView(
@@ -49,7 +50,7 @@ class _AppDrawerState extends State<AppDrawer>{
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Image(image: AssetImage("images/full_logo.png"), height: 60,),
+                Image(image: AssetImage("assets/images/full_logo.png"), height: 60,),
                 IconButton(
                   onPressed: (){
                     //DISPOSE DRAWER
