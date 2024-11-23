@@ -18,15 +18,14 @@ class ConversationHistoryService {
   }) async {
     var prefs = await SharedPreferences.getInstance();
     var refreshToken = await prefs.getString('refreshToken');
-    var accessToken = await prefs.getString('accessToken');
 
     final Map<String, String> queryParameters = {
-      if (cursor != null) 'cursor': cursor!,
+      if (cursor != null) 'cursor': cursor,
       if (limit != null) 'limit': limit.toString(),
-      if (assistantId != null) 'assistantId': assistantId!,
-      if (assistantModel != null) 'assistantModel': assistantModel!,
+      if (assistantId != null) 'assistantId': assistantId,
+      if (assistantModel != null) 'assistantModel': assistantModel,
     };
-    final pathUrl = '$apiLink/conversations/$conversationId/messages';
+    final pathUrl = '$apiLink/$conversationId/messages';
     final uri = Uri.parse(pathUrl).replace(queryParameters: queryParameters);
     final response = await http.get(uri, headers: {
       'Content-Type': 'application/json',

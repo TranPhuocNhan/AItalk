@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ai_app/core/models/chat/conversation.dart';
-import 'package:flutter_ai_app/utils/providers/chatProvider.dart';
+import 'package:flutter_ai_app/features/ai_chat/presentation/chat_provider.dart';
 import 'package:flutter_ai_app/views/home/home_view.dart';
 import 'package:flutter_ai_app/widgets/tools_section.dart';
 import 'package:provider/provider.dart';
@@ -33,7 +33,9 @@ class _ChatContentViewState extends State<ChatContentView> {
                 color: Colors.white,
                 borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
               ),
-              child: _buildMessageList(chatProvider),
+              child: chatProvider.isLoading
+                  ? Center(child: CircularProgressIndicator())
+                  : _buildMessageList(chatProvider),
             ),
           ),
           ToolsSection(),
@@ -75,7 +77,7 @@ class _ChatContentViewState extends State<ChatContentView> {
 
   Widget _buildMessageList(ChatProvider chatProvider) {
     if (_listConversationContent == null || _listConversationContent!.isEmpty) {
-      return Center(child: Text("No conversations available."));
+      return Center(child: Text("...Loading..."));
     }
 
     return ListView.builder(
@@ -88,14 +90,15 @@ class _ChatContentViewState extends State<ChatContentView> {
 
   Widget _buildChatItem(int index, ChatProvider chatProvider) {
     final conversation = _listConversationContent![index];
+    final isPending = chatProvider.isMessagePending(conversation.query ?? "");
 
     return Column(
       children: [
         if (conversation.query != null)
           _buildMessageCard("You", conversation.query ?? "", true),
-        if (conversation.answer != null)
-          _buildMessageCard(chatProvider.selectedAssistant ?? "AiTalk",
-              conversation.answer ?? "", false),
+        if (isPending) _buildMessageCard("AiTalk", "Typing...", false),
+        if (!isPending && conversation.answer != null)
+          _buildMessageCard("AiTalk", conversation.answer ?? "", false),
       ],
     );
   }
@@ -184,6 +187,7 @@ class _ChatContentViewState extends State<ChatContentView> {
             onPressed: () {
               print("Send Message is pressed!");
               chatProvider.sendMessage(_controller.text);
+              _controller.clear();
             },
           ),
         ],

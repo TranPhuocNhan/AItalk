@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_ai_app/core/models/chat/assistant_dto.dart';
 import 'package:flutter_ai_app/core/models/chat/chat_message.dart';
 import 'package:flutter_ai_app/utils/assistant_map.dart';
-import 'package:flutter_ai_app/utils/providers/chatProvider.dart';
+import 'package:flutter_ai_app/features/ai_chat/presentation/chat_provider.dart';
+import 'package:flutter_ai_app/widgets/prompt_library_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 
 class ChatSection extends StatefulWidget {
@@ -15,19 +16,53 @@ class ChatSection extends StatefulWidget {
 class _ChatSectionState extends State<ChatSection> {
   final TextEditingController _controller = TextEditingController();
 
-  void _sendMessage(ChatProvider chatProvider) {
+  @override
+  void initState() {
+    super.initState();
+
+    // Add listener to detect '/' input
+    _controller.addListener(() {
+      if (_controller.text.startsWith('/')) {
+        _showBottomSheet();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _showBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => PromptLibraryBottomDialog(),
+    );
+  }
+
+  void _sendMessage(ChatProvider chatProvider) async {
     final messageContent = _controller.text;
+
     if (messageContent.isNotEmpty) {
       final message = ChatMessage(
         assistant: AssistantDTO(
-            id: assistantMap[chatProvider.selectedAssistant] ?? "gpt-4o-mini",
-            model: 'dify',
-            name: chatProvider.selectedAssistant),
+          id: assistantMap[chatProvider.selectedAssistant] ?? "gpt-4o-mini",
+          model: 'dify',
+          name: chatProvider.selectedAssistant,
+        ),
         role: "user",
         content: messageContent,
       );
-      chatProvider.sendFirstMessage(message);
-      _controller.clear();
+
+      chatProvider.addUserMessage(message);
+
+      try {
+        await chatProvider.sendFirstMessage(message);
+        _controller.clear();
+      } catch (e) {
+        print("Error sending first message: $e");
+      }
     }
   }
 
@@ -37,9 +72,6 @@ class _ChatSectionState extends State<ChatSection> {
 
     return Column(
       children: [
-        // Expanded(
-        //   child: _buildMessageList(),
-        // ),
         _buildInputArea(chatProvider),
       ],
     );
@@ -75,44 +107,10 @@ class _ChatSectionState extends State<ChatSection> {
             ),
           )),
           IconButton(
-            onPressed:
-                // Handle Send Icon
-                () => _sendMessage(chatProvider),
+            onPressed: () => _sendMessage(chatProvider),
             icon: const Icon(Icons.send),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildMessageList() {
-    return ListView(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        children: [
-          _buildChatBubble('Hello, How can I help you today?', true),
-          _buildChatBubble('I need some information about AI.', false),
-          _buildChatBubble(
-              'Sure, What specifically you would like to know?', true),
-        ]);
-  }
-
-  Widget _buildChatBubble(String message, bool isSender) {
-    return Align(
-      alignment: isSender ? Alignment.centerRight : Alignment.centerLeft,
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        margin: const EdgeInsets.symmetric(vertical: 5),
-        decoration: BoxDecoration(
-          color: isSender ? Colors.blue : Colors.grey[200],
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Text(
-          message,
-          style: TextStyle(
-            color: isSender ? Colors.white : Colors.black,
-          ),
-        ),
       ),
     );
   }

@@ -18,7 +18,6 @@ class SendMessageService {
       List<String>? files}) async {
     var prefs = await SharedPreferences.getInstance();
     var refreshToken = await prefs.getString('refreshToken');
-    var accessToken = await prefs.getString('accessToken');
 
     final body = {
       'assistant': assistant.toJson(),

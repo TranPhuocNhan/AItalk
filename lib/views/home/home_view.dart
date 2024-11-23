@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ai_app/core/models/chat/chat_message.dart';
 import 'package:flutter_ai_app/core/models/thread.dart';
-import 'package:flutter_ai_app/utils/providers/chatProvider.dart';
+import 'package:flutter_ai_app/features/ai_chat/presentation/chat_provider.dart';
 import 'package:flutter_ai_app/views/chat/chat_content_view.dart';
 import 'package:flutter_ai_app/views/chat/chat_view.dart';
 import 'package:flutter_ai_app/views/ai_bot/create_bot_view.dart';

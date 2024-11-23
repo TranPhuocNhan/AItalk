@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ai_app/core/models/chat/conversation_thread.dart';
-import 'package:flutter_ai_app/utils/providers/chatProvider.dart';
+import 'package:flutter_ai_app/features/ai_chat/presentation/chat_provider.dart';
 import 'package:provider/provider.dart';
 
 class ThreadChatHistory extends StatefulWidget {

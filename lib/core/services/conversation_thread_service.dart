@@ -25,7 +25,6 @@ class ConversationThreadService {
 
     var prefs = await SharedPreferences.getInstance();
     var refreshToken = await prefs.getString('refreshToken');
-    var accessToken = await prefs.getString('accessToken');
     print("refreshToken: $refreshToken");
 
     // Xây dựng URL với query params
@@ -35,7 +34,7 @@ class ConversationThreadService {
     final headers = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $refreshToken',
-      if (jarvisGuid != null) 'x-jarvis-guid': jarvisGuid,
+      'x-jarvis-guid': jarvisGuid,
     };
 
     // Thực hiện gọi API

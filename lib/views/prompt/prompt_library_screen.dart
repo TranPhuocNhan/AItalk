@@ -1,5 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ai_app/core/models/chat/assistant_dto.dart';
+import 'package:flutter_ai_app/core/models/chat/chat_message.dart';
+import 'package:flutter_ai_app/core/models/prompt/prompt.dart';
+import 'package:flutter_ai_app/features/ai_chat/presentation/chat_provider.dart';
+import 'package:flutter_ai_app/features/prompt/presentation/prompt_provider.dart';
+import 'package:flutter_ai_app/utils/assistant_map.dart';
+import 'package:flutter_ai_app/utils/category_prompt_map.dart';
 import 'package:flutter_ai_app/widgets/create_prompt.dart';
+import 'package:flutter_ai_app/widgets/edit_prompt_form.dart';
+import 'package:flutter_ai_app/widgets/prompt_dialog.dart';
+import 'package:provider/provider.dart';
 
 class PromptLibraryScreen extends StatefulWidget {
   @override
@@ -9,23 +19,46 @@ class PromptLibraryScreen extends StatefulWidget {
 class _PromptLibraryScreenState extends State<PromptLibraryScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  final List<String> categories = [
-    'All',
-    'Marketing',
-    'AI Painting',
-    'Chatbot',
-    'SEO',
-    'Writing'
-  ];
-  String selectedCategory = 'All';
+  final _searchController = TextEditingController();
+  List<Prompt> filteredPrompts = [];
+  List<Prompt> filteredFavoritePrompts = [];
+
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<PromptProvider>(context, listen: false).fetchPrivatePrompts();
+      Provider.of<PromptProvider>(context, listen: false).fetchPublicPrompts();
+      Provider.of<PromptProvider>(context, listen: false)
+          .fetchFavoritePrompts();
+      setState(() {
+        filteredPrompts =
+            Provider.of<PromptProvider>(context, listen: false).publicPrompts;
+        filteredFavoritePrompts =
+            Provider.of<PromptProvider>(context, listen: false).favoritePrompts;
+      });
+    });
     _tabController = TabController(length: 3, vsync: this);
+    _tabController.addListener(() {
+      setState(() {
+        _searchController.clear();
+        if (_tabController.index == 1) {
+          filteredPrompts =
+              Provider.of<PromptProvider>(context, listen: false).publicPrompts;
+        } else if (_tabController.index == 2) {
+          filteredFavoritePrompts =
+              Provider.of<PromptProvider>(context, listen: false)
+                  .favoritePrompts;
+        }
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    final promptProvider = Provider.of<PromptProvider>(context);
+    print("public prompts: ${promptProvider.publicPrompts}");
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Prompt Library'),
@@ -42,19 +75,45 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
         controller: _tabController,
         children: [
           // Tab My Prompt
-          _buildMyPromptList(),
+          promptProvider.isLoading
+              ? Center(child: CircularProgressIndicator())
+              : _buildMyPromptList(
+                  promptProvider.privatePrompts, promptProvider),
 
           // Tab Public Prompt
-          _buildPublicPromptList(),
+          promptProvider.isLoading
+              ? Center(child: CircularProgressIndicator())
+              : _buildPublicPromptList(
+                  promptProvider.publicPrompts,
+                  promptProvider.categories,
+                  promptProvider.selectedCategory,
+                  promptProvider),
 
           // Tab Favorite Prompt
-          _buildFavoritePromptList(),
+          promptProvider.isLoading
+              ? Center(child: CircularProgressIndicator())
+              : _buildFavoritePromptList(
+                  promptProvider.favoritePrompts, promptProvider),
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
+        onPressed: () async {
           // Add new prompt action
-          showDialog(context: context, builder: (context) => PromptForm());
+          final result = await showDialog(
+              context: context, builder: (context) => PromptForm());
+          if (result != null) {
+            final prompt = Prompt(
+              id: "",
+              isFavorite: false,
+              isPublic: result["isPublic"],
+              category: result["category"],
+              content: result["content"],
+              description: result["description"],
+              language: result["language"],
+              title: result["title"],
+            );
+            await promptProvider.createPrompt(prompt);
+          }
         },
         child: Icon(Icons.add),
         backgroundColor: Colors.purple,
@@ -63,89 +122,34 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
   }
 
   // List of prompts for "My Prompt" tab
-  Widget _buildMyPromptList() {
-    final prompts = [
-      {
-        'title': 'Brainstorm',
-        'description': 'Generate creative ideas for your project.',
-        'isFavorite': false,
-      },
-      {
-        'title': 'Translate to Japanese',
-        'description': 'Quickly translate text into Japanese.',
-        'isFavorite': false,
-      },
-      {
-        'title': 'Grammar corrector',
-        'description':
-            'Improve your spelling and grammar by correcting errors in your writing.',
-        'isFavorite': true,
-      },
-    ];
-
+  Widget _buildMyPromptList(
+      List<Prompt> privatePrompts, PromptProvider promptProvider) {
     return ListView.builder(
       padding: EdgeInsets.all(16),
-      itemCount: prompts.length,
+      itemCount: privatePrompts.length,
       itemBuilder: (context, index) {
-        final prompt = prompts[index];
-        return _buildPromptItem(prompt);
+        final prompt = privatePrompts[index];
+        return _buildPromptItem(prompt, promptProvider);
       },
     );
   }
 
-  Widget _buildPublicPromptList() {
-    final prompts = [
-      {
-        'title': 'Grammar corrector',
-        'description':
-            'Improve your spelling and grammar by correcting errors in your writing.',
-        'isFavorite': true,
-      },
-      {
-        'title': 'Learn Code FAST!',
-        'description':
-            'Teach you the code with the most understandable knowledge.',
-        'isFavorite': false,
-      },
-      {
-        'title': 'Story generator',
-        'description': 'Write your own beautiful story.',
-        'isFavorite': false,
-      },
-      {
-        'title': 'Essay improver',
-        'description': 'Improve your content\'s effectiveness with ease.',
-        'isFavorite': false,
-      },
-      {
-        'title': 'Pro tips generator',
-        'description': 'Get perfect tips and advice tailored to your field.',
-        'isFavorite': false,
-      },
-      {
-        'title': 'Resume Editing',
-        'description':
-            'Provide suggestions on how to improve your resume to make it stand out.',
-        'isFavorite': false,
-      },
-      {
-        'title': 'AI Painting Prompt Generator',
-        'description':
-            'Input your keywords and style to generate creative prompts.',
-        'isFavorite': false,
-      },
-    ];
+  Widget _buildPublicPromptList(
+      List<Prompt> publicPrompts,
+      List<String> categories,
+      String selectedCategory,
+      PromptProvider promptProvider) {
     return Column(
       children: [
         _buildSearchBar(),
-        _buildCategoryList(),
+        _buildCategoryList(categories, selectedCategory, promptProvider),
         Expanded(
           child: ListView.builder(
             padding: EdgeInsets.all(16),
-            itemCount: prompts.length,
+            itemCount: filteredPrompts.length,
             itemBuilder: (context, index) {
-              final prompt = prompts[index];
-              return _buildPublicPromptItem(prompt);
+              final prompt = filteredPrompts[index];
+              return _buildPublicPromptItem(prompt, promptProvider);
             },
           ),
         )
@@ -154,21 +158,73 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
   }
 
   // Widget to build each individual prompt item
-  Widget _buildPromptItem(Map<String, dynamic> prompt) {
+  Widget _buildPromptItem(Prompt prompt, PromptProvider promptProvider) {
     return Card(
       margin: EdgeInsets.symmetric(vertical: 8),
       child: ListTile(
-        title: Text(prompt['title'] ?? ''),
-        subtitle: Text(prompt['description'] ?? ''),
+        onTap: () async {
+          promptProvider.setSelectedPrompt(prompt);
+          final result = await showDialog(
+              context: context,
+              builder: (BuildContext context) => PromptDialog());
+          if (result != null) {
+            print("result: $result");
+          }
+        },
+        title: Text(prompt.title ?? ''),
+        subtitle: Text(prompt.description ?? ''),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (prompt['isFavorite']) Icon(Icons.star, color: Colors.amber),
+            Chip(
+              label: Text(categoryPromptMap[prompt.category] ?? ''),
+              labelStyle:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              backgroundColor: Colors.blue.shade400,
+              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                  side: BorderSide(color: Colors.transparent, width: 0),
+                  borderRadius: BorderRadius.circular(10)),
+            ),
+            if (prompt.isFavorite) Icon(Icons.star, color: Colors.amber),
             SizedBox(width: 10),
             IconButton(
-              icon: Icon(Icons.info),
-              onPressed: () {
+              icon: Icon(Icons.edit),
+              onPressed: () async {
                 // Edit action
+                print("prompt: ${prompt.toJson()}");
+                final result = await showDialog(
+                    context: context,
+                    builder: (context) =>
+                        EditPromptForm(promptData: prompt.toJson()));
+
+                if (result != null) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("Prompt updated")),
+                  );
+                  print("result: $result");
+                  final updatedPrompt = Prompt(
+                    id: prompt.id,
+                    isFavorite: false,
+                    isPublic: result["isPublic"],
+                    category: result["category"],
+                    content: result["content"],
+                    description: result["description"],
+                    language: result["language"],
+                    title: result["title"],
+                  );
+                  await promptProvider.updatePrompt(updatedPrompt);
+                }
+              },
+            ),
+            IconButton(
+              icon: Icon(Icons.delete),
+              onPressed: () async {
+                await promptProvider.deletePrompt(prompt.id);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text("Prompt deleted")),
+                );
               },
             ),
           ],
@@ -177,13 +233,21 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
     );
   }
 
-  Widget _buildCategoryList() {
+  Widget _buildEditPromptDialog(Prompt prompt, PromptProvider promptProvider) {
+    return AlertDialog(
+      title: Text("Edit Prompt"),
+      content: PromptForm(),
+    );
+  }
+
+  Widget _buildCategoryList(List<String> categories, String selectedCategory,
+      PromptProvider promptProvider) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       padding: EdgeInsets.symmetric(vertical: 8),
       child: Row(
         children: categories.map((category) {
-          return _buildFilterItem(category);
+          return _buildFilterItem(category, selectedCategory, promptProvider);
         }).toList(),
       ),
     );
@@ -193,6 +257,7 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
     return Padding(
       padding: EdgeInsets.all(8),
       child: TextField(
+        controller: _searchController,
         decoration: InputDecoration(
           hintText: 'Search',
           prefixIcon: Icon(Icons.search),
@@ -202,24 +267,97 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
           fillColor: Colors.grey[200],
           filled: true,
         ),
+        onChanged: (value) {
+          print("value: $value");
+          setState(() {
+            if (_tabController.index == 1) {
+              if (value.isEmpty) {
+                filteredPrompts =
+                    Provider.of<PromptProvider>(context, listen: false)
+                        .publicPrompts;
+              } else {
+                filteredPrompts =
+                    Provider.of<PromptProvider>(context, listen: false)
+                        .publicPrompts
+                        .where((prompt) => (prompt.title?.toLowerCase() ?? "")
+                            .contains(value.toLowerCase()))
+                        .toList();
+              }
+            } else if (_tabController.index == 2) {
+              if (value.isEmpty) {
+                filteredFavoritePrompts =
+                    Provider.of<PromptProvider>(context, listen: false)
+                        .favoritePrompts;
+              } else {
+                filteredFavoritePrompts =
+                    Provider.of<PromptProvider>(context, listen: false)
+                        .favoritePrompts
+                        .where((prompt) => (prompt.title?.toLowerCase() ?? "")
+                            .contains(value.toLowerCase()))
+                        .toList();
+              }
+            }
+          });
+        },
       ),
     );
   }
 
-  _buildPublicPromptItem(Map<String, dynamic> prompt) {
+  Widget _buildPublicPromptItem(Prompt prompt, PromptProvider promptProvider) {
     return Card(
       margin: EdgeInsets.symmetric(vertical: 8),
       child: ListTile(
-        title: Text(prompt['title'] ?? ''),
-        subtitle: Text(prompt['description'] ?? ''),
+        onTap: () async {
+          promptProvider.setSelectedPrompt(prompt);
+          final result = await showDialog(
+              context: context,
+              builder: (BuildContext context) => PromptDialog());
+          if (result != null) {
+            print("result from prompt dialog in public prompt list: $result");
+
+            final chatProvider =
+                Provider.of<ChatProvider>(context, listen: false);
+            chatProvider.sendFirstMessage(ChatMessage(
+                assistant: AssistantDTO(
+                    id: assistantMap[chatProvider.selectedAssistant] ??
+                        "gpt-4o-mini",
+                    model: 'dify',
+                    name: chatProvider.selectedAssistant),
+                role: "user",
+                content: result));
+            chatProvider.setSelectedScreenIndex(0);
+            chatProvider.toggleChatContentView();
+          }
+        },
+        title: Text(prompt.title ?? ''),
+        subtitle: Text(prompt.description ?? ''),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
+            Chip(
+              label: Text(categoryPromptMap[prompt.category] ?? ''),
+              labelStyle:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              backgroundColor: Colors.blue.shade400,
+              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                  side: BorderSide(color: Colors.transparent, width: 0),
+                  borderRadius: BorderRadius.circular(10)),
+            ),
             IconButton(
-                onPressed: () {},
+                onPressed: () async {
+                  if (prompt.isFavorite) {
+                    prompt.setIsFavorite(false);
+                    await promptProvider.removeFavoritePrompt(prompt.id);
+                  } else {
+                    prompt.setIsFavorite(true);
+                    await promptProvider.addFavoritePrompt(prompt.id);
+                  }
+                },
                 icon: Icon(
                   Icons.star,
-                  color: Colors.amber,
+                  color: prompt.isFavorite ? Colors.amber : Colors.grey,
                 )),
             SizedBox(width: 10),
             IconButton(
@@ -234,7 +372,8 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
     );
   }
 
-  Widget _buildFilterItem(String category) {
+  Widget _buildFilterItem(
+      String category, String selectedCategory, PromptProvider promptProvider) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 8, horizontal: 1),
       child: ChoiceChip(
@@ -242,67 +381,45 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
         selected: selectedCategory == category,
         onSelected: (bool selected) {
           setState(() {
-            selectedCategory = selected ? category : 'All';
+            if (selected) {
+              if (_searchController.text.isNotEmpty) {
+                filteredPrompts = promptProvider.publicPrompts
+                    .where((prompt) =>
+                        prompt.category?.toLowerCase() ==
+                            category.toLowerCase() &&
+                        (prompt.title?.toLowerCase() ?? "")
+                            .contains(_searchController.text.toLowerCase()))
+                    .toList();
+              } else {
+                filteredPrompts = promptProvider.publicPrompts
+                    .where((prompt) =>
+                        prompt.category?.toLowerCase() ==
+                        category.toLowerCase())
+                    .toList();
+              }
+              promptProvider.updateSelectedCategory(category);
+            } else {
+              filteredPrompts = promptProvider.publicPrompts;
+              promptProvider.updateSelectedCategory('All');
+            }
           });
         },
       ),
     );
   }
 
-  Widget _buildFavoritePromptList() {
-    final prompts = [
-      {
-        'title': 'Grammar corrector',
-        'description':
-            'Improve your spelling and grammar by correcting errors in your writing.',
-        'isFavorite': true,
-      },
-      {
-        'title': 'Learn Code FAST!',
-        'description':
-            'Teach you the code with the most understandable knowledge.',
-        'isFavorite': false,
-      },
-      {
-        'title': 'Story generator',
-        'description': 'Write your own beautiful story.',
-        'isFavorite': false,
-      },
-      {
-        'title': 'Essay improver',
-        'description': 'Improve your content\'s effectiveness with ease.',
-        'isFavorite': false,
-      },
-      {
-        'title': 'Pro tips generator',
-        'description': 'Get perfect tips and advice tailored to your field.',
-        'isFavorite': false,
-      },
-      {
-        'title': 'Resume Editing',
-        'description':
-            'Provide suggestions on how to improve your resume to make it stand out.',
-        'isFavorite': false,
-      },
-      {
-        'title': 'AI Painting Prompt Generator',
-        'description':
-            'Input your keywords and style to generate creative prompts.',
-        'isFavorite': false,
-      },
-    ];
+  Widget _buildFavoritePromptList(
+      List<Prompt> favoritePrompts, PromptProvider promptProvider) {
     return Column(
       children: [
         _buildSearchBar(),
         Expanded(
           child: ListView.builder(
             padding: EdgeInsets.all(16),
-            itemCount: prompts.length,
+            itemCount: filteredFavoritePrompts.length,
             itemBuilder: (context, index) {
-              final prompt = prompts[index];
-              if (prompt['isFavorite'] == true) {
-                return _buildPublicPromptItem(prompt);
-              }
+              final prompt = filteredFavoritePrompts[index];
+              return _buildPublicPromptItem(prompt, promptProvider);
             },
           ),
         )

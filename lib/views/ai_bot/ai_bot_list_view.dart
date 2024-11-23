@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ai_app/core/models/assistant.dart';
-import 'package:flutter_ai_app/utils/providers/chatProvider.dart';
+import 'package:flutter_ai_app/features/ai_chat/presentation/chat_provider.dart';
 import 'package:flutter_ai_app/views/ai_bot/create_bot_view.dart';
 import 'package:provider/provider.dart';
 
