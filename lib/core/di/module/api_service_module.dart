@@ -1,10 +1,10 @@
-import 'package:flutter_ai_app/core/AuthService.dart';
-import 'package:flutter_ai_app/core/UserDataService.dart';
 import 'package:flutter_ai_app/core/services/ai_chat_service.dart';
+import 'package:flutter_ai_app/core/services/auth_service.dart';
 import 'package:flutter_ai_app/core/services/conversation_history_service.dart';
 import 'package:flutter_ai_app/core/services/conversation_thread_service.dart';
 import 'package:flutter_ai_app/core/services/prompt_service.dart';
 import 'package:flutter_ai_app/core/services/send_message_service.dart';
+import 'package:flutter_ai_app/core/services/user_data_service.dart';
 import 'package:get_it/get_it.dart';
 
 class ApiServiceModule {

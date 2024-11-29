@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ai_app/core/AuthService.dart';
+import 'package:flutter_ai_app/core/services/auth_service.dart';
 import 'package:flutter_ai_app/views/login/verify_email.dart';
 import 'package:flutter_ai_app/views/constant/Color.dart';
 import 'package:get_it/get_it.dart';

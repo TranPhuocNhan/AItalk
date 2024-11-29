@@ -46,7 +46,7 @@ class _TokenUsageState extends State<TokenUsageCard>{
             ),
             SizedBox(height: 10,),
             LinearProgressIndicator(
-              value: tokenManage.getPercentage().toDouble(),
+              value: tokenManage.percentage.toDouble(),
               minHeight: 5,
               color: ColorPalette().selectedItemOnDrawerColor,
               valueColor: AlwaysStoppedAnimation<Color>(ColorPalette().btnColor),

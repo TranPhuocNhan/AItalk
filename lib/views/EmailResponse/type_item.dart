@@ -11,12 +11,12 @@ class TypeItem{
 
 abstract class TypeItems{
   static const List<TypeItem> items = [Thanks,Sorry,Yes,No,Followup,Request];
-  static const Thanks = TypeItem(title: "Thanks", icon: "images/thanks.png");
-  static const Sorry = TypeItem(title: "Sorry", icon: "images/sorry.png");
-  static const Yes = TypeItem(title: "Yes", icon: "images/yes.png");
-  static const No = TypeItem(title: "No", icon: "images/no.png");
-  static const Followup = TypeItem(title: "Follow Up", icon: "images/followup.png");
-  static const Request = TypeItem(title: "Request for more information", icon: "images/request.png");
+  static const Thanks = TypeItem(title: "Thanks", icon: "assets/images/thanks.png");
+  static const Sorry = TypeItem(title: "Sorry", icon: "assets/images/sorry.png");
+  static const Yes = TypeItem(title: "Yes", icon: "assets/images/yes.png");
+  static const No = TypeItem(title: "No", icon: "assets/images/no.png");
+  static const Followup = TypeItem(title: "Follow Up", icon: "assets/images/followup.png");
+  static const Request = TypeItem(title: "Request for more information", icon: "assets/images/request.png");
 
   static Widget buildItem(TypeItem item){
     return Row(

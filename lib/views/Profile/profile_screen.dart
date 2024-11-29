@@ -15,22 +15,23 @@ class _ProfileState extends State<ProfileScreen>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorPalette().bgColor,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(
           "Profile",
           style: TextStyle(
-            color: Colors.white,
+            color: Colors.black,
             fontWeight: FontWeight.bold,
             fontSize: 25,
             letterSpacing: 2.0
           ),
         ),
-        backgroundColor: ColorPalette().mainColor,
+        // backgroundColor: ColorPalette().mainColor,
+        backgroundColor: ColorPalette().bgColor,
         leading: Builder(builder: (context) {
           return IconButton(
               icon: const Icon(Icons.menu),
-              color: Colors.white,
+              color: Colors.black,
               onPressed: () {
                 Scaffold.of(context).openDrawer();
               });

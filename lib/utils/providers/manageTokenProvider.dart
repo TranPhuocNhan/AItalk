@@ -4,6 +4,7 @@ class Managetokenprovider with ChangeNotifier{
   bool _isUnlimited = false;
   int _totalTokens = 0;
   int _available = 0;
+  double percentage = 0.0;
   void updateRemainToken(int value){
     _available = value;
     notifyListeners();
@@ -14,6 +15,15 @@ class Managetokenprovider with ChangeNotifier{
   }
   void setIsUnlimited(){
     _isUnlimited = !_isUnlimited;
+    notifyListeners();
+  }
+  void updatePercentage(){
+    if(_totalTokens == 0 || _available == 0 ) {
+      percentage = 0;
+    }
+    else {
+      percentage = (_available.toDouble() / _totalTokens.toDouble());
+    }
     notifyListeners();
   }
   int getRemainToken(){return _available;}

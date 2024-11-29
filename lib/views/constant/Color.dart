@@ -6,7 +6,8 @@ class ColorPalette{
   Color bgColor = const Color.fromARGB(255, 229, 239, 229);
   Color headerColor = const Color(0xff708c69);
   Color bigIcon = const Color.fromARGB(255, 110, 176, 94);
-  Color mainColor = const Color(0xff60906a);
+  // Color mainColor = const Color(0xff60906a);
+  Color mainColor = const Color(0xff547d5b);
   Color btnColor = const Color(0xff60906a);
   Color endLinear = const Color(0xff94d8c3);
 

@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_ai_app/core/AuthService.dart';
+import 'package:flutter_ai_app/core/services/auth_service.dart';
 import 'package:flutter_ai_app/utils/providers/manageTokenProvider.dart';
 import 'package:flutter_ai_app/views/constant/Color.dart';
 import 'package:get_it/get_it.dart';
@@ -49,7 +49,7 @@ class _AppDrawerState extends State<AppDrawer>{
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Image(image: AssetImage("images/full_logo.png"), height: 60,),
+                Image(image: AssetImage("assets/images/full_logo.png"), height: 60,),
                 IconButton(
                   onPressed: (){
                     //DISPOSE DRAWER
@@ -70,12 +70,12 @@ class _AppDrawerState extends State<AppDrawer>{
                 ),
                 borderRadius: BorderRadius.all(Radius.circular(10)),
               ) : null,
-              selectedTileColor: ColorPalette().startLinear.withOpacity(0.1),
+              selectedTileColor: Color(0xff94d8c3).withOpacity(0.2),
               selectedColor: ColorPalette().selectedItemOnDrawerColor,
               leading: Icon(Icons.mark_unread_chat_alt_sharp),
               title: Text("Chat"),
               selected: selectedIndex == 0,
-              tileColor: (selectedIndex == 0) ? ColorPalette().endLinear : null,
+              tileColor: (selectedIndex == 0) ? Color.fromARGB(255, 23, 32, 29) : null,
               onTap: (){
                 _onItemTapped(0);
                 Navigator.pushNamed(context, '/home');
@@ -137,7 +137,7 @@ class _AppDrawerState extends State<AppDrawer>{
                   ListTile(
                     leading: Container(
                       decoration: BoxDecoration(
-                        color: ColorPalette().endLinear.withOpacity(0.5),
+                        color: Color(0xff94d8c3).withOpacity(0.2),
                         borderRadius: BorderRadius.circular(5)
                       ),
                       padding: EdgeInsets.all(5),
@@ -169,7 +169,7 @@ class _AppDrawerState extends State<AppDrawer>{
                   Padding(
                     padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
                     child: LinearProgressIndicator(
-                      value: tokenManage.getPercentage().toDouble(),
+                      value: tokenManage.percentage,
                       minHeight: 5,
                       color: ColorPalette().selectedItemOnDrawerColor,
                       valueColor: AlwaysStoppedAnimation<Color>(ColorPalette().btnColor),

@@ -16,14 +16,14 @@ class _EmailResponseState extends State<EmailResponseScreen>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorPalette().bgColor,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Row(
           children: [
             Text(
               "Email Response",
                 style: TextStyle(
-                  color: Colors.white
+                  color: Colors.black
                 ),
             ),
             Padding(
@@ -32,7 +32,8 @@ class _EmailResponseState extends State<EmailResponseScreen>{
             )
           ],
         ),
-        backgroundColor: ColorPalette().mainColor,
+        // backgroundColor: ColorPalette().mainColor,
+        backgroundColor: ColorPalette().bgColor,
         actions: [                
           Container(
             margin: EdgeInsets.only(right: 10),
@@ -42,7 +43,7 @@ class _EmailResponseState extends State<EmailResponseScreen>{
         leading: Builder(builder: (context) {
           return IconButton(
               icon: const Icon(Icons.menu),
-              color: Colors.white,
+              color: Colors.black,
               onPressed: () {
                 Scaffold.of(context).openDrawer();
               });
@@ -71,7 +72,7 @@ class _EmailResponseState extends State<EmailResponseScreen>{
                     child: TextField(
                       decoration: InputDecoration(
                         filled: true,
-                        fillColor: ColorPalette().startLinear.withOpacity(0.2),
+                        fillColor: ColorPalette().bgColor,
                         hintText: "Tell us how you want to reply...",
                         border:  OutlineInputBorder(
                           borderRadius: BorderRadius.circular(15),

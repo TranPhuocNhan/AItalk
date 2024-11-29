@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ai_app/core/AuthService.dart';
-import 'package:flutter_ai_app/core/UserDataService.dart';
+import 'package:flutter_ai_app/core/services/auth_service.dart';
+import 'package:flutter_ai_app/core/services/user_data_service.dart';
 import 'package:flutter_ai_app/utils/providers/manageTokenProvider.dart';
 import 'package:flutter_ai_app/utils/providers/processingProvider.dart';
 import 'package:flutter_ai_app/views/constant/Color.dart';

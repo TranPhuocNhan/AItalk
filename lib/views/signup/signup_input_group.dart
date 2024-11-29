@@ -1,14 +1,15 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ai_app/core/AuthService.dart';
-import 'package:flutter_ai_app/core/UserDataService.dart';
 import 'package:flutter_ai_app/core/models/user.dart';
+import 'package:flutter_ai_app/core/services/user_data_service.dart';
 import 'package:flutter_ai_app/utils/providers/manageTokenProvider.dart';
 import 'package:flutter_ai_app/views/constant/Color.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../../core/services/auth_service.dart';
 
 class SignupInputGroup extends StatefulWidget {
   @override
