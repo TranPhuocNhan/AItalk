@@ -5,8 +5,9 @@ plugins {
     id "dev.flutter.flutter-gradle-plugin"
 }
 
+
 android {
-    namespace = "com.example.flutter_ai_app"
+    namespace = "com.example.aitalk"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -21,15 +22,26 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.flutter_ai_app"
+        applicationId = "com.example.aitalk"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
+        // minSdk = flutter.minSdkVersion
+        // targetSdk = flutter.targetSdkVersion
+        minSdk = 28
+        targetSdk = 34
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
 
+    
+    signingConfigs{
+        debug{
+            keyAlias 'uploadkeystore1'
+            keyPassword 'android'
+            storeFile file('upload-keystore1.jks')
+            storePassword('android')
+        }
+    }
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
@@ -41,4 +53,8 @@ android {
 
 flutter {
     source = "../.."
+}
+
+dependencies {
+    implementation("com.google.android.gms:play-services-auth:21.2.0")
 }

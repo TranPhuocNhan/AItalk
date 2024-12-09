@@ -8,5 +8,6 @@ class ServiceInjection {
     await ApiServiceModule.configureConversationThreadModuleInjection();
     await ApiServiceModule.configureAIChatModuleInjection();
     await ApiServiceModule.configurePromptModuleInjection();
+    await ApiServiceModule.configureEmailAIChatModuleInjection();
   }
 }

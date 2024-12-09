@@ -2,6 +2,7 @@ import 'package:flutter_ai_app/core/services/ai_chat_service.dart';
 import 'package:flutter_ai_app/core/services/auth_service.dart';
 import 'package:flutter_ai_app/core/services/conversation_history_service.dart';
 import 'package:flutter_ai_app/core/services/conversation_thread_service.dart';
+import 'package:flutter_ai_app/core/services/email_response_service.dart';
 import 'package:flutter_ai_app/core/services/prompt_service.dart';
 import 'package:flutter_ai_app/core/services/send_message_service.dart';
 import 'package:flutter_ai_app/core/services/user_data_service.dart';
@@ -14,6 +15,12 @@ class ApiServiceModule {
         AuthService(apiLink: "https://api.dev.jarvis.cx"));
     getIt.registerSingleton<UserDataService>(
         UserDataService(apiLink: "https://api.dev.jarvis.cx"));
+  }
+  static Future<void> configureEmailAIChatModuleInjection() async{
+    final GetIt getIt = GetIt.instance;
+    getIt.registerSingleton<EmailResponseService>(
+      EmailResponseService(apiLink: "https://api.dev.jarvis.cx")
+    );
   }
 
   static Future<void> configureAIChatModuleInjection() async {

@@ -6,8 +6,11 @@ class Managetokenprovider with ChangeNotifier{
   int _available = 0;
   double percentage = 0.0;
   void updateRemainToken(int value){
-    _available = value;
+    updateRemainTokenWithoutNotify(value);
     notifyListeners();
+  }
+  void updateRemainTokenWithoutNotify(int value){
+    _available = value;
   }
   void updateTotalToken(int value){
     _totalTokens = value;
@@ -18,13 +21,17 @@ class Managetokenprovider with ChangeNotifier{
     notifyListeners();
   }
   void updatePercentage(){
+    updatePercentageWithoutNotify();
+    notifyListeners();
+  }
+
+  void updatePercentageWithoutNotify(){
     if(_totalTokens == 0 || _available == 0 ) {
       percentage = 0;
     }
     else {
       percentage = (_available.toDouble() / _totalTokens.toDouble());
     }
-    notifyListeners();
   }
   int getRemainToken(){return _available;}
   int getTotalToken(){return _totalTokens;}  

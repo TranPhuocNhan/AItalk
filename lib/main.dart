@@ -7,6 +7,7 @@ import 'package:flutter_ai_app/features/ai_chat/data/chat_manager.dart';
 import 'package:flutter_ai_app/features/ai_chat/presentation/chat_provider.dart';
 import 'package:flutter_ai_app/features/prompt/data/prompt_manager.dart';
 import 'package:flutter_ai_app/features/prompt/presentation/prompt_provider.dart';
+import 'package:flutter_ai_app/utils/providers/email_style_provider.dart';
 import 'package:flutter_ai_app/utils/providers/manageTokenProvider.dart';
 import 'package:flutter_ai_app/utils/providers/processingProvider.dart';
 import 'package:flutter_ai_app/utils/routes.dart';
@@ -22,6 +23,7 @@ Future<void> main() async {
     MultiProvider(providers: [
       ChangeNotifierProvider(create: (_) => ProcessingProvider()),
       ChangeNotifierProvider(create: (_) => Managetokenprovider()),
+      ChangeNotifierProvider(create: (_) => EmailStyleProvider()),
       ChangeNotifierProvider(
           create: (_) => ChatProvider(chatManager: chatManager)),
       ChangeNotifierProvider(

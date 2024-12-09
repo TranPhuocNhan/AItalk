@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_ai_app/views/constant/Color.dart';
 import 'package:flutter_ai_app/views/login/login_input_group.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 class LoginScreen extends StatefulWidget{
   late BuildContext loginContext;
   LoginScreen({
@@ -73,7 +74,9 @@ class _LoginState extends State<LoginScreen>{
               alignment: Alignment.center,
               margin: EdgeInsets.only(top: 10, bottom: 10),
               child: IconButton(
-                onPressed: (){}, 
+                onPressed: () async{
+                  await handleLoginWithGoogle();
+                }, 
                 icon: Image.asset("assets/images/gmail.png", width: 40, height: 40,),
                 iconSize: 20,
               ),          
@@ -106,4 +109,34 @@ class _LoginState extends State<LoginScreen>{
      ) 
     );
   }
+  Future<void> handleLoginWithGoogle() async{
+    GoogleSignIn _googleSignIn = GoogleSignIn(
+      clientId: "348732758460-9afjr61qmljttpthraugt60rdk7l9gl8.apps.googleusercontent.com",
+      scopes: [
+        'profile',
+        'email',
+        'https://www.googleapis.com/auth/userinfo.email',
+        'openid',
+        'https://www.googleapis.com/auth/userinfo.profile',
+      ],
+
+    );
+    try{
+      final googleUserAccount = await _googleSignIn.signIn();
+      if(googleUserAccount != null){
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(googleUserAccount.email)));
+      }else{
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("google user account is null")));
+      }
+      // final googleAuth = await googleUserAccount?.authentication;
+      // if(googleAuth != null){
+      //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(googleAuth.idToken.toString() + "---" + googleAuth.accessToken.toString())));
+      // }else{
+      //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("google authentication is null")));
+      // }
+    }catch(error){
+      print(error);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error.toString())));
+    } 
   }
+}

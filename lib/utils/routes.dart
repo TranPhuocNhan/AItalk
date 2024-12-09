@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ai_app/views/EmailResponse/email_resp_view.dart';
+import 'package:flutter_ai_app/views/email_response/email_response_view.dart';
 import 'package:flutter_ai_app/views/Profile/profile_screen.dart';
 import 'package:flutter_ai_app/views/home/home_view.dart';
 import 'package:flutter_ai_app/views/login/change_password.dart';
 import 'package:flutter_ai_app/views/login/forgot_password.dart';
 import 'package:flutter_ai_app/views/login/login_screen.dart';
-import 'package:flutter_ai_app/views/signup/signup_input_group.dart';
 import 'package:flutter_ai_app/views/signup/signup_screen.dart';
 import 'package:flutter_ai_app/views/signup/verification.dart';
 import 'package:flutter_ai_app/views/splash/splash_screen.dart';

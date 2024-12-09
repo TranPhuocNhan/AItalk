@@ -1,0 +1,4 @@
+enum EmailResponseType{
+  ResponseEmail,
+  RequestReplyIdeas,
+}
