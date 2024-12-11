@@ -3,18 +3,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ai_app/core/services/user_data_service.dart';
 import 'package:flutter_ai_app/di/service_injection.dart';
-<<<<<<< HEAD
 import 'package:flutter_ai_app/features/ai_chat/domains/chat_manager.dart';
 import 'package:flutter_ai_app/features/ai_chat/presentation/providers/chat_provider.dart';
-=======
-import 'package:flutter_ai_app/features/ai_chat/data/chat_manager.dart';
-import 'package:flutter_ai_app/features/ai_chat/presentation/chat_provider.dart';
 import 'package:flutter_ai_app/features/login/presentation/processing_provider.dart';
->>>>>>> e58a40a54f1f9688b8692b583d44f8907172f18d
 import 'package:flutter_ai_app/features/prompt/data/prompt_manager.dart';
-import 'package:flutter_ai_app/features/prompt/presentation/prompt_provider.dart';
 import 'package:flutter_ai_app/features/email_response/presentation/email_style_provider.dart';
 import 'package:flutter_ai_app/features/profile/presentation/manage_token_provider.dart';
+import 'package:flutter_ai_app/features/prompt/presentation/providers/prompt_provider.dart';
 import 'package:flutter_ai_app/utils/routes.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
@@ -37,7 +32,6 @@ Future<void> main() async {
   );
 }
 
-
 class MyApp extends StatelessWidget {
   MyApp({super.key});
   final UserDataService userDataService = GetIt.instance<UserDataService>();
@@ -46,15 +40,9 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-<<<<<<< HEAD
-    // update token after refresh/resumed app
-    final tokenManage = Provider.of<Managetokenprovider>(context);
-    updateTokenValue(tokenManage);
-=======
-  // // update token after refresh/resumed app 
-  // final tokenManage = Provider.of<Managetokenprovider>(context);
-  // updateTokenValue(tokenManage);
->>>>>>> e58a40a54f1f9688b8692b583d44f8907172f18d
+    // // update token after refresh/resumed app
+    // final tokenManage = Provider.of<Managetokenprovider>(context);
+    // updateTokenValue(tokenManage);
     return MaterialApp(
       title: 'Home Screen',
       theme: ThemeData(

@@ -15,7 +15,15 @@ class HomeView extends StatefulWidget {
   State<HomeView> createState() => _HomeViewState();
 }
 
-class _HomeViewState extends State<HomeView> {
+class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 3, vsync: this);
+  }
+
   final List<Widget> _widgetOptions = <Widget>[
     const Text("Read Content"),
     const Text("Search Content"),
@@ -28,8 +36,31 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     final chatProvider = Provider.of<ChatProvider>(context);
+    String appBarTitle = "Chat View"; // Default title
+
+    // Set the title based on selectedScreenIndex
+    if (chatProvider.selectedScreenIndex == 1) {
+      appBarTitle = "Thread Chat History";
+    } else if (chatProvider.selectedScreenIndex == 2) {
+      appBarTitle = "Prompt Library";
+    } else if (chatProvider.selectedScreenIndex == 3) {
+      appBarTitle = "Bot Dashboard";
+    }
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text(appBarTitle),
+        bottom:
+            chatProvider.selectedScreenIndex == 2 // PromptLibraryScreen index
+                ? TabBar(
+                    controller: _tabController,
+                    tabs: const [
+                      Tab(text: 'My Prompt'),
+                      Tab(text: 'Public Prompt'),
+                      Tab(text: 'Favorite Prompt'),
+                    ],
+                  )
+                : null,
+      ),
       drawer: AppDrawer(
         selected: 0,
       ),
@@ -49,7 +80,9 @@ class _HomeViewState extends State<HomeView> {
                       )
                     : ChatView(),
                 ThreadChatHistory(),
-                PromptLibraryScreen(),
+                PromptLibraryScreen(
+                  tabController: _tabController,
+                ),
                 BotDashBoard(),
                 ..._widgetOptions.skip(2)
               ],

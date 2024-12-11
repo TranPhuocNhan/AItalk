@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ai_app/core/models/assistant.dart';
 import 'package:flutter_ai_app/features/ai_chat/data/models/assistant_dto.dart';
 import 'package:flutter_ai_app/features/ai_chat/domains/entities/chat_message.dart';
-import 'package:flutter_ai_app/utils/assistant_map.dart';
 import 'package:flutter_ai_app/features/ai_chat/presentation/providers/chat_provider.dart';
-import 'package:flutter_ai_app/widgets/prompt_library_bottom_sheet.dart';
+import 'package:flutter_ai_app/features/prompt/presentation/widgets/prompt_library_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 
 class ChatSection extends StatefulWidget {
@@ -47,9 +47,11 @@ class _ChatSectionState extends State<ChatSection> {
     if (messageContent.isNotEmpty) {
       final message = ChatMessage(
         assistant: AssistantDTO(
-          id: assistantMap[chatProvider.selectedAssistant] ?? "gpt-4o-mini",
+          id: chatProvider.selectedAssistant?.id ??
+              Assistant.assistants.first.id,
           model: 'dify',
-          name: chatProvider.selectedAssistant,
+          name: chatProvider.selectedAssistant?.name ??
+              Assistant.assistants.first.name,
         ),
         role: "user",
         content: messageContent,

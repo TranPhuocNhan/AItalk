@@ -58,7 +58,6 @@ class PromptProvider extends ChangeNotifier {
       language: prompt.language ?? "",
       title: prompt.title ?? "",
     );
-    // print("response of create prompt: $response");
     if (response["isPublic"]) {
       fetchPublicPrompts();
     } else {
@@ -77,7 +76,6 @@ class PromptProvider extends ChangeNotifier {
       isPublic: true,
     );
     _publicPrompts = response.items;
-    // print("public prompts in provider: ${_publicPrompts}");
     _isLoading = false;
     notifyListeners();
   }

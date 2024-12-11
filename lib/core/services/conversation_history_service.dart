@@ -33,10 +33,6 @@ class ConversationHistoryService {
       'x-jarvis-guid': jarvisGuid ?? '',
     });
 
-    // print("Conversaton history pathUrl: $pathUrl");
-    // print("Conversaton history uri: $uri");
-    // print("Conversation History Response: ${response.body}");
-
     if (response.statusCode == 200) {
       return ConversationHistoryResponse.fromJson(jsonDecode(response.body));
     } else {

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ai_app/widgets/upload_confluence_dialog.dart';
-import 'package:flutter_ai_app/widgets/upload_drive_dialog.dart';
-import 'package:flutter_ai_app/widgets/upload_file_dialog.dart';
-import 'package:flutter_ai_app/widgets/upload_slack_dialog.dart';
-import 'package:flutter_ai_app/widgets/upload_web_dialog.dart';
+import 'package:flutter_ai_app/features/ai_bot/presentation/widgets/upload_confluence_dialog.dart';
+import 'package:flutter_ai_app/features/ai_bot/presentation/widgets/upload_drive_dialog.dart';
+import 'package:flutter_ai_app/features/ai_bot/presentation/widgets/upload_file_dialog.dart';
+import 'package:flutter_ai_app/features/ai_bot/presentation/widgets/upload_slack_dialog.dart';
+import 'package:flutter_ai_app/features/ai_bot/presentation/widgets/upload_web_dialog.dart';
 
 class UnitKnowledgeDialog extends StatefulWidget {
   const UnitKnowledgeDialog({super.key});
@@ -100,7 +100,6 @@ class _UnitKnowledgeDialogState extends State<UnitKnowledgeDialog> {
   }
 
   void _handleLocalFiles(BuildContext context) {
-    print("Dialog");
     showDialog(context: context, builder: (context) => UploadFileDialog());
   }
 
