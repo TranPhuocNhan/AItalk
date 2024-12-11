@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:flutter_ai_app/core/models/chat/conversation_threads_api_response.dart';
+import 'package:flutter_ai_app/features/ai_chat/data/models/api_response/conversation_threads_api_response.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 

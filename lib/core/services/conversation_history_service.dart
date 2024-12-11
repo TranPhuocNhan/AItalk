@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:flutter_ai_app/core/models/chat/conversation_history_response.dart';
+import 'package:flutter_ai_app/features/ai_chat/data/models/api_response/conversation_history_response.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 

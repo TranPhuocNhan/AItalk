@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-import 'package:flutter_ai_app/core/models/chat/ai_chat_metadata.dart';
-import 'package:flutter_ai_app/core/models/chat/ai_chat_response.dart';
-import 'package:flutter_ai_app/core/models/chat/assistant_dto.dart';
+import 'package:flutter_ai_app/features/ai_chat/data/models/ai_chat_metadata.dart';
+import 'package:flutter_ai_app/features/ai_chat/data/models/api_response/ai_chat_response.dart';
+import 'package:flutter_ai_app/features/ai_chat/data/models/assistant_dto.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 

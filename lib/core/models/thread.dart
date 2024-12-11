@@ -1,4 +1,4 @@
-import 'package:flutter_ai_app/core/models/chat/chat_message.dart';
+import 'package:flutter_ai_app/features/ai_chat/domains/entities/chat_message.dart';
 
 class ThreadChat {
   final String threadId;
