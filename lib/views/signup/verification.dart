@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_ai_app/views/constant/Color.dart';
+import 'package:flutter_ai_app/utils/constant/Color.dart';
 
 class VerificationScreen extends StatefulWidget{
   late BuildContext verContext;
@@ -45,11 +45,11 @@ class _VerificationState extends State<VerificationScreen>{
                   color: ColorPalette().headerColor
                 ),
               ),
-              SizedBox(height: 30,),
-              Text(
+              const SizedBox(height: 30,),
+              const Text(
                 "Please check your email to get OTP code",
               ),
-              SizedBox(height: 80,),
+              const SizedBox(height: 80,),
               
               // OPT 
               Container(
@@ -100,7 +100,7 @@ class _VerificationState extends State<VerificationScreen>{
                   }
               ),
               ),  
-              SizedBox(height: 50,),
+              const SizedBox(height: 50,),
               //BUTTON CONFIRM 
               Container(
                 margin: EdgeInsets.only(top: 30, bottom: 50),
@@ -112,7 +112,7 @@ class _VerificationState extends State<VerificationScreen>{
                     onPressed: (){}, 
                     child: Padding(
                       padding: EdgeInsets.all(10),
-                      child: Text(
+                      child: const Text(
                         "Confirm",
                         style: TextStyle(
                           color: Colors.white,
@@ -123,11 +123,9 @@ class _VerificationState extends State<VerificationScreen>{
                     style: ElevatedButton.styleFrom(
                       backgroundColor: ColorPalette().btnColor,
                     ),
-                    
                   ),
                 ),
               )
-              
             ],
           ),
         ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ai_app/utils/providers/manageTokenProvider.dart';
-import 'package:flutter_ai_app/views/constant/Color.dart';
+import 'package:flutter_ai_app/features/profile/presentation/manage_token_provider.dart';
+import 'package:flutter_ai_app/utils/constant/Color.dart';
 import 'package:provider/provider.dart';
 
 class TokenUsageCard extends StatefulWidget{
@@ -19,24 +19,24 @@ class _TokenUsageState extends State<TokenUsageCard>{
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               "Token Usage",
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 15,),
+            const SizedBox(height: 15,),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
+                const Text(
                   "Today",
                   style: TextStyle(
                     fontSize: 16
                   ),
                 ),
-                Text(
+                const Text(
                   "Total",
                   style: TextStyle(
                     fontSize: 16
@@ -44,7 +44,7 @@ class _TokenUsageState extends State<TokenUsageCard>{
                 ),
               ],
             ),
-            SizedBox(height: 10,),
+            const SizedBox(height: 10,),
             LinearProgressIndicator(
               value: tokenManage.percentage.toDouble(),
               minHeight: 5,
@@ -52,7 +52,7 @@ class _TokenUsageState extends State<TokenUsageCard>{
               valueColor: AlwaysStoppedAnimation<Color>(ColorPalette().btnColor),
               borderRadius: BorderRadius.circular(10),
             ),
-            SizedBox(height: 10,),
+            const SizedBox(height: 10,),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

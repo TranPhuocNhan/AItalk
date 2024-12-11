@@ -34,14 +34,14 @@ class SendMessageService {
         },
         body: jsonEncode(body));
 
-    print('response send message service: ${response.body}');
-    print("body send message service: $body");
+    // print('response send message service: ${response.body}');
+    // print("body send message service: $body");
 
     if (response.statusCode == 200) {
       return AIChatResponse.fromJson(jsonDecode(response.body));
     } else {
       print('Error: ${response.statusCode}');
-      print('Response body: ${response.body}');
+      // print('Response body: ${response.body}');
 
       throw Exception(
           'Failed to send message. Status code: ${response.statusCode}, Response: ${response.body}');

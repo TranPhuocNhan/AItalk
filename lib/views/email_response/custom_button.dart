@@ -1,18 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_ai_app/utils/providers/email_style_provider.dart';
-import 'package:flutter_ai_app/views/constant/Color.dart';
+import 'package:flutter_ai_app/features/email_response/data/email_style_manager.dart';
+import 'package:flutter_ai_app/utils/email_response_style.dart';
+import 'package:flutter_ai_app/features/email_response/presentation/email_style_provider.dart';
+import 'package:flutter_ai_app/utils/constant/Color.dart';
 import 'package:provider/provider.dart';
 
 class CustomButton extends StatefulWidget {
   late String title;
   late IconData? icon = null;
-  late StyleType type = StyleType.LENGTH;
+  late EmailResponseStyle type = EmailResponseStyle.LENGTH;
   late int position ;
   CustomButton({
     required String content, 
     required IconData? ic,
-    required StyleType type,
+    required EmailResponseStyle type,
     required int position,
   }){
     this.title = content;
@@ -27,11 +29,10 @@ class CustomButton extends StatefulWidget {
 class _CustomButtonState extends State<CustomButton>{
   late String title;
   late IconData? icon; 
-  late StyleType type;
+  late EmailResponseStyle type;
   late int position;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     this.title = widget.title;
     this.icon = widget.icon;
@@ -42,46 +43,11 @@ class _CustomButtonState extends State<CustomButton>{
   Widget build(BuildContext context) {
     final styleManage = Provider.of<EmailStyleProvider>(context);
     List<bool> listData;
-    switch(type){
-      case StyleType.LENGTH:{
-        listData = styleManage.getListLength();
-        break;
-      }
-      case StyleType.FORMALITY: {
-        listData = styleManage.getListFormality();
-        break;
-      }
-      case StyleType.TONE:{
-        listData = styleManage.getListTone();
-        break;
-      }
-      default:{
-        listData = styleManage.getListLength();
-        break;
-      }
-    }
+    listData = EmailStyleManager().getEmailResponseType(styleManage, type);
+    
     return OutlinedButton(
       onPressed: (){
-        switch(type){
-          case StyleType.LENGTH: {
-            styleManage.updateListLength(position);
-            listData = styleManage.getListLength();
-            break;
-          }
-          case StyleType.FORMALITY: {
-            styleManage.updateListFormality(position);
-            listData = styleManage.getListFormality();
-            break;
-          }
-          case StyleType.TONE: {
-            styleManage.updateListTone(position);
-            listData = styleManage.getListTone();
-            break;
-          }
-          default: {
-            break;
-          }
-        }
+        EmailStyleManager().getAndUpdateEmailResponseStyle(styleManage, type, position);
       }, 
       child: (icon != null) ?
         Row(
@@ -91,6 +57,7 @@ class _CustomButtonState extends State<CustomButton>{
               title,
               style: TextStyle(
                 color: listData[position] ? Colors.black : Colors.grey,
+                fontSize: 13,
               ),
             ),
           ],
@@ -99,13 +66,9 @@ class _CustomButtonState extends State<CustomButton>{
           title,
           style: TextStyle(
             color: listData[position] ? Colors.black : Colors.grey,
+            fontSize: 13
           ),
         ),
-      // child: Row(
-      //   children: [
-      //     Icon(icon),
-      //   ],
-      // ),
       style: OutlinedButton.styleFrom(
         backgroundColor: listData[position] ? ColorPalette().iconColor.withOpacity(0.5) : Colors.grey.shade100,
         side: BorderSide(
@@ -115,10 +78,4 @@ class _CustomButtonState extends State<CustomButton>{
     );
   }
 
-}
-
-enum StyleType{
-  LENGTH,
-  FORMALITY,
-  TONE,
 }

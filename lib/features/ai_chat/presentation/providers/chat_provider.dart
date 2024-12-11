@@ -77,7 +77,7 @@ class ChatProvider extends ChangeNotifier {
     setLoading(true);
     _selectedThreadId = threadId;
     _isChatContentView = true;
-    print("Current selectedThreadId: $_selectedThreadId");
+    // print("Current selectedThreadId: $_selectedThreadId");
 
     fetchConversationHistory(
         _selectedThreadId ?? "", _assistantId ?? "gpt-4o-mini");
@@ -133,11 +133,11 @@ class ChatProvider extends ChangeNotifier {
       );
       _conversationThreads = response.getItems;
 
-      print("API response: $response"); // Debug API response
+      // print("API response: $response"); // Debug API response
       notifyListeners();
     } catch (e, stackTrace) {
       print("Error in getConversationThread: $e");
-      print("Stack Trace: $stackTrace");
+      // print("Stack Trace: $stackTrace");
     }
     setLoading(false);
   }
@@ -201,7 +201,7 @@ class ChatProvider extends ChangeNotifier {
       }
     } catch (error, stackTrace) {
       print("Failed to send message in ChatProvider: $error");
-      print("Stack Trace in ChatProvider: $stackTrace");
+      // print("Stack Trace in ChatProvider: $stackTrace");
       _removePendingResponse(
           content); // Loại bỏ trạng thái "đang chờ" nếu có lỗi
       throw Exception("Failed to send message in ChatProvider");
@@ -251,7 +251,7 @@ class ChatProvider extends ChangeNotifier {
       setLoading(false);
     } catch (error, stackTrace) {
       print("Failed to send first message: $error");
-      print("Stack trace: $stackTrace");
+      // print("Stack trace: $stackTrace");
       setLoading(false);
       throw Exception("Failed to process first message");
     }

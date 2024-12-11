@@ -17,7 +17,7 @@ class CustomTitle extends StatelessWidget{
           mainIcon,
           color: Colors.grey,
         ),
-        SizedBox(width: 10,),
+        const SizedBox(width: 10,),
         Text(
           title,
           style: TextStyle(

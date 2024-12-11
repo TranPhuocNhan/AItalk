@@ -5,8 +5,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
   final String apiLink;
-
-  AuthService({required String this.apiLink});
+  final String knowledgeLink;
+  AuthService({
+    required String this.apiLink,
+    required String this.knowledgeLink  
+  });
 
   Future<User> signUpAccount(
       String email, String password, String username) async {
@@ -43,16 +46,60 @@ class AuthService {
       }),
     );
     if (response.statusCode == 200) {
-      var json = jsonDecode(response.body);
+      Map<String, dynamic> json = jsonDecode(response.body);
       if (json.containsKey('token')) {
         var token = json['token'];
-        await saveAccessToken(token['accessToken'], token['refreshToken']);
-        await getCurrentUser();
-        return true;
-      } else
-        return false;
+        try{
+          // sigin external client 
+          var signInExternalResult = await signinExternalClient(token['refreshToken']);
+          await saveAccessToken(token['accessToken'], token['refreshToken'], signInExternalResult[0], signInExternalResult[1]);
+          await getCurrentUser();
+          return true;
+        }catch(err){
+          throw err;
+        }
+      } else{
+        throw "There is something wrong!!";
+      }
     } else {
-      return false;
+      Map<String, dynamic> json = jsonDecode(response.body);
+      if(json.containsKey('message')){
+        throw json['message'];
+      }else{
+        throw "There something wrong!!";
+      }
+    }
+  }
+
+  Future<List<String>> signinExternalClient(String token) async{
+    print("enter signin external client");
+    final response = await http.post(
+      Uri.parse("${knowledgeLink}/kb-core/v1/auth/external-sign-in"),
+      headers: <String, String>{
+        'x-jarvis-guid': '',
+        'Content-Type': 'application/json'
+      },
+      body: jsonEncode(<String, String>{
+        'token' : token,
+      }),
+    );
+    if(response.statusCode == 200){
+      print("responze status code is 200");
+      // get externalAccessToken and externalRefreshToken
+      var decodedData = jsonDecode(response.body)['token'];
+      List<String> output = [];
+      output.add(decodedData['accessToken']);
+      output.add(decodedData['refreshToken']);
+      return output;
+    }else{
+      print("response status code is not 200");
+      // throw message 
+      var decodedData = jsonDecode(response.body);
+      if(decodedData.containsKey('message')){
+        throw decodedData['message'];
+      }else{
+        throw "Something Wrong! Try again!";
+      }
     }
   }
 
@@ -80,7 +127,7 @@ class AuthService {
       return false;
   }
 
-  //FAILED
+
   Future<bool> logoutAccount() async {
     final prefs = await SharedPreferences.getInstance();
     var refreshToken = await prefs.getString("refreshToken");
@@ -123,12 +170,16 @@ class AuthService {
     await prefs.remove("currentId");
     await prefs.remove("accessToken");
     await prefs.remove("refreshToken");
+    await prefs.remove("externalAccessToken");
+    await prefs.remove("externalRefreshToken");
   }
 
-  Future<void> saveAccessToken(String accessToken, String freshToken) async {
+  Future<void> saveAccessToken(String accessToken, String freshToken, String externalAccessToken, String externalRefreshToken) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString("accessToken", accessToken);
     await prefs.setString("refreshToken", freshToken);
+    await prefs.setString("externalAccessToken", externalAccessToken);
+    await prefs.setString("externalRefreshToken", externalRefreshToken);
   }
 
   String handleResponse(String response) {

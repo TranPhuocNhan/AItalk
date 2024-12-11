@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_ai_app/core/models/email/email_request.dart';
 import 'package:flutter_ai_app/core/models/email/email_response.dart';
 import 'package:flutter_ai_app/core/models/email/suggest_idea_request.dart';
@@ -9,11 +7,11 @@ import 'package:flutter_ai_app/utils/LanguageConverter.dart';
 import 'package:flutter_ai_app/utils/email_response_converter.dart';
 import 'package:flutter_ai_app/utils/email_response_type.dart';
 import 'package:flutter_ai_app/utils/language_enum.dart';
-import 'package:flutter_ai_app/utils/providers/email_style_provider.dart';
-import 'package:flutter_ai_app/utils/providers/manageTokenProvider.dart';
-import 'package:flutter_ai_app/views/constant/Color.dart';
+import 'package:flutter_ai_app/features/email_response/presentation/email_style_provider.dart';
+import 'package:flutter_ai_app/features/profile/presentation/manage_token_provider.dart';
+import 'package:flutter_ai_app/utils/constant/Color.dart';
 import 'package:flutter_ai_app/views/email_response/email_style_popup.dart';
-import 'package:flutter_ai_app/views/email_response/show_dialog_support.dart';
+import 'package:flutter_ai_app/features/email_response/presentation/show_dialog_support.dart';
 import 'package:flutter_ai_app/widgets/app_drawer.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
@@ -47,7 +45,6 @@ class _EmailResponseState extends State<EmailResponseScreen>{
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _focusNode.addListener((){
       setState(() {
@@ -68,7 +65,7 @@ class _EmailResponseState extends State<EmailResponseScreen>{
       appBar: AppBar(
         title: const Row(
           children: [
-            Text(
+            const Text(
               "Email Response",
               style: TextStyle(
                 color: Colors.black,
@@ -100,15 +97,15 @@ class _EmailResponseState extends State<EmailResponseScreen>{
                   width: size.width / 2 - size.width * 0.05,
                   child:  ElevatedButton(
                     onPressed: (){
-                      //todo: something
                       setState(() {
                         emailType = EmailResponseType.ResponseEmail;
                       });
                     }, 
-                    child: Text(
+                    child: const Text(
                       "Response Email",
                       style: TextStyle(
-                        fontWeight: FontWeight.bold
+                        fontWeight: FontWeight.bold,
+                        fontSize: 13,
                       ),
                     ),
                     style: OutlinedButton.styleFrom(
@@ -124,7 +121,6 @@ class _EmailResponseState extends State<EmailResponseScreen>{
                   width:  size.width / 2 - size.width * 0.05 ,
                   child: ElevatedButton(
                     onPressed: (){
-                      //todo: something
                       setState(() {
                         emailType = EmailResponseType.RequestReplyIdeas;
                       });
@@ -132,7 +128,8 @@ class _EmailResponseState extends State<EmailResponseScreen>{
                     child: const Text(
                       "Suggest Reply Ideas",
                       style: TextStyle(
-                        fontWeight: FontWeight.bold
+                        fontWeight: FontWeight.bold,
+                        fontSize: 13,
                       ),
                     ),
                     style: OutlinedButton.styleFrom(
@@ -161,8 +158,8 @@ class _EmailResponseState extends State<EmailResponseScreen>{
                             width: 20,
                             height: 20,
                           ),
-                          SizedBox(width: 10,),
-                          Text(
+                          const SizedBox(width: 10,),
+                          const Text(
                             "Input email",
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
@@ -172,7 +169,7 @@ class _EmailResponseState extends State<EmailResponseScreen>{
                         ],
                       )
                     ),
-                    Divider(),
+                    const Divider(),
                     //text field 
                     Expanded(
                       child: Padding(
@@ -193,20 +190,24 @@ class _EmailResponseState extends State<EmailResponseScreen>{
                             showDialog(
                               context: context, 
                               builder: (BuildContext context){
-                                return CustomMailDialog();
+                                return CustomMailDialog(
+                                  originLength: styleManage.getChosenLength(), 
+                                  originFormality: styleManage.getChosenFormality(), 
+                                  originTone: styleManage.getChosenTone()
+                                );
                               }
                             );
                           }, 
                           child: Row(
                             children: [
-                              Icon(Icons.auto_awesome_sharp),
-                              Text("Style | Length")
+                              const Icon(Icons.auto_awesome_sharp),
+                              const Text("Style | Length")
                             ],
                           )
-                        ) : SizedBox(width: 0,),
-                        TextButton(
+                        ) : const SizedBox(width: 0,),
+                        const TextButton(
                           onPressed: null, 
-                          child: Text(
+                          child: const Text(
                             "Language: ",
                             style: TextStyle(
                               color: const Color(0xff806d9f)
@@ -264,7 +265,7 @@ class _EmailResponseState extends State<EmailResponseScreen>{
                           onPressed: (){
                             handleSendButton(styleManage, tokenManage);
                           }, 
-                          child: Text(
+                          child: const Text(
                             'Request',
                             style: TextStyle(
                               color: Colors.white,

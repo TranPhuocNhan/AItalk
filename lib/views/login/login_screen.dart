@@ -1,16 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_ai_app/views/constant/Color.dart';
+import 'package:flutter_ai_app/features/login/data/login_manager.dart';
+import 'package:flutter_ai_app/utils/constant/Color.dart';
 import 'package:flutter_ai_app/views/login/login_input_group.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 class LoginScreen extends StatefulWidget{
-  late BuildContext loginContext;
-  LoginScreen({
-    required BuildContext context
-  }){
-    this.loginContext = context;
-  }
+  final BuildContext loginContext;
+  LoginScreen({required this.loginContext});
   @override
   State<StatefulWidget> createState() => _LoginState();
 
@@ -24,7 +18,6 @@ class _LoginState extends State<LoginScreen>{
   void initState() {
     super.initState();
     _lgContext = widget.loginContext;
-    // rememberCheck = false;
   }
   
   
@@ -42,18 +35,18 @@ class _LoginState extends State<LoginScreen>{
             Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 30,),
-                    Text(
-                      "Log in",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 32,
-                        color: ColorPalette().headerColor
-                      )
-                    ),
-                  SizedBox(height: 50,),
+                  const SizedBox(height: 30,),
+                  Text(
+                    "Log in",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 32,
+                      color: ColorPalette().headerColor
+                    )
+                  ),
+                  const SizedBox(height: 50,),
                   LoginInputGroup(),
-                  SizedBox(height: 100,),
+                  const SizedBox(height: 100,),
                 ],
               ),
             // ANOTHER LOGIN TYPE 
@@ -64,7 +57,7 @@ class _LoginState extends State<LoginScreen>{
                 Expanded(child: Divider(color: Colors.black,)),
                 Padding(
                   padding: EdgeInsets.only(left: 10, right: 10),
-                  child: Text("Or Sign In With"),
+                  child: const Text("Or Sign In With"),
                 ),
                 Expanded(child: Divider(color: Colors.black,))
               ],
@@ -75,23 +68,23 @@ class _LoginState extends State<LoginScreen>{
               margin: EdgeInsets.only(top: 10, bottom: 10),
               child: IconButton(
                 onPressed: () async{
-                  await handleLoginWithGoogle();
+                  await LoginManager().handleLoginWithGoogle(context);
                 }, 
-                icon: Image.asset("assets/images/gmail.png", width: 40, height: 40,),
+                icon:  Image.asset("assets/images/gmail.png", width: 40, height: 40,),
                 iconSize: 20,
               ),          
             ),
             Row(
               mainAxisAlignment:MainAxisAlignment.spaceBetween,
               children: [
-                Text(
+                const Text(
                   "Don't have an account?",
                 ),
                 TextButton(
                   onPressed: (){
                     Navigator.pushNamed(_lgContext,'/register');                   
                   }, 
-                  child: Text(
+                  child: const Text(
                     "Sign up",
                       style: TextStyle(
                         color: Colors.red
@@ -99,7 +92,7 @@ class _LoginState extends State<LoginScreen>{
                     ))
               ],
             ),
-            SizedBox(height: 20,)
+            const SizedBox(height: 20,)
               ],
             )
           ],
@@ -108,35 +101,5 @@ class _LoginState extends State<LoginScreen>{
      ),
      ) 
     );
-  }
-  Future<void> handleLoginWithGoogle() async{
-    GoogleSignIn _googleSignIn = GoogleSignIn(
-      clientId: "348732758460-9afjr61qmljttpthraugt60rdk7l9gl8.apps.googleusercontent.com",
-      scopes: [
-        'profile',
-        'email',
-        'https://www.googleapis.com/auth/userinfo.email',
-        'openid',
-        'https://www.googleapis.com/auth/userinfo.profile',
-      ],
-
-    );
-    try{
-      final googleUserAccount = await _googleSignIn.signIn();
-      if(googleUserAccount != null){
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(googleUserAccount.email)));
-      }else{
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("google user account is null")));
-      }
-      // final googleAuth = await googleUserAccount?.authentication;
-      // if(googleAuth != null){
-      //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(googleAuth.idToken.toString() + "---" + googleAuth.accessToken.toString())));
-      // }else{
-      //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("google authentication is null")));
-      // }
-    }catch(error){
-      print(error);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error.toString())));
-    } 
   }
 }

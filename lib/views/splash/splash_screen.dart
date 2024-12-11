@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ai_app/core/services/user_data_service.dart';
+import 'package:flutter_ai_app/features/profile/presentation/manage_token_provider.dart';
 import 'package:flutter_ai_app/views/splash/PageContent.dart';
 import 'package:get_it/get_it.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget{
@@ -10,6 +12,8 @@ class SplashScreen extends StatefulWidget{
 }
 
 class _SplashState extends State<SplashScreen>{
+  
+
   var _currentIndex = 0;
   final PageController _pageController = PageController();
   final UserDataService userDataService = GetIt.instance<UserDataService>();
@@ -49,10 +53,22 @@ class _SplashState extends State<SplashScreen>{
       });
     });
   }
-  void checkLoginStatus() async{
+  void checkLoginStatus(Managetokenprovider tokenManage) async{
     final prefs = await SharedPreferences.getInstance();
     if(prefs.containsKey("accessToken")){
+      updateTokenValue(tokenManage);
       Navigator.pushNamed(context, '/home');
+    }
+  }
+  void updateTokenValue(Managetokenprovider tokenManage) async{
+    // check login before get token value 
+    final prefs = await SharedPreferences.getInstance();
+    var accessToken = await prefs.getString("accessToken");
+    if(accessToken != null && accessToken != "" && tokenManage.getTotalToken() <= 0){
+      List<int> token = await userDataService.getTokenUsage();
+      tokenManage.updateTotalToken(token[1]);
+      tokenManage.updateRemainToken(token[0]);
+      tokenManage.updatePercentage();
     }
   }
 
@@ -64,7 +80,9 @@ class _SplashState extends State<SplashScreen>{
   }
   @override
   Widget build(BuildContext context) {
-    checkLoginStatus();
+  final tokenManage = Provider.of<Managetokenprovider>(context);
+
+    checkLoginStatus(tokenManage);
     return Scaffold(
       body: PageView.builder(
         itemCount: pages.length,
@@ -75,7 +93,7 @@ class _SplashState extends State<SplashScreen>{
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 Row(
@@ -95,7 +113,7 @@ class _SplashState extends State<SplashScreen>{
                       onPressed: (){
                         Navigator.pushNamed(context, "/login");
                       }, 
-                      child: Text(
+                      child: const Text(
                       "Skip",
                       style: TextStyle(
                         fontSize: 16,
@@ -112,7 +130,7 @@ class _SplashState extends State<SplashScreen>{
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Image.asset(pages[index].image),
-                      SizedBox(height: 20,),
+                      const SizedBox(height: 20,),
                       (index != 3) ? 
                       Container(
                         margin: EdgeInsets.all(5),
@@ -125,8 +143,8 @@ class _SplashState extends State<SplashScreen>{
                           ),
                           textAlign: TextAlign.center,
                         ),
-                      ) : Text(""),
-                      SizedBox(height: 20,),
+                      ) : const Text(""),
+                      const SizedBox(height: 20,),
                       (index != 4) ? 
                       Container(
                         margin: EdgeInsets.all(10),
@@ -138,7 +156,7 @@ class _SplashState extends State<SplashScreen>{
                           ),
                           textAlign: TextAlign.center,
                         ),
-                      ) : Text(""),
+                      ) : const Text(""),
                     ],
                   ),
                 ),
@@ -152,7 +170,7 @@ class _SplashState extends State<SplashScreen>{
                     }, 
                     child: Padding(
                       padding: EdgeInsets.all(5),
-                      child: Text(
+                      child: const Text(
                         "Started",
                         style: TextStyle(
                           color: Colors.white,
@@ -165,7 +183,7 @@ class _SplashState extends State<SplashScreen>{
                     )
                   )
                 )
-                : Text(""),
+                : const Text(""),
                 // thanh chỉ dẫn 
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -183,7 +201,7 @@ class _SplashState extends State<SplashScreen>{
                       );
                     })
                 ),
-                SizedBox(height: 20,),
+                const SizedBox(height: 20,),
               ],
             )
           );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ai_app/views/ai_bot/ai_bot_view.dart';
 import 'package:flutter_ai_app/views/email_response/email_response_view.dart';
-import 'package:flutter_ai_app/views/Profile/profile_screen.dart';
+import 'package:flutter_ai_app/views/profile/profile_screen.dart';
 import 'package:flutter_ai_app/views/home_view.dart';
 import 'package:flutter_ai_app/views/login/change_password.dart';
 import 'package:flutter_ai_app/views/login/forgot_password.dart';
@@ -20,18 +21,21 @@ class Routes {
   static const String home = '/home';
   static const String profile = '/profile';
   static const String emailResponse = '/emailRsp';
+  static const String aiBot = '/aiBot';
+  static const String createBot = "/createBot";
   static final routes = <String, WidgetBuilder>{
     splash: (BuildContext context) => SplashScreen(),
-    login: (BuildContext context) => LoginScreen(context: context),
+    login: (BuildContext context) => LoginScreen(loginContext: context),
     register: (BuildContext context) => SignUpScreen(context: context),
     verification: (BuildContext context) =>
         VerificationScreen(context: context),
     forgotPassword: (BuildContext context) =>
-        ForgotPasswordScreen(context: context),
+        ForgotPasswordScreen(forgotCtx: context),
     changePassword: (BuildContext context) =>
-        ChangePasswordScreen(context: context),
+        ChangePasswordScreen(changeContext: context),
     home: (BuildContext context) => HomeView(),
     profile: (BuildContext context) => ProfileScreen(),
     emailResponse: (BuildContext context) => EmailResponseScreen(),
+    aiBot: (BuildContext context) => AIBotView(),
   };
 }

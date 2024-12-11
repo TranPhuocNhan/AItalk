@@ -41,8 +41,8 @@ class ConversationThreadService {
     final response = await http.get(uri, headers: headers);
 
     // Xử lý kết quả
-    print('Request URL: $uri');
-    print('Response: ${response.body}');
+    // print('Request URL: $uri');
+    // print('Response: ${response.body}');
 
     if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(response.body);
