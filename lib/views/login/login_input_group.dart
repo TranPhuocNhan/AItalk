@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ai_app/core/services/auth_service.dart';
 import 'package:flutter_ai_app/core/services/user_data_service.dart';
-import 'package:flutter_ai_app/utils/providers/manageTokenProvider.dart';
-import 'package:flutter_ai_app/utils/providers/processingProvider.dart';
-import 'package:flutter_ai_app/views/constant/Color.dart';
+import 'package:flutter_ai_app/features/login/data/login_manager.dart';
+import 'package:flutter_ai_app/features/profile/presentation/manage_token_provider.dart';
+import 'package:flutter_ai_app/features/login/presentation/processing_provider.dart';
+import 'package:flutter_ai_app/utils/constant/Color.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
@@ -45,7 +46,7 @@ class _LoginInputState extends State<LoginInputGroup>{
               controller:emailController,
               validator: _validate,
               decoration: InputDecoration(
-                label: Text("Email"),
+                label: const Text("Email"),
                 prefixIcon: Icon(Icons.person, color: ColorPalette().iconColor,),
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(
@@ -81,7 +82,7 @@ class _LoginInputState extends State<LoginInputGroup>{
               controller: passwordController,
               validator: _validate,
               decoration: InputDecoration(
-                label: Text("Password"),
+                label: const Text("Password"),
                 prefixIcon: Icon(Icons.lock, color: ColorPalette().iconColor,),
                 suffixIcon:(
                   IconButton(
@@ -118,7 +119,6 @@ class _LoginInputState extends State<LoginInputGroup>{
             ),
           )
         ),
-        //
 
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -133,14 +133,14 @@ class _LoginInputState extends State<LoginInputGroup>{
                     });
                   },
                 ),
-                Text("Remember Me"),
+                const Text("Remember Me"),
                 ],
               ),
             TextButton(
               onPressed: (){
                 Navigator.pushNamed(context, "/forgot");
               }, 
-              child: Text(
+              child: const Text(
                 "Forgot Password",
                 style: TextStyle(color: Colors.red),
               )
@@ -162,15 +162,15 @@ class _LoginInputState extends State<LoginInputGroup>{
               onPressed: () async{
                 bool checkUsername = usernameKey.currentState!.validate();
                 bool checkPassword = passwordKey.currentState!.validate();
-                if(checkPassword && checkPassword){
+                if(checkUsername && checkPassword){
                   processing.UpdateLoadingProcess();
-                  await handleActionLogin(tokenManage);
+                  await LoginManager().handleActionLogin(tokenManage, emailController.value.text, passwordController.value.text, context);
                   processing.UpdateLoadingProcess();
                 }
               }, 
               child: Padding(
                 padding: EdgeInsets.all(10),
-                child: Text(
+                child: const Text(
                   "Login", 
                     style: TextStyle(
                       color: Colors.white,
@@ -187,43 +187,9 @@ class _LoginInputState extends State<LoginInputGroup>{
             )
         ),
         processing.getProcessState() ? 
-        CircularProgressIndicator() : Text(""),
-
+        const CircularProgressIndicator() : const Text(""),
 
       ],
-    );
-  }
-
-  Future<void> handleActionLogin(Managetokenprovider tokenManage) async{
-    bool result = await authService.signInAccount(emailController.value.text, passwordController.value.text);
-    if(result == true){
-      List<int> token = await userDataService.getTokenUsage();
-      tokenManage.updateTotalToken(token[1]);
-      tokenManage.updateRemainToken(token[0]);
-      Navigator.pushNamed(context, '/home');
-    }else{
-      showLoginDialog(context, "");
-    }
-  }
-
-  void showLoginDialog(BuildContext context, String message){
-    showDialog(
-      context: context, 
-      builder: (BuildContext context){
-        return AlertDialog(
-          title: Text("NOTIFICATION"),
-          content: Text("Message"),
-          actions: [
-            TextButton(
-              onPressed: (){
-                Navigator.pop(context);
-              }, 
-              child: Text("Ok"),
-            )
-          ],
-        );
-      }
-      
     );
   }
 }

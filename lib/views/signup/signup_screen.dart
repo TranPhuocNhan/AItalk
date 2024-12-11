@@ -1,16 +1,15 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_ai_app/views/signup/signup_input_group.dart';
-import 'package:flutter_ai_app/views/constant/Color.dart';
+import 'package:flutter_ai_app/utils/constant/Color.dart';
 
 
 class SignUpScreen extends StatefulWidget{
-  late BuildContext context;
+  final BuildContext context;
+  SignUpScreen({required this.context});
   @override
   State<StatefulWidget> createState() => _SignupState();
-  SignUpScreen({required BuildContext context}){
-    this.context = context;
-  }
+  
 }
 
 class _SignupState extends State<SignUpScreen>{
@@ -27,7 +26,6 @@ class _SignupState extends State<SignUpScreen>{
     mainContext = widget.context;
     privateCheck = false;
   }
-  final colorElements = <Color>[ColorPalette().startLinear, ColorPalette().endLinear];
   
   @override
   Widget build(BuildContext context) {
@@ -44,7 +42,7 @@ class _SignupState extends State<SignUpScreen>{
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: 20,),
+                    const SizedBox(height: 20,),
                     Text(
                       "Sign up",
                       style: TextStyle(
@@ -53,16 +51,16 @@ class _SignupState extends State<SignUpScreen>{
                         color: ColorPalette().headerColor
                       ),
                     ),
-                    SizedBox(height: 20,),
+                    const SizedBox(height: 20,),
                     SignupInputGroup(),
-                    SizedBox(height: 100,),
+                    const SizedBox(height: 100,),
                   ],
                 ),
                 //NAVIGATE TO SIGN IN 
                 Row(
                   mainAxisAlignment:MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
+                    const Text(
                       "Already have an account?",
                     ),
                     TextButton(
@@ -70,7 +68,7 @@ class _SignupState extends State<SignUpScreen>{
                         //navigate to login screen
                         Navigator.pushNamed(context, '/login');
                       }, 
-                      child: Text(
+                      child: const Text(
                           "Sign in",
                           style: TextStyle(
                             color: Colors.red

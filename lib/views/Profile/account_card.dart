@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ai_app/core/services/auth_service.dart';
 import 'package:flutter_ai_app/views/login/verify_email.dart';
-import 'package:flutter_ai_app/views/constant/Color.dart';
+import 'package:flutter_ai_app/utils/constant/Color.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -16,7 +16,6 @@ class _AccountCardState extends State<AccountCard>{
   var email = "";
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     setUserInformation();
   }
@@ -47,7 +46,7 @@ class _AccountCardState extends State<AccountCard>{
               ),
               subtitle: Text(email),
             ),
-            Divider(),
+            const Divider(),
             GestureDetector(
               onTap: (){
                 Navigator.push(context, MaterialPageRoute(builder: (context)=>
@@ -63,7 +62,7 @@ class _AccountCardState extends State<AccountCard>{
                   padding: EdgeInsets.all(5),
                   child: Icon(Icons.lock),
                 ),
-                title: Text(
+                title: const Text(
                   "Change pasword",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
@@ -73,7 +72,7 @@ class _AccountCardState extends State<AccountCard>{
                 trailing: Icon(Icons.arrow_forward_ios_rounded),
               ),
             ),
-            Divider(),
+            const Divider(),
             GestureDetector(
               onTap: () async{
                 var logoutResult = await authService.logoutAccount();
@@ -93,7 +92,7 @@ class _AccountCardState extends State<AccountCard>{
                     color: Colors.red.shade700,
                   ),
                 ),
-                title: Text(
+                title: const Text(
                   "Logout",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
@@ -110,7 +109,7 @@ class _AccountCardState extends State<AccountCard>{
   }
   
   void setUserInformation() async{
-    print("ENTER SET USER INFORMATION");
+    // print("ENTER SET USER INFORMATION");
     //get user name and email and remain token 
     final prefs = await SharedPreferences.getInstance();
     var name = await prefs.getString('currentUser');

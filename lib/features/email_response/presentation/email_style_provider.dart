@@ -12,46 +12,39 @@ class EmailStyleProvider  with ChangeNotifier{
   List<Tone> originListTone = [Tone.witty, Tone.empathetic, Tone.personable, Tone.concerned, Tone.friendly, Tone.direct, Tone.sincere,
   Tone.optimistic, Tone.confident, Tone.informational, Tone.enthusiastic];
 
-
-  bool isApply = false;
+  bool isDecided = false;
   // theo thứ tự [short, medium, length]
-  List<bool> lengthEmail = [false, true, false];  
+  List<bool> lengthEmail = [false, false, true];  
   // theo thứ tự [casual, neutral, formal]
-  List<bool> formalityEmail = [true, false, false];
+  List<bool> formalityEmail = [false, true, false];
   //theo thứ tự [witty, empathetic, personable, concerned, friendly, direct,
   //sincere, optimistic, confident, informational, enthusiastic ]
   List<bool> toneEmail = [false, false, false , false, true, false, false, false, false, false, false];
   List<bool> getListLength()  {return this.lengthEmail;}
   List<bool> getListFormality() {return this.formalityEmail;}
   List<bool> getListTone() {return this.toneEmail;}
-  bool getIsApply(){ return this.isApply;}
   Length getChosenLength(){
-    if(isApply){
-      for(int i = 0; i < lengthEmail.length; ++i){
-        if(lengthEmail[i]){
-          return originListLength[i];
-        }
+    for(int i = 0; i < lengthEmail.length; ++i){
+      if(lengthEmail[i]){
+        print("GET CHOOSEN LENGTH ${originListLength[i]}");
+        return originListLength[i];
       }
     }
     return originLengthValue;
   }
   Formality getChosenFormality(){
-    if(isApply){
-      for(int i = 0; i < formalityEmail.length; ++i){
-        if(formalityEmail[i]){
-          return originListFormality[i];
-        }
+    for(int i = 0; i < formalityEmail.length; ++i){
+      if(formalityEmail[i]){
+        return originListFormality[i];
       }
     }
     return originFormalityValue;
   }
 
   Tone getChosenTone(){
-    if(isApply){
-      for(int i = 0; i < toneEmail.length; ++i){
-        if(toneEmail[i]){
-          return originListTone[i];
-        }
+    for(int i = 0; i < toneEmail.length; ++i){
+      if(toneEmail[i]){
+        return originListTone[i];
       }
     }
     return originToneValue;
@@ -78,8 +71,17 @@ class EmailStyleProvider  with ChangeNotifier{
     toneEmail[position] = true;
     notifyListeners();
   }
-  void updateIsApply(bool value){
-    isApply = value;
-    notifyListeners();
+  void updateIsDecided(bool value){
+    isDecided = value;
+  }
+
+
+  void resetOriginValue(Length length, Formality formality, Tone tone){
+    var lengthPos = originListLength.indexOf(length);
+    var formalityPos = originListFormality.indexOf(formality);
+    var tonePos = originListTone.indexOf(tone);
+    updateListFormality(formalityPos);
+    updateListLength(lengthPos);
+    updateListTone(tonePos);
   }
 }

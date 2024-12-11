@@ -33,6 +33,8 @@ class Managetokenprovider with ChangeNotifier{
       percentage = (_available.toDouble() / _totalTokens.toDouble());
     }
   }
+
+  
   int getRemainToken(){return _available;}
   int getTotalToken(){return _totalTokens;}  
   int getPercentage(){

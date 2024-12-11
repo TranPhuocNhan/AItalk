@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ai_app/views/Profile/account_card.dart';
-import 'package:flutter_ai_app/views/Profile/token_usage_card.dart';
-import 'package:flutter_ai_app/views/constant/Color.dart';
+import 'package:flutter_ai_app/views/profile/account_card.dart';
+import 'package:flutter_ai_app/views/profile/token_usage_card.dart';
+import 'package:flutter_ai_app/utils/constant/Color.dart';
 import 'package:flutter_ai_app/widgets/app_drawer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProfileScreen extends StatefulWidget{
   @override
@@ -12,12 +13,13 @@ class ProfileScreen extends StatefulWidget{
 class _ProfileState extends State<ProfileScreen>{
   final colorElements = <Color>[ColorPalette().startLinear, ColorPalette().endLinear];
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           "Profile",
           style: TextStyle(
             color: Colors.black,
@@ -26,7 +28,6 @@ class _ProfileState extends State<ProfileScreen>{
             letterSpacing: 2.0
           ),
         ),
-        // backgroundColor: ColorPalette().mainColor,
         backgroundColor: ColorPalette().bgColor,
         leading: Builder(builder: (context) {
           return IconButton(
@@ -45,7 +46,7 @@ class _ProfileState extends State<ProfileScreen>{
             children: [
               TokenUsageCard(),
               Padding(padding: EdgeInsets.all(5),
-                child: Text(
+                child: const Text(
                   "Account",
                   style: TextStyle(
                     fontSize: 20,
@@ -61,12 +62,13 @@ class _ProfileState extends State<ProfileScreen>{
                 child: Container(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: (){
-                      //UPGRADE ACCOUNT
+                    onPressed: () async {
+                      // navigate to subcribe web: https://admin.dev.jarvis.cx/pricing/overview
+                      _launchUrl();
                     }, 
                     child: Padding(
                       padding: EdgeInsets.all(10), 
-                      child: Text(
+                      child: const Text(
                         "Upgrade Account",
                         style: TextStyle(
                           color: Colors.white,
@@ -86,8 +88,15 @@ class _ProfileState extends State<ProfileScreen>{
           ),
         ),
       ),
-      drawer: AppDrawer(selected: 2),
+      drawer: AppDrawer(selected: 3),
     );
+  }
+
+   void _launchUrl() async {
+    final Uri url = Uri.parse('https://admin.dev.jarvis.cx/pricing/overview');
+    if (!await launchUrl(url)) {
+      throw Exception('Could not launch $url');
+    }
   }
   
 }

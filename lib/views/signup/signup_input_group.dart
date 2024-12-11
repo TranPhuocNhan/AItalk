@@ -1,10 +1,10 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ai_app/core/models/user.dart';
 import 'package:flutter_ai_app/core/services/user_data_service.dart';
-import 'package:flutter_ai_app/utils/providers/manageTokenProvider.dart';
-import 'package:flutter_ai_app/views/constant/Color.dart';
+import 'package:flutter_ai_app/features/profile/presentation/manage_token_provider.dart';
+import 'package:flutter_ai_app/features/register/presentation/register_manager.dart';
+import 'package:flutter_ai_app/utils/constant/Color.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -28,10 +28,6 @@ class _SignupInputState extends State<SignupInputGroup> {
   bool passwordVisibility = false;
   bool confirmPassVisibility = false;
   bool privateCheck = false;
-  final colorElements = <Color>[
-    ColorPalette().startLinear,
-    ColorPalette().endLinear
-  ];
 
   TextStyle defaultStyle = TextStyle(color: Colors.grey);
   TextStyle linkStyle = TextStyle(color: Colors.blue);
@@ -49,8 +45,11 @@ class _SignupInputState extends State<SignupInputGroup> {
   String? _passwordValidate(String? input) {
     if (input!.isEmpty) {
       return "You must enter a value in this field";
+    }else{
+      if(!RegisterManager().checkPasswordValidate(input)){
+        return "Required an uppercase, lowercase and digit";
+      }
     }
-    //check password valid
     return null;
   }
 
@@ -79,16 +78,16 @@ class _SignupInputState extends State<SignupInputGroup> {
                 controller: usernameController,
                 validator: _validate,
                 decoration: InputDecoration(
-                  label: Text("Username"),
+                  label: const Text("Username"),
                   focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(
                     color: ColorPalette().iconColor,
                   )),
-                  enabledBorder: OutlineInputBorder(
+                  enabledBorder: const OutlineInputBorder(
                       borderSide: BorderSide(
                     color: Colors.black,
                   )),
-                  errorBorder: OutlineInputBorder(
+                  errorBorder: const OutlineInputBorder(
                       borderSide: BorderSide(
                     color: Colors.red,
                   )),
@@ -105,16 +104,16 @@ class _SignupInputState extends State<SignupInputGroup> {
                 controller: emailController,
                 validator: _validate,
                 decoration: InputDecoration(
-                  label: Text("Email"),
+                  label: const Text("Email"),
                   focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(
                     color: ColorPalette().iconColor,
                   )),
-                  enabledBorder: OutlineInputBorder(
+                  enabledBorder: const OutlineInputBorder(
                       borderSide: BorderSide(
                     color: Colors.black,
                   )),
-                  errorBorder: OutlineInputBorder(
+                  errorBorder: const OutlineInputBorder(
                       borderSide: BorderSide(
                     color: Colors.red,
                   )),
@@ -130,7 +129,7 @@ class _SignupInputState extends State<SignupInputGroup> {
                   controller: passwordController,
                   validator: _passwordValidate,
                   decoration: InputDecoration(
-                    label: Text("Password"),
+                    label: const Text("Password"),
                     suffixIcon: (IconButton(
                         onPressed: () {
                           setState(() {
@@ -152,11 +151,11 @@ class _SignupInputState extends State<SignupInputGroup> {
                         borderSide: BorderSide(
                       color: ColorPalette().iconColor,
                     )),
-                    enabledBorder: OutlineInputBorder(
+                    enabledBorder: const OutlineInputBorder(
                         borderSide: BorderSide(
                       color: Colors.black,
                     )),
-                    errorBorder: OutlineInputBorder(
+                    errorBorder: const OutlineInputBorder(
                         borderSide: BorderSide(
                       color: Colors.red,
                     )),
@@ -195,11 +194,11 @@ class _SignupInputState extends State<SignupInputGroup> {
                         borderSide: BorderSide(
                       color: ColorPalette().iconColor,
                     )),
-                    enabledBorder: OutlineInputBorder(
+                    enabledBorder: const OutlineInputBorder(
                         borderSide: BorderSide(
                       color: Colors.black,
                     )),
-                    errorBorder: OutlineInputBorder(
+                    errorBorder: const OutlineInputBorder(
                         borderSide: BorderSide(
                       color: Colors.red,
                     )),
@@ -230,7 +229,7 @@ class _SignupInputState extends State<SignupInputGroup> {
                         print("tap on policy ");
                         _launchUrl();
                       }),
-                TextSpan(text: " and "),
+                const TextSpan(text: " and "),
                 TextSpan(
                     text: "Privacy",
                     style: linkStyle,
@@ -262,12 +261,19 @@ class _SignupInputState extends State<SignupInputGroup> {
                         checkEmail &&
                         checkPass &&
                         checkConfirmPass) {
-                      handleActionRegister(tokenManage);
+                          RegisterManager().handleActionRegister(
+                            tokenManage, 
+                            emailController.value.text, 
+                            passwordController.value.text, 
+                            usernameController.value.text, 
+                            context
+                          );
+                      // handleActionRegister(tokenManage);
                     }
                   },
                   child: Padding(
                     padding: EdgeInsets.all(10),
-                    child: Text(
+                    child: const Text(
                       "Sign Up",
                       style: TextStyle(color: Colors.white, fontSize: 18),
                     ),
@@ -287,62 +293,4 @@ class _SignupInputState extends State<SignupInputGroup> {
     }
   }
 
-  void handleActionRegister(Managetokenprovider tokenManage) async {
-    // ignore: unused_local_variable
-    try {
-      User result = await authService.signUpAccount(emailController.value.text,
-          passwordController.value.text, usernameController.value.text);
-      bool signinResult = await authService.signInAccount(
-          emailController.value.text, passwordController.value.text);
-      if (signinResult) {
-        List<int> token = await userDataService.getTokenUsage();
-        tokenManage.updateTotalToken(token[1]);
-        tokenManage.updateRemainToken(token[0]);
-        Navigator.pushNamed(context, '/home');
-      } else {
-        showLoginResultDialog(context,
-            "Register Sucessful! Failed to login. Please enter email and password to login again!!");
-      }
-    } catch (e) {
-      showMyDialog(context, e.toString());
-    }
-  }
-
-  void showLoginResultDialog(BuildContext content, String message) {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text("NOTIFICATION"),
-            content: Text(message),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/login');
-                },
-                child: Text("Ok"),
-              )
-            ],
-          );
-        });
-  }
-
-  void showMyDialog(BuildContext context, String message) {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text("NOTIFICATION"),
-            content: Text(message),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text("Ok"),
-              )
-            ],
-          );
-        });
-  }
 }

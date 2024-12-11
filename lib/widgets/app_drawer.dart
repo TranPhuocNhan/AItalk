@@ -1,23 +1,21 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ai_app/core/services/auth_service.dart';
-import 'package:flutter_ai_app/utils/providers/manageTokenProvider.dart';
-import 'package:flutter_ai_app/views/constant/Color.dart';
+import 'package:flutter_ai_app/features/profile/presentation/manage_token_provider.dart';
+import 'package:flutter_ai_app/utils/constant/Color.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AppDrawer extends StatefulWidget{
-  late int selected ;
-  AppDrawer({required int selected}){
-    this.selected = selected;
-  }
+  final int selected ;
+  AppDrawer({required this.selected});
   @override
   State<StatefulWidget> createState() => _AppDrawerState();
 }
 
 class _AppDrawerState extends State<AppDrawer>{
-  int selectedIndex = 2;
+  int selectedIndex = 0;
   final AuthService authService = GetIt.instance<AuthService>();
   var username = "";
   var email = "";
@@ -28,7 +26,8 @@ class _AppDrawerState extends State<AppDrawer>{
     super.initState();
     this.selectedIndex = widget.selected;
     print(selectedIndex);
-    setUserInformation();
+    if(username == "" || email == "")
+      setUserInformation();
   }
   void _onItemTapped(int index){
     setState(() {
@@ -38,6 +37,7 @@ class _AppDrawerState extends State<AppDrawer>{
   @override
   Widget build(BuildContext context) {
     final tokenManage = Provider.of<Managetokenprovider>(context);
+    // setUserInformation1(tokenManage);
     return Drawer(
       backgroundColor: ColorPalette().bgColor,
       child: ListView(
@@ -115,12 +115,33 @@ class _AppDrawerState extends State<AppDrawer>{
               ) : null,
               selectedTileColor: ColorPalette().startLinear.withOpacity(0.1),
               selectedColor: ColorPalette().selectedItemOnDrawerColor,
-              leading: Icon(Icons.person),
-              title: Text("Profile"),
+              leading: Icon(Icons.adb),
+              title: Text("Bots"),
               selected: selectedIndex == 2,
               tileColor: (selectedIndex == 2) ? ColorPalette().endLinear : null,
               onTap: (){
                 _onItemTapped(2);
+                Navigator.pushNamed(context, '/aiBot');
+              },
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 10, right: 10),
+            child: ListTile(
+              shape: (selectedIndex == 3) ? RoundedRectangleBorder(
+                side: BorderSide(
+                  color: ColorPalette().startLinear.withOpacity(0.1),
+                ),
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+              ) : null,
+              selectedTileColor: ColorPalette().startLinear.withOpacity(0.1),
+              selectedColor: ColorPalette().selectedItemOnDrawerColor,
+              leading: Icon(Icons.person),
+              title: Text("Profile"),
+              selected: selectedIndex == 3,
+              tileColor: (selectedIndex == 3) ? ColorPalette().endLinear : null,
+              onTap: (){
+                _onItemTapped(3);
                 Navigator.pushNamed(context, '/profile');
               },
             ),
@@ -231,6 +252,8 @@ class _AppDrawerState extends State<AppDrawer>{
     });
 
   }
+
+  
 
   void handleLogoutAction() async{
     var result = await authService.logoutAccount();
