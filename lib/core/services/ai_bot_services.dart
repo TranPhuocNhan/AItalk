@@ -40,7 +40,7 @@ class AiBotService {
       // print("out of for loop");
       return output;
     } else{
-      print("status code is not 200");
+      // print("status code is not 200");
       Map<String, dynamic> decodedData = jsonDecode(response.body);
       throw decodedData['message'];
     }
@@ -110,8 +110,8 @@ class AiBotService {
     kbAccessToken = await prefs.getString("externalAccessToken");
     if(kbAccessToken == null) throw "Can not get access token!";
 
-    print("TEST UPDATE ${assistantInstructions}");
-    print("TEST UPDATE ${assistantDescription}");
+    // print("TEST UPDATE ${assistantInstructions}");
+    // print("TEST UPDATE ${assistantDescription}");
     // call api 
     var response = await http.patch(
       Uri.parse("${knowledgeLink}/kb-core/v1/ai-assistant/${assistantId}"),
