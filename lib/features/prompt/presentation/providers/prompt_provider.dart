@@ -26,11 +26,13 @@ class PromptProvider extends ChangeNotifier {
   Prompt? get selectedPrompt => _selectedPrompt;
 
   void setSelectedPrompt(Prompt prompt) {
+    print("setSelectedPrompt");
     _selectedPrompt = prompt;
     notifyListeners();
   }
 
   Future<void> fetchPrivatePrompts() async {
+    print("fetchPrivatePrompts");
     _isLoading = true;
     notifyListeners();
     final GetPromptResponse response = await _promptManager.fetchPrompts(
@@ -45,11 +47,13 @@ class PromptProvider extends ChangeNotifier {
   }
 
   void updateSelectedCategory(String category) {
+    print(" updateSelectedCategory");
     _selectedCategory = category;
     notifyListeners();
   }
 
   Future<Map<String, dynamic>> createPrompt(Prompt prompt) async {
+    print("createPrompt");
     final response = await _promptManager.createPrompt(
       category: prompt.category ?? "",
       content: prompt.content ?? "",
@@ -67,6 +71,7 @@ class PromptProvider extends ChangeNotifier {
   }
 
   Future<void> fetchPublicPrompts() async {
+    print("fetchPublicPrompts");
     _isLoading = true;
     notifyListeners();
     final GetPromptResponse response = await _promptManager.fetchPrompts(
@@ -81,6 +86,7 @@ class PromptProvider extends ChangeNotifier {
   }
 
   Future<void> fetchFavoritePrompts() async {
+    print("fetchFavoritePrompts");
     _isLoading = true;
     notifyListeners();
     final GetPromptResponse response = await _promptManager.fetchPrompts(
@@ -95,28 +101,33 @@ class PromptProvider extends ChangeNotifier {
   }
 
   Future<void> addFavoritePrompt(String promptId) async {
+    print("addFavoritePrompt");
     await _promptManager.favoritePrompt(promptId: promptId);
     _updatePromptFavoriteState(promptId, true);
     fetchFavoritePrompts();
   }
 
   Future<void> removeFavoritePrompt(String promptId) async {
+    print("removeFavoritePrompt");
     await _promptManager.unfavoritePrompt(promptId: promptId);
     _updatePromptFavoriteState(promptId, false);
     fetchFavoritePrompts();
   }
 
   Future<void> updatePrompt(Prompt prompt) async {
+    print("updatePrompt");
     await _promptManager.updatePrompt(prompt: prompt);
     fetchPrivatePrompts();
   }
 
   Future<void> deletePrompt(String promptId) async {
+    print("deletePrompt");
     await _promptManager.deletePrompt(promptId: promptId);
     fetchPrivatePrompts();
   }
 
   void _updatePromptFavoriteState(String promptId, bool isFavorite) {
+    print("updatePromptFavoriteState");
     // Update public prompts
     for (var prompt in _publicPrompts) {
       if (prompt.id == promptId) {

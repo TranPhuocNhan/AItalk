@@ -14,9 +14,7 @@ import 'package:flutter_ai_app/widgets/app_drawer.dart';
 import 'package:provider/provider.dart';
 
 class PromptLibraryScreen extends StatefulWidget {
-  final TabController tabController;
-
-  PromptLibraryScreen({required this.tabController});
+  PromptLibraryScreen({super.key});
   @override
   _PromptLibraryScreenState createState() => _PromptLibraryScreenState();
 }
@@ -26,10 +24,13 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
   final _searchController = TextEditingController();
   List<Prompt> filteredPrompts = [];
   List<Prompt> filteredFavoritePrompts = [];
+  late TabController tabController;
 
   @override
   void initState() {
     super.initState();
+    tabController = TabController(length: 3, vsync: this);
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<PromptProvider>(context, listen: false).fetchPrivatePrompts();
       Provider.of<PromptProvider>(context, listen: false).fetchPublicPrompts();
@@ -42,13 +43,13 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
             Provider.of<PromptProvider>(context, listen: false).favoritePrompts;
       });
     });
-    widget.tabController.addListener(() {
+    tabController.addListener(() {
       setState(() {
         _searchController.clear();
-        if (widget.tabController.index == 1) {
+        if (tabController.index == 1) {
           filteredPrompts =
               Provider.of<PromptProvider>(context, listen: false).publicPrompts;
-        } else if (widget.tabController.index == 2) {
+        } else if (tabController.index == 2) {
           filteredFavoritePrompts =
               Provider.of<PromptProvider>(context, listen: false)
                   .favoritePrompts;
@@ -60,10 +61,21 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
   @override
   Widget build(BuildContext context) {
     final promptProvider = Provider.of<PromptProvider>(context);
-
+    print("PromptLibraryScreen build...");
     return Scaffold(
+      appBar: AppBar(
+        title: Text("Prompt library"),
+        bottom: TabBar(
+          controller: tabController,
+          tabs: const [
+            Tab(text: 'My Prompt'),
+            Tab(text: 'Public Prompt'),
+            Tab(text: 'Favorite Prompt'),
+          ],
+        ),
+      ),
       body: TabBarView(
-        controller: widget.tabController,
+        controller: tabController,
         children: [
           // Tab My Prompt
           promptProvider.isLoading
@@ -255,7 +267,7 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
         ),
         onChanged: (value) {
           setState(() {
-            if (widget.tabController.index == 1) {
+            if (tabController.index == 1) {
               if (value.isEmpty) {
                 filteredPrompts =
                     Provider.of<PromptProvider>(context, listen: false)
@@ -268,7 +280,7 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
                             .contains(value.toLowerCase()))
                         .toList();
               }
-            } else if (widget.tabController.index == 2) {
+            } else if (tabController.index == 2) {
               if (value.isEmpty) {
                 filteredFavoritePrompts =
                     Provider.of<PromptProvider>(context, listen: false)

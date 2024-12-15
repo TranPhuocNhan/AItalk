@@ -16,33 +16,20 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
-  late TabController _tabController;
-  late TabController _tabBotController;
-
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: 3, vsync: this);
-    _tabBotController = TabController(length: 2, vsync: this);
-  }
-
   final List<Widget> _widgetOptions = <Widget>[
-    const Text("Chat Content"),
-    const Text("Thread Chat History"),
-    const Text("Prompt Library"),
-    const Text("Bot Dashboard"),
-    const Text("Translate Content"),
-    const Text("Toolkit Content"),
-    const Text("Memo Content"),
+    ChatView(),
+    ThreadChatHistory(),
+    PromptLibraryScreen(),
+    BotDashBoard(),
   ];
-
+  int _selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
     final chatProvider = Provider.of<ChatProvider>(context);
     String appBarTitle = "Chat View"; // Default title
 
     // Đặt tiêu đề dựa trên tab được chọn
-    switch (chatProvider.selectedScreenIndex) {
+    switch (_selectedIndex) {
       case 1:
         appBarTitle = "Thread Chat History";
         break;
@@ -59,46 +46,19 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
     return Scaffold(
       appBar: AppBar(
         title: Text(appBarTitle),
-        bottom:
-            chatProvider.selectedScreenIndex == 2 // PromptLibraryScreen index
-                ? TabBar(
-                    controller: _tabController,
-                    tabs: const [
-                      Tab(text: 'My Prompt'),
-                      Tab(text: 'Public Prompt'),
-                      Tab(text: 'Favorite Prompt'),
-                    ],
-                  )
-                : (chatProvider.selectedScreenIndex == 3 // BotDashboard index
-                    ? TabBar(
-                        controller: _tabBotController,
-                        tabs: const [
-                          Tab(text: 'Bot List'),
-                          Tab(text: 'Knowledge List'),
-                        ],
-                      )
-                    : null),
       ),
       drawer: AppDrawer(
         selected: 0,
       ),
       body: IndexedStack(
-        index: chatProvider.selectedScreenIndex,
-        children: [
-          ChatView(),
-          ThreadChatHistory(),
-          PromptLibraryScreen(tabController: _tabController),
-          BotDashBoard(tabController: _tabBotController),
-          const Text("Translate Content"),
-          const Text("Toolkit Content"),
-          const Text("Memo Content"),
-        ],
+        index: _selectedIndex,
+        children: _widgetOptions,
       ),
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: chatProvider.selectedScreenIndex,
+        currentIndex: _selectedIndex,
         onTap: (int index) {
           setState(() {
-            chatProvider.setSelectedScreenIndex(index);
+            _selectedIndex = index;
           });
         },
         items: const [

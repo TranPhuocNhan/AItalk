@@ -56,6 +56,7 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: initial,
       routes: Routes.routes,
+      debugShowCheckedModeBanner: false,
     );
   }
 
