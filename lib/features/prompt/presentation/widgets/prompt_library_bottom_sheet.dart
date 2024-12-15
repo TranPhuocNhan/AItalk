@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ai_app/core/models/prompt/prompt.dart';
+import 'package:flutter_ai_app/features/prompt/data/prompt.dart';
 import 'package:flutter_ai_app/features/prompt/presentation/providers/prompt_provider.dart';
 import 'package:flutter_ai_app/features/prompt/presentation/widgets/prompt_dialog.dart';
 import 'package:provider/provider.dart';

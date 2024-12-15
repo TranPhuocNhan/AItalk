@@ -5,10 +5,14 @@ import 'package:flutter_ai_app/core/services/user_data_service.dart';
 import 'package:flutter_ai_app/di/service_injection.dart';
 import 'package:flutter_ai_app/features/ai_chat/domains/chat_manager.dart';
 import 'package:flutter_ai_app/features/ai_chat/presentation/providers/chat_provider.dart';
-import 'package:flutter_ai_app/features/email_response/presentation/email_style_provider.dart';
+import 'package:flutter_ai_app/features/knowledge_base/data/knowledge-manager.dart';
+import 'package:flutter_ai_app/features/knowledge_base/presentation/providers/knowledge_provider.dart';
 import 'package:flutter_ai_app/features/login/presentation/processing_provider.dart';
+import 'package:flutter_ai_app/features/prompt/data/prompt_manager.dart';
+import 'package:flutter_ai_app/features/email_response/presentation/email_style_provider.dart';
 import 'package:flutter_ai_app/features/profile/presentation/manage_token_provider.dart';
 import 'package:flutter_ai_app/features/prompt/data/prompt_manager.dart';
+import 'package:flutter_ai_app/features/prompt/presentation/providers/prompt_provider.dart';
 import 'package:flutter_ai_app/features/prompt/presentation/providers/prompt_provider.dart';
 import 'package:flutter_ai_app/utils/routes.dart';
 import 'package:get_it/get_it.dart';
@@ -19,6 +23,7 @@ Future<void> main() async {
   await ServiceInjection.ConfigureServiceInjection();
   ChatManager chatManager = ChatManager();
   PromptManager promptManager = PromptManager();
+  KnowledgeManager knowledgeManager = KnowledgeManager();
   runApp(
     MultiProvider(providers: [
       ChangeNotifierProvider(create: (_) => ProcessingProvider()),
@@ -28,10 +33,11 @@ Future<void> main() async {
           create: (_) => ChatProvider(chatManager: chatManager)),
       ChangeNotifierProvider(
           create: (_) => PromptProvider(promptManager: promptManager)),
+      ChangeNotifierProvider(
+          create: (_) => KnowledgeProvider(knowledgeManager: knowledgeManager)),
     ], child: MyApp()),
   );
 }
-
 
 class MyApp extends StatelessWidget {
   MyApp({super.key});
@@ -45,6 +51,9 @@ class MyApp extends StatelessWidget {
   // // update token after refresh/resumed app 
   // final tokenManage = Provider.of<Managetokenprovider>(context);
   // updateTokenValue(tokenManage);
+    // // update token after refresh/resumed app
+    // final tokenManage = Provider.of<Managetokenprovider>(context);
+    // updateTokenValue(tokenManage);
     return MaterialApp(
       title: 'Home Screen',
       theme: ThemeData(

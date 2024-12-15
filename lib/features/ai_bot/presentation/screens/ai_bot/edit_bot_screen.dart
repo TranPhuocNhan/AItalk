@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ai_app/core/models/ai_bot/ai_%20bot.dart';
 import 'package:flutter_ai_app/core/services/ai_bot_services.dart';
+import 'package:flutter_ai_app/features/ai_bot/presentation/screens/ai_bot/update_bot_kb.dart';
 import 'package:flutter_ai_app/utils/helper_functions.dart';
 import 'package:flutter_ai_app/utils/constant/Color.dart';
 import 'package:get_it/get_it.dart';
@@ -170,7 +171,18 @@ class _EditBotState extends State<EditBotScreen>{
                     )
                   ),
                 ),
-                const SizedBox(height: 30,),
+                // KNOWLEDGE BASE
+                const SizedBox(height: 20,),
+                const Text(
+                  "Knowledge Base" ,
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                  ),
+                ),
+                const SizedBox(height: 10,),
+                UpdateBotKnowledgeBase(input: data),
                 // GROUP BUTTON
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,

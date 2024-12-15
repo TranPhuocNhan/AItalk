@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_ai_app/core/models/ai_bot/message.dart';
 import 'package:flutter_ai_app/utils/constant/Color.dart';
 import 'package:flutter_ai_app/utils/message_role_enum.dart';
-import 'package:http/http.dart';
 
 class ChatBotHistory extends StatefulWidget{
   final List<Message> data;

@@ -24,7 +24,7 @@ class Routes {
   static const String aiBot = '/aiBot';
   static const String createBot = "/createBot";
   static final routes = <String, WidgetBuilder>{
-    splash: (BuildContext context) => SplashScreen(),
+    splash: (BuildContext contexst) => SplashScreen(),
     login: (BuildContext context) => LoginScreen(loginContext: context),
     register: (BuildContext context) => SignUpScreen(context: context),
     verification: (BuildContext context) =>

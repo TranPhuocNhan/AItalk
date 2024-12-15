@@ -4,9 +4,9 @@ import 'package:flutter_ai_app/features/ai_chat/data/models/assistant_dto.dart';
 import 'package:flutter_ai_app/features/ai_chat/domains/entities/chat_conversation.dart';
 import 'package:flutter_ai_app/features/ai_chat/domains/entities/chat_message.dart';
 import 'package:flutter_ai_app/features/ai_chat/data/models/api_response/conversation_history_response.dart';
-import 'package:flutter_ai_app/core/services/ai_chat_service.dart';
+import 'package:flutter_ai_app/features/ai_chat/domains/services/ai_chat_service.dart';
 import 'package:flutter_ai_app/core/services/conversation_history_service.dart';
-import 'package:flutter_ai_app/core/services/send_message_service.dart';
+import 'package:flutter_ai_app/features/ai_chat/domains/services/send_message_service.dart';
 import 'package:get_it/get_it.dart';
 
 class ChatManager {

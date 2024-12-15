@@ -1,4 +1,4 @@
-import 'package:flutter_ai_app/core/models/prompt/prompt.dart';
+import 'package:flutter_ai_app/features/prompt/data/prompt.dart';
 
 class CreatePromptResponse {
   final Prompt prompt;

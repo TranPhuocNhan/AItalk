@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ai_app/core/models/prompt/prompt.dart';
+import 'package:flutter_ai_app/features/prompt/data/prompt.dart';
 import 'package:flutter_ai_app/features/prompt/presentation/providers/prompt_provider.dart';
 import 'package:flutter_ai_app/utils/category_prompt_map.dart';
 import 'package:flutter_ai_app/utils/language_enum.dart';

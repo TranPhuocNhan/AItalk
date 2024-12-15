@@ -1,15 +1,23 @@
+import 'dart:typed_data';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_ai_app/features/knowledge_base/data/api_response/knowledge_res_dto.dart';
+import 'package:flutter_ai_app/features/knowledge_base/presentation/providers/knowledge_provider.dart';
+import 'package:provider/provider.dart';
 
 class UploadFileDialog extends StatefulWidget {
-  const UploadFileDialog({super.key});
+  const UploadFileDialog({super.key, required this.knowledge});
+
+  final KnowledgeResDto knowledge;
 
   @override
   State<UploadFileDialog> createState() => _UploadFileDialogState();
 }
 
 class _UploadFileDialogState extends State<UploadFileDialog> {
-  String? _selectedFile;
+  String? _fileName;
+  Uint8List? _fileBytes;
 
   // Function to pick files
   Future<void> pickFile() async {
@@ -17,14 +25,19 @@ class _UploadFileDialogState extends State<UploadFileDialog> {
 
     if (result != null) {
       setState(() {
-        _selectedFile = result.files.single.name;
+        _fileName = result.files.single.name;
+        _fileBytes = result.files.single.bytes;
+        ;
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    KnowledgeProvider knowledgeProvider =
+        Provider.of<KnowledgeProvider>(context);
     final size = MediaQuery.of(context).size;
+
     return AlertDialog(
       title: ListTile(
         leading: Icon(Icons.upload),
@@ -43,14 +56,14 @@ class _UploadFileDialogState extends State<UploadFileDialog> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             _buildFileUploadBox(
-              selectedFile: _selectedFile,
+              selectedFile: _fileName,
               onTap: pickFile,
             ),
             SizedBox(height: 20),
           ],
         ),
       ),
-      actions: _buildDialogActions(context),
+      actions: _buildDialogActions(context, knowledgeProvider),
     );
   }
 
@@ -86,7 +99,8 @@ class _UploadFileDialogState extends State<UploadFileDialog> {
         ));
   }
 
-  List<Widget> _buildDialogActions(BuildContext context) {
+  List<Widget> _buildDialogActions(
+      BuildContext context, KnowledgeProvider knowledgeProvider) {
     return [
       TextButton(
         onPressed: () {
@@ -95,8 +109,14 @@ class _UploadFileDialogState extends State<UploadFileDialog> {
         child: Text('Cancel'),
       ),
       ElevatedButton(
-        onPressed: () {
+        onPressed: () async {
           // Action for creating assistant (handle form submission here)
+
+          await knowledgeProvider.uploadKnowledgeFromFile(
+            id: widget.knowledge.id,
+            fileName: _fileName!,
+            file: _fileBytes!,
+          );
           Navigator.of(context).pop(); // Close dialog after submission
         },
         child: Text('OK'),
