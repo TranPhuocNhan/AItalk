@@ -19,10 +19,8 @@ class ChatProvider extends ChangeNotifier {
 
   bool _isLoading = false;
 
-  final List<Assistant> _assistants = assistantMap.entries
-      .map((e) => Assistant(name: e.key, id: e.value))
-      .toList();
-  String? _selectedAssistant = "Gpt4OMini";
+  final List<Assistant> _assistants = Assistant.assistants;
+  Assistant? _selectedAssistant = Assistant.assistants.first;
   bool _isChatContentView = false;
   List<Conversation>? _listConversationContent;
   AIChatMetadata? _metadata;
@@ -35,7 +33,7 @@ class ChatProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
   final List<String> _pendingResponses = [];
 
-  String? get selectedAssistant => _selectedAssistant;
+  Assistant? get selectedAssistant => _selectedAssistant;
   bool get isChatContentView => _isChatContentView;
   List<Assistant> get assistants => _assistants;
   List<Conversation>? get listConversationContent => _listConversationContent;
@@ -77,7 +75,6 @@ class ChatProvider extends ChangeNotifier {
     setLoading(true);
     _selectedThreadId = threadId;
     _isChatContentView = true;
-    // print("Current selectedThreadId: $_selectedThreadId");
 
     fetchConversationHistory(
         _selectedThreadId ?? "", _assistantId ?? "gpt-4o-mini");
@@ -88,7 +85,6 @@ class ChatProvider extends ChangeNotifier {
   }
 
   Future<void> newChat() async {
-    print("Newchat");
     setLoading(true);
     _isChatContentView = false;
     _selectedThreadId = null;
@@ -97,7 +93,7 @@ class ChatProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void selectAssistant(String assistant) {
+  void selectAssistant(Assistant assistant) {
     _selectedAssistant = assistant;
     notifyListeners();
   }
@@ -133,11 +129,9 @@ class ChatProvider extends ChangeNotifier {
       );
       _conversationThreads = response.getItems;
 
-      // print("API response: $response"); // Debug API response
       notifyListeners();
-    } catch (e, stackTrace) {
+    } catch (e) {
       print("Error in getConversationThread: $e");
-      // print("Stack Trace: $stackTrace");
     }
     setLoading(false);
   }
@@ -149,8 +143,10 @@ class ChatProvider extends ChangeNotifier {
                 ChatMessage(
                   assistant: AssistantDTO(
                     model: _assistantModel ?? "dify",
-                    id: assistantMap[_selectedAssistant ?? "Gpt4OMini"] ?? "",
-                    name: _selectedAssistant ?? "",
+                    // id: assistantMap[_selectedAssistant ?? "Gpt4OMini"] ?? "",
+                    id: _selectedAssistant?.id ?? Assistant.assistants.first.id,
+                    name: _selectedAssistant?.name ??
+                        Assistant.assistants.first.name,
                   ),
                   role: "user",
                   content: item.query ?? "",
@@ -158,8 +154,9 @@ class ChatProvider extends ChangeNotifier {
                 ChatMessage(
                   assistant: AssistantDTO(
                     model: _assistantModel ?? "dify",
-                    id: assistantMap[_selectedAssistant ?? "Gpt4OMini"] ?? "",
-                    name: _selectedAssistant ?? "",
+                    id: _selectedAssistant?.id ?? Assistant.assistants.first.id,
+                    name: _selectedAssistant?.name ??
+                        Assistant.assistants.first.name,
                   ),
                   role: "model",
                   content: item.answer ?? "",
@@ -184,12 +181,13 @@ class ChatProvider extends ChangeNotifier {
 
       // Gửi tin nhắn tới AI
       final response = await _chatManager.sendMessage(
-        assistantId: assistantMap[_selectedAssistant ?? "Gpt4OMini"] ?? "",
+        assistantId: _selectedAssistant?.id ?? Assistant.assistants.first.id,
         assistantModel: _assistantModel ?? "dify",
         jarvisGuid: jarvisGuid,
         content: content,
         messages: messages,
-        assistantName: _selectedAssistant ?? "Gpt4OMini",
+        assistantName:
+            _selectedAssistant?.name ?? Assistant.assistants.first.name,
         conversationId: _selectedThreadId ?? "",
       );
 
@@ -199,9 +197,8 @@ class ChatProvider extends ChangeNotifier {
         _removePendingResponse(content); // Loại bỏ trạng thái "đang chờ"
         notifyListeners();
       }
-    } catch (error, stackTrace) {
+    } catch (error) {
       print("Failed to send message in ChatProvider: $error");
-      // print("Stack Trace in ChatProvider: $stackTrace");
       _removePendingResponse(
           content); // Loại bỏ trạng thái "đang chờ" nếu có lỗi
       throw Exception("Failed to send message in ChatProvider");
@@ -235,8 +232,7 @@ class ChatProvider extends ChangeNotifier {
         // Cập nhật ID của cuộc hội thoại
         _conversationId = response.conversationId;
         _selectedThreadId = _conversationId;
-        _assistantId = assistantMap[message.assistant?.name ?? "Gpt4OMini"] ??
-            "gpt-4o-mini";
+        _assistantId = Assistant.assistants.first.id;
         _assistantModel = "dify";
 
         // Lấy lịch sử hội thoại sau khi nhận phản hồi từ API
@@ -249,9 +245,8 @@ class ChatProvider extends ChangeNotifier {
 
       notifyListeners();
       setLoading(false);
-    } catch (error, stackTrace) {
+    } catch (error) {
       print("Failed to send first message: $error");
-      // print("Stack trace: $stackTrace");
       setLoading(false);
       throw Exception("Failed to process first message");
     }

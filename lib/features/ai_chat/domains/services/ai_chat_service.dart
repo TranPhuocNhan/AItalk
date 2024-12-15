@@ -18,7 +18,7 @@ class AIChatService {
     String? jarvisGuid,
   }) async {
     var prefs = await SharedPreferences.getInstance();
-    var accessToken = await prefs.getString('accessToken');
+    // var accessToken = await prefs.getString('accessToken');
     var refreshToken = await prefs.getString('refreshToken');
 
     final body = {
@@ -36,18 +36,9 @@ class AIChatService {
         },
         body: jsonEncode(body));
 
-    // print('response in ai chat service: ${response.body}');
-    // print("body in ai chat service: $body");
-    // print("accessToken in ai chat service: $accessToken");
-    // print("refreshToken in ai chat service: $refreshToken");
-
     if (response.statusCode == 200) {
       return AIChatResponse.fromJson(jsonDecode(response.body));
     } else {
-      print('Error: ${response.statusCode}');
-      // print('Response body: ${response.body}');
-
-      // Xử lý lỗi cụ thể hơn
       throw Exception(
           'Failed to send message. Status code: ${response.statusCode}, Response: ${response.body}');
     }

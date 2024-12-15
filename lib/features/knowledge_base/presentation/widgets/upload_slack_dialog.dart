@@ -1,13 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ai_app/features/knowledge_base/data/api_response/knowledge_res_dto.dart';
+import 'package:flutter_ai_app/features/knowledge_base/presentation/providers/knowledge_provider.dart';
+import 'package:provider/provider.dart';
 
 class UploadSlackDialog extends StatefulWidget {
+  const UploadSlackDialog({super.key, required this.knowledge});
+  final KnowledgeResDto knowledge;
   @override
   _SlackUploadDialogState createState() => _SlackUploadDialogState();
 }
 
 class _SlackUploadDialogState extends State<UploadSlackDialog> {
+  TextEditingController slackNameController = TextEditingController();
+  TextEditingController slackWorkspaceController = TextEditingController();
+  TextEditingController botUsernameController = TextEditingController();
+  TextEditingController botTokenController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
+    final KnowledgeProvider knowledgeProvider =
+        Provider.of<KnowledgeProvider>(context);
     final size = MediaQuery.of(context).size;
     return AlertDialog(
       backgroundColor: Colors.white,
@@ -24,17 +36,21 @@ class _SlackUploadDialogState extends State<UploadSlackDialog> {
             _buildHeader(),
             SizedBox(height: 20),
             _buildInputField(
-                label: "Webhook URL:", hintText: "Enter Slack webhook URL"),
+                label: "Name:",
+                hintText: "Slack Name",
+                controller: slackNameController),
             SizedBox(height: 20),
             _buildInputField(
-                label: "Slack Channel:", hintText: "Enter Slack channel"),
+                label: "Slack Workspace:",
+                hintText: "Enter Slack Workspace",
+                controller: slackWorkspaceController),
             SizedBox(height: 20),
             _buildInputField(
-                label: "Bot Username:", hintText: "Enter bot username"),
-            SizedBox(height: 20),
-            _buildInputField(label: "Bot Token:", hintText: "Enter bot token"),
+                label: "Bot Token:",
+                hintText: "Enter bot token",
+                controller: botTokenController),
             SizedBox(height: 30),
-            _buildUploadButton(context),
+            _buildUploadButton(context, knowledgeProvider),
           ],
         ),
       ),
@@ -61,7 +77,10 @@ class _SlackUploadDialogState extends State<UploadSlackDialog> {
   }
 
   // Widget cho từng trường nhập liệu (TextField)
-  Widget _buildInputField({required String label, required String hintText}) {
+  Widget _buildInputField(
+      {required String label,
+      required String hintText,
+      required TextEditingController controller}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -79,6 +98,7 @@ class _SlackUploadDialogState extends State<UploadSlackDialog> {
         ),
         SizedBox(height: 5),
         TextField(
+          controller: controller,
           decoration: InputDecoration(
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
@@ -92,11 +112,19 @@ class _SlackUploadDialogState extends State<UploadSlackDialog> {
   }
 
   // Nút Upload
-  Widget _buildUploadButton(BuildContext context) {
+  Widget _buildUploadButton(
+      BuildContext context, KnowledgeProvider knowledgeProvider) {
     return SizedBox(
       width: double.infinity, // Để nút rộng theo chiều ngang
       child: ElevatedButton(
         onPressed: () {
+          // lây dữ liệu từ các text controller và gửi lên server
+          knowledgeProvider.uploadKnowledgeFromSlack(
+            knowledgeId: widget.knowledge.id,
+            unitName: slackNameController.text,
+            slackWorkspace: slackWorkspaceController.text,
+            slackBotToken: botTokenController.text,
+          );
           // Hành động khi nhấn nút Upload
           print("Upload button pressed");
         },

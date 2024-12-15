@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:flutter_ai_app/core/models/prompt/get_prompt_response.dart';
-import 'package:flutter_ai_app/core/models/prompt/prompt.dart';
+import 'package:flutter_ai_app/features/prompt/data/api_response/get_prompt_response.dart';
+import 'package:flutter_ai_app/features/prompt/data/prompt.dart';
 import 'package:flutter_ai_app/utils/APIValue.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -45,14 +45,12 @@ class PromptService {
     };
 
     final uri = buildCustomUri(apiLink, queryParameters);
-    // print("uri of get prompts: $uri");
 
     final response = await http.get(Uri.parse(uri), headers: {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $refreshToken',
       'x-jarvis-guid': APIValue.xJarvisGuid,
     });
-    // print("response of get prompts: ${response.body}");
 
     if (response.statusCode == 200) {
       return GetPromptResponse.fromJson(jsonDecode(response.body));
@@ -82,7 +80,6 @@ class PromptService {
     };
 
     final uri = Uri.parse(apiLink);
-    print("uri of create prompt: $uri");
 
     final response = await http.post(uri,
         headers: {
@@ -91,7 +88,6 @@ class PromptService {
           'x-jarvis-guid': APIValue.xJarvisGuid,
         },
         body: jsonEncode(body));
-    // print("response of create prompt: ${response.body}");
 
     if (response.statusCode == 201) {
       return jsonDecode(response.body);
@@ -107,7 +103,6 @@ class PromptService {
     final promptId = prompt.id;
     final pathUrl = '$apiLink/$promptId';
     final uri = Uri.parse(pathUrl);
-    // print("uri of update prompt: $uri");
 
     final body = {
       'category': prompt.category,
@@ -125,7 +120,6 @@ class PromptService {
           'x-jarvis-guid': APIValue.xJarvisGuid,
         },
         body: jsonEncode(body));
-    // print("response of update prompt: ${response.body}");
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
@@ -139,14 +133,12 @@ class PromptService {
 
     final pathUrl = '$apiLink/$promptId';
     final uri = Uri.parse(pathUrl);
-    // print("uri of delete prompt: $uri");
 
     final response = await http.delete(uri, headers: {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $refreshToken',
       'x-jarvis-guid': APIValue.xJarvisGuid,
     });
-    // print("response of delete prompt: ${response.body}");
 
     if (response.statusCode != 200) {
       throw Exception('Failed to delete prompt');
@@ -160,14 +152,12 @@ class PromptService {
     final pathUrl = '$apiLink/$promptId/favorite';
 
     final uri = Uri.parse(pathUrl);
-    // print("uri of favorite prompt: $uri");
 
     final response = await http.post(uri, headers: {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $refreshToken',
       'x-jarvis-guid': APIValue.xJarvisGuid,
     });
-    // print("response of favorite prompt: ${response.body}");
 
     if (response.statusCode != 201) {
       throw Exception('Failed to favorite prompt in favorite prompt');
@@ -180,14 +170,12 @@ class PromptService {
 
     final pathUrl = '$apiLink/$promptId/favorite';
     final uri = Uri.parse(pathUrl);
-    // print("uri of unfavorite prompt: $uri");
 
     final response = await http.delete(uri, headers: {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $refreshToken',
       'x-jarvis-guid': APIValue.xJarvisGuid,
     });
-    // print("response of unfavorite prompt: ${response.body}");
 
     if (response.statusCode != 200) {
       throw Exception('Failed to unfavorite prompt in unfavorite prompt');

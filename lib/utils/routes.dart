@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ai_app/views/ai_bot/ai_bot_view.dart';
+import 'package:flutter_ai_app/features/ai_bot/presentation/screens/ai_bot_view.dart';
 import 'package:flutter_ai_app/views/email_response/email_response_view.dart';
 import 'package:flutter_ai_app/views/profile/profile_screen.dart';
 import 'package:flutter_ai_app/views/home_view.dart';

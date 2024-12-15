@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter_ai_app/core/models/prompt/get_prompt_response.dart';
-import 'package:flutter_ai_app/core/models/prompt/prompt.dart';
+import 'package:flutter_ai_app/features/prompt/data/api_response/get_prompt_response.dart';
+import 'package:flutter_ai_app/features/prompt/data/prompt.dart';
 import 'package:flutter_ai_app/features/prompt/data/prompt_manager.dart';
 import 'package:flutter_ai_app/utils/category_prompt_map.dart';
 
@@ -58,7 +58,6 @@ class PromptProvider extends ChangeNotifier {
       language: prompt.language ?? "",
       title: prompt.title ?? "",
     );
-    // print("response of create prompt: $response");
     if (response["isPublic"]) {
       fetchPublicPrompts();
     } else {
@@ -77,7 +76,6 @@ class PromptProvider extends ChangeNotifier {
       isPublic: true,
     );
     _publicPrompts = response.items;
-    // print("public prompts in provider: ${_publicPrompts}");
     _isLoading = false;
     notifyListeners();
   }

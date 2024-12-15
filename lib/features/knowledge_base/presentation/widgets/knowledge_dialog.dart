@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CreateKnowledgeDialog extends StatefulWidget {
   const CreateKnowledgeDialog(
@@ -8,6 +9,10 @@ class CreateKnowledgeDialog extends StatefulWidget {
   State<CreateKnowledgeDialog> createState() => _CreateKnowledgeDialogState();
 }
 
+// KnowledgeService knowledgeService = KnowledgeService(
+//     apiLink:
+//         "https://knowledge-api.dev.jarvis.cx/kb-core/v1/knowledge");
+// knowledgeService.getKnowledges();
 class _CreateKnowledgeDialogState extends State<CreateKnowledgeDialog> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
@@ -18,22 +23,35 @@ class _CreateKnowledgeDialogState extends State<CreateKnowledgeDialog> {
     final size = MediaQuery.of(context).size;
 
     return AlertDialog(
-      title: Text('Create Knowledge base'),
+      backgroundColor: Colors.white,
+      title: Center(child: Text('Create Knowledge base')),
       content: Container(
-        width: size.width * 0.8, // 80% of screen width
+        width: size.width * 0.6, // 80% of screen width
         constraints: BoxConstraints(
           maxHeight:
-              size.height * 0.6, // Maximum height of 60% of screen height
+              size.height * 0.7, // Maximum height of 60% of screen height
         ),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildNameField(),
-              SizedBox(height: 10),
-              _buildDescriptionField(),
-            ],
+        decoration: BoxDecoration(color: Colors.white),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Icon(
+                    Icons.storage,
+                    color: Colors.orange,
+                    size: 100,
+                  ),
+                ),
+                SizedBox(height: 10),
+                _buildNameField(),
+                SizedBox(height: 10),
+                _buildDescriptionField(),
+              ],
+            ),
           ),
         ),
       ),
@@ -49,6 +67,7 @@ class _CreateKnowledgeDialogState extends State<CreateKnowledgeDialog> {
         hintText: 'Enter knowledge name',
         counterText: '${_nameController.text.length}/50',
         border: OutlineInputBorder(),
+        prefixIcon: Icon(Icons.book),
       ),
       maxLength: 50,
     );
@@ -62,6 +81,7 @@ class _CreateKnowledgeDialogState extends State<CreateKnowledgeDialog> {
         hintText: 'Enter Knowledge description',
         border: OutlineInputBorder(),
         counterText: '${_descriptionController.text.length}/2000',
+        prefixIcon: Icon(Icons.description),
       ),
       maxLines: 3,
       maxLength: 2000,
@@ -71,7 +91,7 @@ class _CreateKnowledgeDialogState extends State<CreateKnowledgeDialog> {
   List<Widget> _buildDialogActions(BuildContext context) {
     return [
       TextButton(
-        onPressed: () {
+        onPressed: () async {
           Navigator.of(context).pop(); // Cancel the dialog
         },
         child: Text('Cancel'),
@@ -85,7 +105,13 @@ class _CreateKnowledgeDialogState extends State<CreateKnowledgeDialog> {
           );
           Navigator.of(context).pop(); // Close dialog after submission
         },
-        child: Text('OK'),
+        child: Text(
+          'OK',
+          style: TextStyle(color: Colors.white),
+        ),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.blue, // Button color
+        ),
       ),
     ];
   }

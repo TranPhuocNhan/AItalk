@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ai_app/widgets/upload_confluence_dialog.dart';
-import 'package:flutter_ai_app/widgets/upload_drive_dialog.dart';
-import 'package:flutter_ai_app/widgets/upload_file_dialog.dart';
-import 'package:flutter_ai_app/widgets/upload_slack_dialog.dart';
-import 'package:flutter_ai_app/widgets/upload_web_dialog.dart';
+import 'package:flutter_ai_app/features/knowledge_base/presentation/widgets/upload_confluence_dialog.dart';
+import 'package:flutter_ai_app/features/knowledge_base/presentation/widgets/upload_drive_dialog.dart';
+import 'package:flutter_ai_app/features/knowledge_base/presentation/widgets/upload_file_dialog.dart';
+import 'package:flutter_ai_app/features/knowledge_base/presentation/widgets/upload_slack_dialog.dart';
+import 'package:flutter_ai_app/features/knowledge_base/presentation/widgets/upload_web_dialog.dart';
+import 'package:flutter_ai_app/features/knowledge_base/data/api_response/knowledge_res_dto.dart';
 
 class UnitKnowledgeDialog extends StatefulWidget {
-  const UnitKnowledgeDialog({super.key});
+  const UnitKnowledgeDialog({super.key, required this.knowledge});
+
+  final KnowledgeResDto knowledge;
 
   @override
   State<UnitKnowledgeDialog> createState() => _UnitKnowledgeDialogState();
@@ -30,17 +33,17 @@ class _UnitKnowledgeDialogState extends State<UnitKnowledgeDialog> {
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
               SizedBox(height: 20),
               _buildUnitOption(context, Icons.insert_drive_file, 'Local files',
-                  'Upload pdf, docx,...'),
+                  'Upload pdf, docx,...', widget.knowledge),
               _buildUnitOption(context, Icons.language, 'Website',
-                  'Connect Website to get data'),
+                  'Connect Website to get data', widget.knowledge),
               _buildUnitOption(context, Icons.code, 'Github repositories',
-                  'Connect Github repositories to get data'),
+                  'Connect Github repositories to get data', widget.knowledge),
               _buildUnitOption(context, Icons.code_off, 'Confluence',
-                  'Connect Confluence to get data'),
+                  'Connect Confluence to get data', widget.knowledge),
               _buildUnitOption(context, Icons.cloud, 'Google drive',
-                  'Connect Google drive to get data'),
-              _buildUnitOption(
-                  context, Icons.chat, 'Slack', 'Connect Slack to get data'),
+                  'Connect Google drive to get data', widget.knowledge),
+              _buildUnitOption(context, Icons.chat, 'Slack',
+                  'Connect Slack to get data', widget.knowledge),
               SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -55,8 +58,9 @@ class _UnitKnowledgeDialogState extends State<UnitKnowledgeDialog> {
                   ElevatedButton(
                     onPressed: () {
                       // Xử lý khi nhấn "Next"
+                      Navigator.of(context).pop(); // Đóng dialog
                     },
-                    child: Text('Next'),
+                    child: Text('Oke'),
                   ),
                 ],
               ),
@@ -68,8 +72,8 @@ class _UnitKnowledgeDialogState extends State<UnitKnowledgeDialog> {
   }
 
   // Hàm tạo widget cho mỗi tùy chọn trong dialog
-  Widget _buildUnitOption(
-      BuildContext context, IconData icon, String title, String subtitle) {
+  Widget _buildUnitOption(BuildContext context, IconData icon, String title,
+      String subtitle, KnowledgeResDto knowledge) {
     return ListTile(
       leading: Icon(icon, color: Colors.blue),
       title: Text(title, style: TextStyle(fontWeight: FontWeight.bold)),
@@ -78,19 +82,19 @@ class _UnitKnowledgeDialogState extends State<UnitKnowledgeDialog> {
         // Xử lý khi nhấn vào từng mục tùy chọn
         switch (title) {
           case 'Local files':
-            _handleLocalFiles(context);
+            _handleLocalFiles(context, knowledge);
             break;
           case 'Website':
-            _handleWebsite(context);
+            _handleWebsite(context, knowledge);
             break;
           case 'Google drive':
-            _handleGoogleDrive(context);
+            _handleGoogleDrive(context, knowledge);
             break;
           case 'Slack':
-            _handleSlack(context);
+            _handleSlack(context, knowledge);
             break;
           case 'Confluence':
-            _handleConfluence(context);
+            _handleConfluence(context, knowledge);
             break;
           default:
             print('Unknown option selected');
@@ -99,24 +103,39 @@ class _UnitKnowledgeDialogState extends State<UnitKnowledgeDialog> {
     );
   }
 
-  void _handleLocalFiles(BuildContext context) {
-    print("Dialog");
-    showDialog(context: context, builder: (context) => UploadFileDialog());
+  void _handleLocalFiles(BuildContext context, KnowledgeResDto knowledge) {
+    showDialog(
+        context: context,
+        builder: (context) => UploadFileDialog(
+              knowledge: knowledge,
+            ));
   }
 
-  void _handleWebsite(BuildContext context) {
-    showDialog(context: context, builder: (context) => UploadWebDialog());
+  void _handleWebsite(BuildContext context, KnowledgeResDto knowledge) {
+    showDialog(
+        context: context,
+        builder: (context) => UploadWebDialog(
+              knowledge: knowledge,
+            ));
   }
 
-  void _handleGoogleDrive(BuildContext context) {
+  void _handleGoogleDrive(BuildContext context, KnowledgeResDto knowledge) {
     showDialog(context: context, builder: (context) => UploadDriveDialog());
   }
 
-  void _handleSlack(BuildContext context) {
-    showDialog(context: context, builder: (context) => UploadSlackDialog());
+  void _handleSlack(BuildContext context, KnowledgeResDto knowledge) {
+    showDialog(
+        context: context,
+        builder: (context) => UploadSlackDialog(
+              knowledge: knowledge,
+            ));
   }
 
-  void _handleConfluence(BuildContext context) {
-    showDialog(context: context, builder: (context) => ConfluenceDialog());
+  void _handleConfluence(BuildContext context, KnowledgeResDto knowledge) {
+    showDialog(
+        context: context,
+        builder: (context) => ConfluenceDialog(
+              knowledge: knowledge,
+            ));
   }
 }

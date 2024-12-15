@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ai_app/features/prompt/presentation/prompt_provider.dart';
+import 'package:flutter_ai_app/features/prompt/presentation/providers/prompt_provider.dart';
 import 'package:provider/provider.dart';
 
 class PromptForm extends StatefulWidget {

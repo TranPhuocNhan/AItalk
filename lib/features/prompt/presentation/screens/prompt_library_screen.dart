@@ -1,24 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ai_app/core/models/assistant.dart';
 import 'package:flutter_ai_app/features/ai_chat/data/models/assistant_dto.dart';
 import 'package:flutter_ai_app/features/ai_chat/domains/entities/chat_message.dart';
-import 'package:flutter_ai_app/core/models/prompt/prompt.dart';
+import 'package:flutter_ai_app/features/prompt/data/prompt.dart';
 import 'package:flutter_ai_app/features/ai_chat/presentation/providers/chat_provider.dart';
-import 'package:flutter_ai_app/features/prompt/presentation/prompt_provider.dart';
+import 'package:flutter_ai_app/features/prompt/presentation/providers/prompt_provider.dart';
 import 'package:flutter_ai_app/utils/assistant_map.dart';
 import 'package:flutter_ai_app/utils/category_prompt_map.dart';
-import 'package:flutter_ai_app/widgets/create_prompt.dart';
-import 'package:flutter_ai_app/widgets/edit_prompt_form.dart';
-import 'package:flutter_ai_app/widgets/prompt_dialog.dart';
+import 'package:flutter_ai_app/features/prompt/presentation/widgets/create_prompt.dart';
+import 'package:flutter_ai_app/features/prompt/presentation/widgets/edit_prompt_form.dart';
+import 'package:flutter_ai_app/features/prompt/presentation/widgets/prompt_dialog.dart';
+import 'package:flutter_ai_app/widgets/app_drawer.dart';
 import 'package:provider/provider.dart';
 
 class PromptLibraryScreen extends StatefulWidget {
+  final TabController tabController;
+
+  PromptLibraryScreen({required this.tabController});
   @override
   _PromptLibraryScreenState createState() => _PromptLibraryScreenState();
 }
 
 class _PromptLibraryScreenState extends State<PromptLibraryScreen>
     with SingleTickerProviderStateMixin {
-  late TabController _tabController;
   final _searchController = TextEditingController();
   List<Prompt> filteredPrompts = [];
   List<Prompt> filteredFavoritePrompts = [];
@@ -38,14 +42,13 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
             Provider.of<PromptProvider>(context, listen: false).favoritePrompts;
       });
     });
-    _tabController = TabController(length: 3, vsync: this);
-    _tabController.addListener(() {
+    widget.tabController.addListener(() {
       setState(() {
         _searchController.clear();
-        if (_tabController.index == 1) {
+        if (widget.tabController.index == 1) {
           filteredPrompts =
               Provider.of<PromptProvider>(context, listen: false).publicPrompts;
-        } else if (_tabController.index == 2) {
+        } else if (widget.tabController.index == 2) {
           filteredFavoritePrompts =
               Provider.of<PromptProvider>(context, listen: false)
                   .favoritePrompts;
@@ -57,22 +60,10 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
   @override
   Widget build(BuildContext context) {
     final promptProvider = Provider.of<PromptProvider>(context);
-    print("public prompts: ${promptProvider.publicPrompts}");
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Prompt Library'),
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: [
-            Tab(text: 'My Prompt'),
-            Tab(text: 'Public Prompt'),
-            Tab(text: 'Favorite Prompt'),
-          ],
-        ),
-      ),
       body: TabBarView(
-        controller: _tabController,
+        controller: widget.tabController,
         children: [
           // Tab My Prompt
           promptProvider.isLoading
@@ -167,9 +158,6 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
           final result = await showDialog(
               context: context,
               builder: (BuildContext context) => PromptDialog());
-          if (result != null) {
-            print("result: $result");
-          }
         },
         title: Text(prompt.title ?? ''),
         subtitle: Text(prompt.description ?? ''),
@@ -193,7 +181,6 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
               icon: Icon(Icons.edit),
               onPressed: () async {
                 // Edit action
-                print("prompt: ${prompt.toJson()}");
                 final result = await showDialog(
                     context: context,
                     builder: (context) =>
@@ -203,7 +190,6 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text("Prompt updated")),
                   );
-                  print("result: $result");
                   final updatedPrompt = Prompt(
                     id: prompt.id,
                     isFavorite: false,
@@ -268,9 +254,8 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
           filled: true,
         ),
         onChanged: (value) {
-          print("value: $value");
           setState(() {
-            if (_tabController.index == 1) {
+            if (widget.tabController.index == 1) {
               if (value.isEmpty) {
                 filteredPrompts =
                     Provider.of<PromptProvider>(context, listen: false)
@@ -283,7 +268,7 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
                             .contains(value.toLowerCase()))
                         .toList();
               }
-            } else if (_tabController.index == 2) {
+            } else if (widget.tabController.index == 2) {
               if (value.isEmpty) {
                 filteredFavoritePrompts =
                     Provider.of<PromptProvider>(context, listen: false)
@@ -313,16 +298,15 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
               context: context,
               builder: (BuildContext context) => PromptDialog());
           if (result != null) {
-            print("result from prompt dialog in public prompt list: $result");
-
             final chatProvider =
                 Provider.of<ChatProvider>(context, listen: false);
             chatProvider.sendFirstMessage(ChatMessage(
                 assistant: AssistantDTO(
-                    id: assistantMap[chatProvider.selectedAssistant] ??
-                        "gpt-4o-mini",
+                    id: chatProvider.selectedAssistant?.id ??
+                        Assistant.assistants.first.id,
                     model: 'dify',
-                    name: chatProvider.selectedAssistant),
+                    name: chatProvider.selectedAssistant?.name ??
+                        Assistant.assistants.first.name),
                 role: "user",
                 content: result));
             chatProvider.setSelectedScreenIndex(0);

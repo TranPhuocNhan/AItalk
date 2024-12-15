@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ai_app/features/ai_chat/domains/entities/conversation.dart';
 import 'package:flutter_ai_app/features/ai_chat/presentation/providers/chat_provider.dart';
-import 'package:flutter_ai_app/features/ai_chat/presentation/screens/home_view.dart';
 import 'package:flutter_ai_app/features/ai_chat/presentation/widgets/tools_section.dart';
+import 'package:flutter_ai_app/views/home_view.dart';
+import 'package:flutter_ai_app/widgets/app_drawer.dart';
 import 'package:provider/provider.dart';
 
 class ChatContentView extends StatefulWidget {
@@ -16,7 +17,7 @@ class ChatContentView extends StatefulWidget {
 class _ChatContentViewState extends State<ChatContentView> {
   final TextEditingController _controller = TextEditingController();
   List<Conversation>? _listConversationContent;
-
+  final String logoPath = 'assets/images/logo_icon.png';
   @override
   Widget build(BuildContext context) {
     final chatProvider = Provider.of<ChatProvider>(context);
@@ -25,6 +26,9 @@ class _ChatContentViewState extends State<ChatContentView> {
 
     return Scaffold(
       appBar: AppBar(),
+      drawer: AppDrawer(
+        selected: 0,
+      ),
       body: Column(
         children: [
           Expanded(
@@ -105,16 +109,30 @@ class _ChatContentViewState extends State<ChatContentView> {
 
   Widget _buildMessageCard(String role, String content, bool isUserMessage) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 16.0),
+      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment:
+            isUserMessage ? MainAxisAlignment.end : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          if (!isUserMessage)
+            CircleAvatar(
+              backgroundColor: Colors.blueAccent,
+              child: Image.asset(
+                logoPath,
+                width: 24,
+                height: 24,
+                fit: BoxFit.cover,
+                filterQuality: FilterQuality.high,
+              ),
+            ),
+          const SizedBox(width: 8),
           Flexible(
             child: Card(
-              color: isUserMessage ? Colors.grey[200] : Colors.grey[300],
+              elevation: 4,
+              color: isUserMessage ? Colors.grey[50] : Colors.white,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(15),
               ),
               child: Container(
                 padding: const EdgeInsets.all(12.0),
@@ -125,15 +143,17 @@ class _ChatContentViewState extends State<ChatContentView> {
                       role,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: Colors.black,
+                        color: isUserMessage
+                            ? Colors.blueAccent
+                            : Colors.deepPurpleAccent,
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 6),
                     Text(
                       content,
                       style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
+                        color: Colors.black87,
+                        fontSize: 15,
                       ),
                     ),
                   ],
@@ -141,6 +161,12 @@ class _ChatContentViewState extends State<ChatContentView> {
               ),
             ),
           ),
+          if (isUserMessage) const SizedBox(width: 8),
+          if (isUserMessage)
+            CircleAvatar(
+              backgroundColor: Colors.green,
+              child: Icon(Icons.person, color: Colors.white),
+            ),
         ],
       ),
     );
