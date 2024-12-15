@@ -7,6 +7,7 @@ import 'package:flutter_ai_app/core/services/email_response_service.dart';
 import 'package:flutter_ai_app/core/services/prompt_service.dart';
 import 'package:flutter_ai_app/features/ai_chat/domains/services/send_message_service.dart';
 import 'package:flutter_ai_app/core/services/user_data_service.dart';
+import 'package:flutter_ai_app/features/knowledge_base/data/services/knowledge-service.dart';
 import 'package:get_it/get_it.dart';
 
 class ApiServiceModule {
@@ -54,5 +55,11 @@ class ApiServiceModule {
     final GetIt getIt = GetIt.instance;
     getIt.registerSingleton<PromptService>(
         PromptService(apiLink: "https://api.dev.jarvis.cx/api/v1/prompts"));
+  }
+
+  static Future<void> configureKnowledgeModuleInjection() async {
+    final GetIt getIt = GetIt.instance;
+    getIt.registerSingleton<KnowledgeService>(KnowledgeService(
+        apiLink: "https://knowledge-api.dev.jarvis.cx/kb-core/v1/knowledge"));
   }
 }

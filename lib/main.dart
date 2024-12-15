@@ -5,6 +5,8 @@ import 'package:flutter_ai_app/core/services/user_data_service.dart';
 import 'package:flutter_ai_app/di/service_injection.dart';
 import 'package:flutter_ai_app/features/ai_chat/domains/chat_manager.dart';
 import 'package:flutter_ai_app/features/ai_chat/presentation/providers/chat_provider.dart';
+import 'package:flutter_ai_app/features/knowledge_base/data/knowledge-manager.dart';
+import 'package:flutter_ai_app/features/knowledge_base/presentation/providers/knowledge_provider.dart';
 import 'package:flutter_ai_app/features/login/presentation/processing_provider.dart';
 import 'package:flutter_ai_app/features/prompt/data/prompt_manager.dart';
 import 'package:flutter_ai_app/features/email_response/presentation/email_style_provider.dart';
@@ -19,6 +21,7 @@ Future<void> main() async {
   await ServiceInjection.ConfigureServiceInjection();
   ChatManager chatManager = ChatManager();
   PromptManager promptManager = PromptManager();
+  KnowledgeManager knowledgeManager = KnowledgeManager();
   runApp(
     MultiProvider(providers: [
       ChangeNotifierProvider(create: (_) => ProcessingProvider()),
@@ -28,6 +31,8 @@ Future<void> main() async {
           create: (_) => ChatProvider(chatManager: chatManager)),
       ChangeNotifierProvider(
           create: (_) => PromptProvider(promptManager: promptManager)),
+      ChangeNotifierProvider(
+          create: (_) => KnowledgeProvider(knowledgeManager: knowledgeManager)),
     ], child: MyApp()),
   );
 }

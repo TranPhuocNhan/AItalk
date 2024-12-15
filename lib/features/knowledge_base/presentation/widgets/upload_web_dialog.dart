@@ -1,15 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ai_app/features/knowledge_base/data/api_response/knowledge_res_dto.dart';
+import 'package:flutter_ai_app/features/knowledge_base/presentation/providers/knowledge_provider.dart';
+import 'package:provider/provider.dart';
 
 class UploadWebDialog extends StatefulWidget {
-  const UploadWebDialog({super.key});
+  const UploadWebDialog({super.key, required this.knowledge});
+  final KnowledgeResDto knowledge;
 
   @override
   State<UploadWebDialog> createState() => _UploadWebDialogState();
 }
 
 class _UploadWebDialogState extends State<UploadWebDialog> {
+  TextEditingController _nameController = TextEditingController();
+  TextEditingController _urlController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    KnowledgeProvider knowledgeProvider =
+        Provider.of<KnowledgeProvider>(context);
     final size = MediaQuery.of(context).size;
     return AlertDialog(
       backgroundColor: Colors.blueGrey[50],
@@ -35,7 +43,7 @@ class _UploadWebDialogState extends State<UploadWebDialog> {
           ],
         ),
       ),
-      actions: [_buildDialogActions(context)],
+      actions: [_buildDialogActions(context, knowledgeProvider)],
     );
   }
 
@@ -72,6 +80,7 @@ class _UploadWebDialogState extends State<UploadWebDialog> {
           height: 5,
         ),
         TextField(
+          controller: _nameController,
           decoration: InputDecoration(
             filled: true,
             fillColor: Colors.white,
@@ -114,6 +123,7 @@ class _UploadWebDialogState extends State<UploadWebDialog> {
           height: 5,
         ),
         TextField(
+          controller: _urlController,
           decoration: InputDecoration(
             filled: true,
             fillColor: Colors.white,
@@ -129,10 +139,15 @@ class _UploadWebDialogState extends State<UploadWebDialog> {
     );
   }
 
-  _buildDialogActions(BuildContext context) {
+  _buildDialogActions(
+      BuildContext context, KnowledgeProvider knowledgeProvider) {
     return ElevatedButton(
       onPressed: () {
-        // Action for creating assistant (handle form submission here)
+        knowledgeProvider.uploadKnowledgeFromWeb(
+          id: widget.knowledge.id,
+          unitName: _nameController.text,
+          webUrl: _urlController.text,
+        );
         Navigator.of(context).pop(); // Close dialog after submission
       },
       child: Text('OK'),

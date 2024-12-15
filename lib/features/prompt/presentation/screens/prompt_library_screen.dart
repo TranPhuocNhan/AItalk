@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_ai_app/core/models/assistant.dart';
 import 'package:flutter_ai_app/features/ai_chat/data/models/assistant_dto.dart';
 import 'package:flutter_ai_app/features/ai_chat/domains/entities/chat_message.dart';
-import 'package:flutter_ai_app/core/models/prompt/prompt.dart';
+import 'package:flutter_ai_app/features/prompt/data/prompt.dart';
 import 'package:flutter_ai_app/features/ai_chat/presentation/providers/chat_provider.dart';
 import 'package:flutter_ai_app/features/prompt/presentation/providers/prompt_provider.dart';
 import 'package:flutter_ai_app/utils/assistant_map.dart';

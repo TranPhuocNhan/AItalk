@@ -3,6 +3,7 @@ import 'package:flutter_ai_app/features/ai_chat/domains/entities/conversation.da
 import 'package:flutter_ai_app/features/ai_chat/presentation/providers/chat_provider.dart';
 import 'package:flutter_ai_app/features/ai_chat/presentation/widgets/tools_section.dart';
 import 'package:flutter_ai_app/views/home_view.dart';
+import 'package:flutter_ai_app/widgets/app_drawer.dart';
 import 'package:provider/provider.dart';
 
 class ChatContentView extends StatefulWidget {
@@ -24,7 +25,10 @@ class _ChatContentViewState extends State<ChatContentView> {
     _listConversationContent = chatProvider.listConversationContent;
 
     return Scaffold(
-      // appBar: AppBar(),
+      appBar: AppBar(),
+      drawer: AppDrawer(
+        selected: 0,
+      ),
       body: Column(
         children: [
           Expanded(

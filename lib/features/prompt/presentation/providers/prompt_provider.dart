@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter_ai_app/core/models/prompt/get_prompt_response.dart';
-import 'package:flutter_ai_app/core/models/prompt/prompt.dart';
+import 'package:flutter_ai_app/features/prompt/data/api_response/get_prompt_response.dart';
+import 'package:flutter_ai_app/features/prompt/data/prompt.dart';
 import 'package:flutter_ai_app/features/prompt/data/prompt_manager.dart';
 import 'package:flutter_ai_app/utils/category_prompt_map.dart';
 

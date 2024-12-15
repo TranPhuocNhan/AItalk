@@ -1,16 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ai_app/features/ai_bot/presentation/widgets/unit_knowledge_dialog.dart';
+import 'package:flutter_ai_app/features/knowledge_base/data/api_response/knowledge_res_dto.dart';
+import 'package:flutter_ai_app/features/knowledge_base/data/api_response/knowledge_unit_dto.dart';
+import 'package:flutter_ai_app/features/knowledge_base/presentation/providers/knowledge_provider.dart';
+import 'package:provider/provider.dart';
 
 class KnowledgeUnitView extends StatefulWidget {
-  const KnowledgeUnitView({super.key});
+  const KnowledgeUnitView({super.key, required this.knowledge});
+
+  final KnowledgeResDto knowledge;
 
   @override
   State<KnowledgeUnitView> createState() => _KnowledgeUnitViewState();
 }
 
 class _KnowledgeUnitViewState extends State<KnowledgeUnitView> {
+  List<KnowledgeUnitDto> units = [];
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      // Fetch data from API
+      await Provider.of<KnowledgeProvider>(context, listen: false)
+          .getUnitsOfKnowledge(widget.knowledge.id);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    final knowledgeProvider =
+        Provider.of<KnowledgeProvider>(context, listen: true);
+    units = knowledgeProvider.units;
     return Scaffold(
       appBar: AppBar(
         actions: [
@@ -18,7 +38,8 @@ class _KnowledgeUnitViewState extends State<KnowledgeUnitView> {
             onPressed: () {
               showDialog(
                   context: context,
-                  builder: (context) => UnitKnowledgeDialog());
+                  builder: (context) =>
+                      UnitKnowledgeDialog(knowledge: widget.knowledge));
             },
             label: Text(
               "Add Unit",
@@ -70,9 +91,11 @@ class _KnowledgeUnitViewState extends State<KnowledgeUnitView> {
                         TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 Row(
                   children: [
-                    _buildInfoChip('2 Units', Colors.blue),
+                    _buildInfoChip(
+                        widget.knowledge.numUnits.toString(), Colors.blue),
                     SizedBox(width: 5),
-                    _buildInfoChip('16.39 KB', Colors.red),
+                    _buildInfoChip(
+                        widget.knowledge.totalSize.toString(), Colors.red),
                   ],
                 ),
               ],
@@ -106,12 +129,10 @@ class _KnowledgeUnitViewState extends State<KnowledgeUnitView> {
             DataColumn(label: Text('Enable')),
             DataColumn(label: Text('Action')),
           ],
-          rows: [
-            _buildUnitRow('weekly process', 'Google drive', '13.97 KB',
-                '7/13/2024 9:02:03 PM', '7/13/2024 9:02:03 PM', true),
-            _buildUnitRow('Task Management', 'Jira', '2.42 KB',
-                '7/13/2024 9:22:21 PM', '7/13/2024 9:22:21 PM', true),
-          ],
+          rows: units.map((unit) {
+            return _buildUnitRow(unit.name, unit.type, unit.size.toString(),
+                unit.createdAt, unit.updatedAt, unit.status);
+          }).toList(),
         ),
       ),
     );
@@ -120,13 +141,21 @@ class _KnowledgeUnitViewState extends State<KnowledgeUnitView> {
   // Widget to build each row in the table
   DataRow _buildUnitRow(String unit, String source, String size,
       String createTime, String latestUpdate, bool isEnabled) {
+    String displayUnit =
+        unit.length > 20 ? unit.substring(0, 20) + "..." : unit;
     return DataRow(
       cells: [
         DataCell(Row(
           children: [
             Icon(Icons.insert_drive_file, color: Colors.blue),
             SizedBox(width: 10),
-            Text(unit),
+            Container(
+              child: Text(
+                displayUnit,
+                overflow: TextOverflow.ellipsis,
+              ),
+              constraints: BoxConstraints(maxWidth: 150),
+            ),
           ],
         )),
         DataCell(Text(source)),

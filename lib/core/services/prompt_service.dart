@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:flutter_ai_app/core/models/prompt/get_prompt_response.dart';
-import 'package:flutter_ai_app/core/models/prompt/prompt.dart';
+import 'package:flutter_ai_app/features/prompt/data/api_response/get_prompt_response.dart';
+import 'package:flutter_ai_app/features/prompt/data/prompt.dart';
 import 'package:flutter_ai_app/utils/APIValue.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;

@@ -17,17 +17,20 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
   late TabController _tabController;
+  late TabController _tabBotController;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    _tabBotController = TabController(length: 2, vsync: this);
   }
 
   final List<Widget> _widgetOptions = <Widget>[
-    const Text("Read Content"),
-    const Text("Search Content"),
-    const Text("Write Content"),
+    const Text("Chat Content"),
+    const Text("Thread Chat History"),
+    const Text("Prompt Library"),
+    const Text("Bot Dashboard"),
     const Text("Translate Content"),
     const Text("Toolkit Content"),
     const Text("Memo Content"),
@@ -38,14 +41,21 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
     final chatProvider = Provider.of<ChatProvider>(context);
     String appBarTitle = "Chat View"; // Default title
 
-    // Set the title based on selectedScreenIndex
-    if (chatProvider.selectedScreenIndex == 1) {
-      appBarTitle = "Thread Chat History";
-    } else if (chatProvider.selectedScreenIndex == 2) {
-      appBarTitle = "Prompt Library";
-    } else if (chatProvider.selectedScreenIndex == 3) {
-      appBarTitle = "Bot Dashboard";
+    // Đặt tiêu đề dựa trên tab được chọn
+    switch (chatProvider.selectedScreenIndex) {
+      case 1:
+        appBarTitle = "Thread Chat History";
+        break;
+      case 2:
+        appBarTitle = "Prompt Library";
+        break;
+      case 3:
+        appBarTitle = "Bot Dashboard";
+        break;
+      default:
+        appBarTitle = "Chat View";
     }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(appBarTitle),
@@ -59,88 +69,64 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
                       Tab(text: 'Favorite Prompt'),
                     ],
                   )
-                : null,
+                : (chatProvider.selectedScreenIndex == 3 // BotDashboard index
+                    ? TabBar(
+                        controller: _tabBotController,
+                        tabs: const [
+                          Tab(text: 'Bot List'),
+                          Tab(text: 'Knowledge List'),
+                        ],
+                      )
+                    : null),
       ),
       drawer: AppDrawer(
         selected: 0,
       ),
-      body: Row(
+      body: IndexedStack(
+        index: chatProvider.selectedScreenIndex,
         children: [
-          Expanded(
-            child: IndexedStack(
-              index: chatProvider.selectedScreenIndex,
-              children: [
-                chatProvider.isChatContentView
-                    ? ChatContentView(
-                        onAddPressed: () {
-                          setState(() {
-                            chatProvider.toggleChatContentView();
-                          });
-                        },
-                      )
-                    : ChatView(),
-                ThreadChatHistory(),
-                PromptLibraryScreen(
-                  tabController: _tabController,
-                ),
-                BotDashBoard(),
-                ..._widgetOptions.skip(2)
-              ],
-            ),
-          ),
-          // Right sidebar
-          _buildRightSideBar(chatProvider),
+          ChatView(),
+          ThreadChatHistory(),
+          PromptLibraryScreen(tabController: _tabController),
+          BotDashBoard(tabController: _tabBotController),
+          const Text("Translate Content"),
+          const Text("Toolkit Content"),
+          const Text("Memo Content"),
         ],
       ),
-      bottomNavigationBar: _buildBottomNavigationBar(),
-    );
-  }
-
-  Widget _buildRightSideBar(ChatProvider chatProvider) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.grey[200],
-        borderRadius: BorderRadius.circular(10),
-      ),
-      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 2),
-      child: Column(
-        children: [
-          _buildIconButtonWithLabel(Icons.chat, 'Chat', 0, chatProvider),
-          _buildIconButtonWithLabel(Icons.book, 'Thread', 1, chatProvider),
-          _buildIconButtonWithLabel(Icons.search, 'Prompt', 2, chatProvider),
-          _buildIconButtonWithLabel(Icons.edit, 'AI Bot', 3, chatProvider),
-          _buildIconButtonWithLabel(
-              Icons.translate, 'Translate', 4, chatProvider),
-          _buildIconButtonWithLabel(Icons.campaign, 'Toolkit', 5, chatProvider),
-          _buildIconButtonWithLabel(Icons.note, 'Memo', 6, chatProvider),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildIconButtonWithLabel(
-      IconData icon, String label, int index, ChatProvider chatProvider) {
-    bool isSelected = chatProvider.selectedScreenIndex == index;
-    return Column(
-      children: [
-        IconButton(
-          onPressed: () {
-            setState(() {
-              chatProvider.setSelectedScreenIndex(index);
-            });
-          },
-          icon: Icon(
-            icon,
-            size: 30,
-            color: isSelected ? Colors.blue : Colors.black,
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: chatProvider.selectedScreenIndex,
+        onTap: (int index) {
+          setState(() {
+            chatProvider.setSelectedScreenIndex(index);
+          });
+        },
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.chat),
+            label: 'Chat',
           ),
-        ),
-        Text(label, style: TextStyle(fontSize: 12)),
-      ],
+          BottomNavigationBarItem(
+            icon: Icon(Icons.book),
+            label: 'Thread',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+            label: 'Prompt',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.edit),
+            label: 'AI Bot',
+          ),
+        ],
+        selectedItemColor: Colors.teal[600], // Xanh ngọc đậm
+        unselectedItemColor: Colors.grey[400], // Xám nhạt
+        backgroundColor: Colors.grey[50], // Trắng ngà
+        type: BottomNavigationBarType.fixed,
+        selectedLabelStyle:
+            TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+        unselectedLabelStyle: TextStyle(fontSize: 11),
+      ),
     );
-  }
-
-  Widget _buildBottomNavigationBar() {
-    return Text("");
   }
 }
