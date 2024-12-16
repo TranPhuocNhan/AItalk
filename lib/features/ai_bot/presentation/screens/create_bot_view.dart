@@ -57,7 +57,7 @@ class _BotDashBoardState extends State<BotDashBoard>
     return Scaffold(
       body: _buildBody(),
       appBar: AppBar(
-        title: Text("Bot Dashboard"),
+        title: null,
         bottom: TabBar(
           controller: tabController,
           tabs: [

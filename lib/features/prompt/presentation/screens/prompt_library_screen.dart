@@ -64,7 +64,8 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
     print("PromptLibraryScreen build...");
     return Scaffold(
       appBar: AppBar(
-        title: Text("Prompt library"),
+        title: null,
+        automaticallyImplyLeading: false,
         bottom: TabBar(
           controller: tabController,
           tabs: const [

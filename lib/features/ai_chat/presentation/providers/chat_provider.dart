@@ -253,6 +253,7 @@ class ChatProvider extends ChangeNotifier {
         // Lấy lịch sử hội thoại sau khi nhận phản hồi từ API
         await fetchConversationHistory(
             _conversationId ?? "", _assistantId ?? "");
+        await getConversationThread();
 
         // Hiển thị nội dung chat
         _isChatContentView = true;

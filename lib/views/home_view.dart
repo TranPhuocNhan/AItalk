@@ -25,7 +25,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
   int _selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
-    final chatProvider = Provider.of<ChatProvider>(context);
+    print("HomeView build");
     String appBarTitle = "Chat View"; // Default title
 
     // Đặt tiêu đề dựa trên tab được chọn
