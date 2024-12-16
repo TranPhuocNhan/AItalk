@@ -5,13 +5,12 @@ import 'package:flutter_ai_app/features/ai_chat/domains/entities/chat_message.da
 import 'package:flutter_ai_app/features/prompt/data/prompt.dart';
 import 'package:flutter_ai_app/features/ai_chat/presentation/providers/chat_provider.dart';
 import 'package:flutter_ai_app/features/prompt/presentation/providers/prompt_provider.dart';
-import 'package:flutter_ai_app/utils/assistant_map.dart';
-import 'package:flutter_ai_app/utils/category_prompt_map.dart';
 import 'package:flutter_ai_app/features/prompt/presentation/widgets/create_prompt.dart';
 import 'package:flutter_ai_app/features/prompt/presentation/widgets/edit_prompt_form.dart';
-import 'package:flutter_ai_app/features/prompt/presentation/widgets/prompt_dialog.dart';
-import 'package:flutter_ai_app/widgets/app_drawer.dart';
+import 'package:flutter_ai_app/utils/category_prompt_map.dart';
 import 'package:provider/provider.dart';
+
+import '../widgets/prompt_dialog.dart';
 
 class PromptLibraryScreen extends StatefulWidget {
   PromptLibraryScreen({super.key});

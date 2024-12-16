@@ -5,6 +5,7 @@ import 'package:flutter_ai_app/features/ai_chat/domains/entities/chat_message.da
 import 'package:flutter_ai_app/features/ai_chat/presentation/providers/chat_provider.dart';
 import 'package:flutter_ai_app/features/ai_chat/presentation/screens/chat_content_view.dart';
 import 'package:flutter_ai_app/features/prompt/presentation/widgets/prompt_library_bottom_sheet.dart';
+import 'package:flutter_ai_app/features/ai_chat/presentation/providers/chat_provider.dart';
 import 'package:provider/provider.dart';
 
 class ChatSection extends StatefulWidget {

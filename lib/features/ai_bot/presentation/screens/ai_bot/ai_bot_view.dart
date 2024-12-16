@@ -1,11 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ai_app/core/models/ai_bot/ai_%20bot.dart';
+import 'package:flutter_ai_app/core/models/ai_bot/message.dart';
 import 'package:flutter_ai_app/core/services/ai_bot_services.dart';
 import 'package:flutter_ai_app/features/ai_bot/data/bot_manager.dart';
-import 'package:flutter_ai_app/features/ai_bot/presentation/screens/create_bot_screen.dart';
-import 'package:flutter_ai_app/features/ai_bot/presentation/screens/edit_bot_screen.dart';
-import 'package:flutter_ai_app/features/ai_bot/presentation/screens/search_group.dart';
+import 'package:flutter_ai_app/features/ai_bot/presentation/screens/ai_bot/ai_bot_popup_menu.dart';
+import 'package:flutter_ai_app/features/ai_bot/presentation/screens/ai_bot/chat_bot_screen.dart';
+import 'package:flutter_ai_app/features/ai_bot/presentation/screens/ai_bot/create_bot_screen.dart';
+import 'package:flutter_ai_app/features/ai_bot/presentation/screens/ai_bot/edit_bot_screen.dart';
+import 'package:flutter_ai_app/features/ai_bot/presentation/screens/ai_bot/search_group.dart';
 import 'package:flutter_ai_app/utils/constant/Color.dart';
 import 'package:flutter_ai_app/widgets/app_drawer.dart';
 import 'package:get_it/get_it.dart';
@@ -23,6 +26,8 @@ class _AIBotState extends State<AIBotView> {
   late Function(bool updateData) updateDataCallback; // use for create new bot
   late Function(AiBot editedData) updateEditCallback; // use for edit a bot
   late Function(String keywork) updateSearchCallback; // use for search function
+  late Function(String selected, AiBot bot)
+      handlePopupSelectedCallback; // use for handle select action in popup;
 
   void updateListData(List<AiBot> data) {
     setState(() {
@@ -74,6 +79,9 @@ class _AIBotState extends State<AIBotView> {
         updateListData(result);
       }
     };
+    handlePopupSelectedCallback = (String selected, AiBot data) {
+      handleSelectedPopupCallback(selected, data);
+    };
   }
 
   @override
@@ -115,11 +123,10 @@ class _AIBotState extends State<AIBotView> {
               Expanded(
                   child: Center(
                 child: lstData.length == 0
-                    ? const Text(
-                        "Empty",
-                        style: TextStyle(
-                          fontSize: 25,
-                        ),
+                    ? Image.asset(
+                        // "assets/images/empty_icon.png",
+                        "images/empty_icon.png",
+                        width: 200,
                       )
                     : Container(
                         padding: EdgeInsets.only(bottom: 20),
@@ -129,60 +136,25 @@ class _AIBotState extends State<AIBotView> {
                               return Column(
                                 children: [
                                   ListTile(
-                                    title: Text(
-                                      lstData[index].assistantName,
-                                      style: TextStyle(
-                                        fontSize: 22,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    subtitle: Text(
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                      lstData[index].description,
-                                      style: TextStyle(
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                    trailing: DropdownButton<String>(
-                                      // value: selectedOption,
-                                      hint: Icon(Icons.more_vert),
-                                      items: [
-                                        const DropdownMenuItem<String>(
-                                          value: 'edit',
-                                          child: const Text('Edit'),
+                                      title: Text(
+                                        lstData[index].assistantName,
+                                        style: TextStyle(
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.bold,
                                         ),
-                                        const DropdownMenuItem<String>(
-                                          value: 'delete',
-                                          child: const Text('Delete'),
+                                      ),
+                                      subtitle: Text(
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        lstData[index].description,
+                                        style: TextStyle(
+                                          color: Colors.grey,
                                         ),
-                                      ],
-                                      onChanged: (value) {
-                                        // handle when click delete or edit
-                                        switch (value) {
-                                          case "delete":
-                                            {
-                                              handleDeleteAssistant(
-                                                  lstData[index].id,
-                                                  lstData[index].assistantName);
-                                              break;
-                                            }
-                                          case "edit":
-                                            {
-                                              handleEditAssistant(
-                                                  lstData[index]);
-                                              break;
-                                            }
-                                          default:
-                                            {
-                                              break;
-                                            }
-                                        }
-                                      },
-                                      underline: const SizedBox(),
-                                      icon: const SizedBox.shrink(),
-                                    ),
-                                  ),
+                                      ),
+                                      trailing: AiBotPopupMenu(
+                                          data: lstData[index],
+                                          handleSelectedCallback:
+                                              handlePopupSelectedCallback)),
                                   const Divider(),
                                 ],
                               );
@@ -216,6 +188,18 @@ class _AIBotState extends State<AIBotView> {
     updateListAssistant(result);
   }
 
+  void handleSelectedPopupCallback(String selected, AiBot bot) {
+    if (selected.contains('edit')) {
+      handleEditAssistant(bot);
+    } else if (selected.contains("delete")) {
+      handleDeleteAssistant(bot.id, bot.assistantName);
+    } else if (selected.contains("chat")) {
+      handleOpenChatAssistant(bot);
+    } else {
+      print("handleSelectedPopupCallback --> FAILED ");
+    }
+  }
+
   void handleDeleteAssistant(String assistantId, String assistantName) async {
     // show dialog to confirm delete
     showDialog(
@@ -242,7 +226,7 @@ class _AIBotState extends State<AIBotView> {
         });
   }
 
-  void handleEditAssistant(AiBot input) async {
+  void handleEditAssistant(AiBot input) {
     Navigator.push(
         context,
         MaterialPageRoute(
@@ -250,6 +234,13 @@ class _AIBotState extends State<AIBotView> {
                   data: input,
                   onUpdate: updateEditCallback,
                 )));
+  }
+
+  void handleOpenChatAssistant(AiBot input) async{
+    print("enter handle chat click");
+    List<Message> history = await aiBotService.retrieveMessageOfThread(input.openAiThreadIdPlay);
+    Navigator.push(
+        context, MaterialPageRoute(builder: (_) => ChatBotScreen(assistant: input, history: history.reversed.toList())));
   }
 
   void deleteBotWithId(String id) {

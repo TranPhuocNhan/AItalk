@@ -4,6 +4,7 @@ import 'package:flutter_ai_app/features/ai_chat/presentation/providers/chat_prov
 import 'package:flutter_ai_app/features/ai_chat/presentation/widgets/tools_section.dart';
 import 'package:flutter_ai_app/views/home_view.dart';
 import 'package:flutter_ai_app/widgets/app_drawer.dart';
+import 'package:flutter_ai_app/views/home_view.dart';
 import 'package:provider/provider.dart';
 
 class ChatContentView extends StatefulWidget {

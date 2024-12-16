@@ -11,6 +11,8 @@ import 'package:flutter_ai_app/features/login/presentation/processing_provider.d
 import 'package:flutter_ai_app/features/prompt/data/prompt_manager.dart';
 import 'package:flutter_ai_app/features/email_response/presentation/email_style_provider.dart';
 import 'package:flutter_ai_app/features/profile/presentation/manage_token_provider.dart';
+import 'package:flutter_ai_app/features/prompt/data/prompt_manager.dart';
+import 'package:flutter_ai_app/features/prompt/presentation/providers/prompt_provider.dart';
 import 'package:flutter_ai_app/features/prompt/presentation/providers/prompt_provider.dart';
 import 'package:flutter_ai_app/utils/routes.dart';
 import 'package:get_it/get_it.dart';
@@ -45,6 +47,10 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+
+  // // update token after refresh/resumed app 
+  // final tokenManage = Provider.of<Managetokenprovider>(context);
+  // updateTokenValue(tokenManage);
     // // update token after refresh/resumed app
     // final tokenManage = Provider.of<Managetokenprovider>(context);
     // updateTokenValue(tokenManage);
