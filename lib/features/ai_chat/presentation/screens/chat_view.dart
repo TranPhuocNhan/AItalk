@@ -6,11 +6,22 @@ import 'package:flutter_ai_app/features/ai_chat/presentation/widgets/free_unlimi
 import 'package:flutter_ai_app/features/ai_chat/presentation/widgets/tools_section.dart';
 import 'package:flutter_ai_app/features/ai_chat/presentation/widgets/upload_and_writing_agent_section.dart';
 
-class ChatView extends StatelessWidget {
+class ChatView extends StatefulWidget {
   ChatView({super.key});
 
   @override
+  _ChatViewState createState() => _ChatViewState();
+}
+
+class _ChatViewState extends State<ChatView>
+    with AutomaticKeepAliveClientMixin<ChatView> {
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
+    print("ChatView build...");
     return Row(
       children: [
         Expanded(

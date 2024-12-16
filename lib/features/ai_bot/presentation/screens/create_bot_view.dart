@@ -6,8 +6,7 @@ import 'package:flutter_ai_app/features/knowledge_base/presentation/widgets/know
 import 'package:flutter_ai_app/features/knowledge_base/presentation/screens/knowledge_tab.dart';
 
 class BotDashBoard extends StatefulWidget {
-  const BotDashBoard({super.key, this.tabController});
-  final TabController? tabController;
+  const BotDashBoard({super.key});
 
   @override
   State<BotDashBoard> createState() => _BotDashBoardState();
@@ -30,28 +29,15 @@ class _BotDashBoardState extends State<BotDashBoard>
       'type': 'SEO',
     },
   ];
-  // New knowledge list
-  List<Map<String, String>> knowledgeList = [
-    {
-      'knowledge': 'KB knowledge',
-      'units': '2',
-      'size': '994.80 KB',
-      'editTime': '7/13/2024 9:51:44 PM',
-    },
-  ];
+  late TabController tabController;
 
   String _selectedType = "All";
   String _searchQuery = "";
   final List<String> _types = ['All', 'AI', 'Chatbot', 'Marketing', 'SEO'];
-  late TabController _tabController;
   @override
   void initState() {
     super.initState();
-    if (widget.tabController != null) {
-      _tabController = widget.tabController!;
-    } else {
-      _tabController = TabController(length: 2, vsync: this);
-    }
+    tabController = TabController(length: 2, vsync: this);
   }
 
   void _addAiBot(String name, String description) {
@@ -67,8 +53,23 @@ class _BotDashBoardState extends State<BotDashBoard>
 
   @override
   Widget build(BuildContext context) {
+    print("BotDashBoard build...");
     return Scaffold(
       body: _buildBody(),
+      appBar: AppBar(
+        title: null,
+        bottom: TabBar(
+          controller: tabController,
+          tabs: [
+            Tab(
+              text: "Bots",
+            ),
+            Tab(
+              text: "Knowledge",
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -77,7 +78,7 @@ class _BotDashBoardState extends State<BotDashBoard>
       children: [
         Expanded(
           child: TabBarView(
-            controller: _tabController,
+            controller: tabController,
             children: [
               // Tab Bots
               _buildBotsTab(),

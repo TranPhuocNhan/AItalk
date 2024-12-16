@@ -8,8 +8,7 @@ import 'package:flutter_ai_app/views/home_view.dart';
 import 'package:provider/provider.dart';
 
 class ChatContentView extends StatefulWidget {
-  ChatContentView({super.key, required this.onAddPressed});
-  final VoidCallback onAddPressed;
+  ChatContentView({super.key});
 
   @override
   State<ChatContentView> createState() => _ChatContentViewState();
@@ -27,9 +26,9 @@ class _ChatContentViewState extends State<ChatContentView> {
 
     return Scaffold(
       appBar: AppBar(),
-      drawer: AppDrawer(
-        selected: 0,
-      ),
+      // drawer: AppDrawer(
+      //   selected: 0,
+      // ),
       body: Column(
         children: [
           Expanded(
@@ -63,10 +62,11 @@ class _ChatContentViewState extends State<ChatContentView> {
         IconButton(
           icon: const Icon(Icons.add, color: Colors.white),
           onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => HomeView()),
-            );
+            // Navigator.pushReplacement(
+            //   context,
+            //   MaterialPageRoute(builder: (context) => HomeView()),
+            // );
+            Navigator.pop(context);
             print("New Chat is clicked! - Back to Home Screen");
           },
         ),

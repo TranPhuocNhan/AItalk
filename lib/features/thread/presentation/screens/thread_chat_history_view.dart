@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ai_app/features/ai_chat/domains/entities/conversation_thread.dart';
 import 'package:flutter_ai_app/features/ai_chat/presentation/providers/chat_provider.dart';
+import 'package:flutter_ai_app/features/ai_chat/presentation/screens/chat_content_view.dart';
+import 'package:flutter_ai_app/features/knowledge_base/presentation/providers/knowledge_provider.dart';
 import 'package:provider/provider.dart';
 
 class ThreadChatHistory extends StatefulWidget {
@@ -29,6 +31,7 @@ class _ThreadChatHistoryState extends State<ThreadChatHistory> {
 
   @override
   Widget build(BuildContext context) {
+    print("ThreadChatHistory build...");
     ChatProvider chatProvider = Provider.of<ChatProvider>(context);
     conversationThreads = chatProvider.conversationThreads;
 
@@ -111,6 +114,11 @@ class _ThreadChatHistoryState extends State<ThreadChatHistory> {
         onTap: () {
           chatProvider.onThreadSelected(thread.id ?? '');
           print("Current selectedThreadId: ${thread.id}");
+
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => ChatContentView()),
+          );
         },
       ),
     );

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_ai_app/core/models/assistant.dart';
 import 'package:flutter_ai_app/features/ai_chat/data/models/assistant_dto.dart';
 import 'package:flutter_ai_app/features/ai_chat/domains/entities/chat_message.dart';
+import 'package:flutter_ai_app/features/ai_chat/presentation/providers/chat_provider.dart';
+import 'package:flutter_ai_app/features/ai_chat/presentation/screens/chat_content_view.dart';
 import 'package:flutter_ai_app/features/prompt/presentation/widgets/prompt_library_bottom_sheet.dart';
 import 'package:flutter_ai_app/features/ai_chat/presentation/providers/chat_provider.dart';
 import 'package:provider/provider.dart';
@@ -61,7 +63,11 @@ class _ChatSectionState extends State<ChatSection> {
 
       try {
         await chatProvider.sendFirstMessage(message);
-        _controller.clear();
+        _controller.clear(); // Chuyển hướng đến ChatContentView
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => ChatContentView()),
+        );
       } catch (e) {
         print("Error sending first message: $e");
       }

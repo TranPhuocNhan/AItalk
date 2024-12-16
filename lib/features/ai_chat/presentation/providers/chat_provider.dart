@@ -43,35 +43,42 @@ class ChatProvider extends ChangeNotifier {
   int get selectedScreenIndex => _selectedScreenIndex;
 
   bool isMessagePending(String query) {
+    print("isMessagePending: $_pendingResponses");
     return _pendingResponses.contains(query);
   }
 
   void _addPendingResponse(String query) {
+    print("addPendingResponse: $_pendingResponses");
     _pendingResponses.add(query);
     notifyListeners();
   }
 
   void _removePendingResponse(String query) {
+    print("removePendingResponse: $_pendingResponses");
     _pendingResponses.remove(query);
     notifyListeners();
   }
 
   void setSelectedScreenIndex(int index) {
+    print("setSelectedScreenIndex: $index");
     _selectedScreenIndex = index;
     notifyListeners();
   }
 
   void setLoading(bool value) {
+    print("setloading");
     _isLoading = value;
     notifyListeners();
   }
 
   void toggleChatContentView() {
+    print("togglechatconview");
     _isChatContentView = !_isChatContentView;
     notifyListeners();
   }
 
   Future<void> onThreadSelected(String threadId) async {
+    print("onThreadSelected");
     setLoading(true);
     _selectedThreadId = threadId;
     _isChatContentView = true;
@@ -85,6 +92,7 @@ class ChatProvider extends ChangeNotifier {
   }
 
   Future<void> newChat() async {
+    print("newChat");
     setLoading(true);
     _isChatContentView = false;
     _selectedThreadId = null;
@@ -94,6 +102,7 @@ class ChatProvider extends ChangeNotifier {
   }
 
   void selectAssistant(Assistant assistant) {
+    print(" selectAssistant");
     _selectedAssistant = assistant;
     notifyListeners();
   }
@@ -101,6 +110,7 @@ class ChatProvider extends ChangeNotifier {
   Future<void> fetchConversationHistory(
       String conversationId, String assistantId) async {
     setLoading(true);
+    print(" fetchConversationHistory");
     try {
       final response = await _chatManager.fetchConversationHistory(
         conversationId: conversationId,
@@ -118,6 +128,7 @@ class ChatProvider extends ChangeNotifier {
 
   Future<void> getConversationThread() async {
     setLoading(true);
+    print("getConversationThread");
     try {
       final conversationThreadService = ConversationThreadService(
         apiLink: 'https://api.dev.jarvis.cx/api/v1/ai-chat/conversations',
@@ -137,6 +148,7 @@ class ChatProvider extends ChangeNotifier {
   }
 
   List<ChatMessage> _createChatMessagesFromContent() {
+    print(" _createChatMessagesFromContent");
     return _listConversationContent
             ?.map((item) {
               return [
@@ -169,6 +181,7 @@ class ChatProvider extends ChangeNotifier {
   }
 
   Future<void> sendMessage(String content) async {
+    print("sendMessage");
     try {
       // Thêm tin nhắn của người dùng vào danh sách hiển thị
       final userMessage = Conversation(query: content, answer: null);
@@ -206,6 +219,7 @@ class ChatProvider extends ChangeNotifier {
   }
 
   void addUserMessage(ChatMessage message) {
+    print(" addUserMessage");
     if (_listConversationContent == null) {
       _listConversationContent = [];
     }
@@ -218,6 +232,7 @@ class ChatProvider extends ChangeNotifier {
   }
 
   Future<void> sendFirstMessage(ChatMessage message) async {
+    print("sendFirstMessage");
     try {
       setLoading(true);
 
@@ -238,6 +253,7 @@ class ChatProvider extends ChangeNotifier {
         // Lấy lịch sử hội thoại sau khi nhận phản hồi từ API
         await fetchConversationHistory(
             _conversationId ?? "", _assistantId ?? "");
+        await getConversationThread();
 
         // Hiển thị nội dung chat
         _isChatContentView = true;
