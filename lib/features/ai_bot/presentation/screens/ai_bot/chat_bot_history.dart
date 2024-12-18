@@ -5,8 +5,10 @@ import 'package:flutter_ai_app/utils/message_role_enum.dart';
 
 class ChatBotHistory extends StatefulWidget{
   final List<Message> data;
+  final ScrollController controller;
   ChatBotHistory({
     required this.data,
+    required this.controller,
   });
   @override
   State<StatefulWidget> createState() => _chatBotHistoryState();
@@ -14,15 +16,15 @@ class ChatBotHistory extends StatefulWidget{
 
 class _chatBotHistoryState extends State<ChatBotHistory>{
   late List<Message> data;
-  ScrollController _scrollController = ScrollController();
+  late ScrollController _scrollController;
 
 
   @override
   void initState() {
     super.initState();
     this.data = widget.data;
+    this._scrollController = widget.controller;
     WidgetsBinding.instance.addPostFrameCallback((_){
-      print("ENTER SCROLL");
       if(_scrollController.hasClients){
         _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
       }

@@ -237,7 +237,6 @@ class _AIBotState extends State<AIBotView> {
   }
 
   void handleOpenChatAssistant(AiBot input) async{
-    print("enter handle chat click");
     List<Message> history = await aiBotService.retrieveMessageOfThread(input.openAiThreadIdPlay);
     Navigator.push(
         context, MaterialPageRoute(builder: (_) => ChatBotScreen(assistant: input, history: history.reversed.toList())));

@@ -24,12 +24,18 @@ class ChatBotScreen extends StatefulWidget {
 class _chatBotState extends State<ChatBotScreen> {
 
   final AiBotService aiBotService = GetIt.instance<AiBotService>();
-
   TextEditingController chatController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
+  ScrollController historyControler = ScrollController();
+  
   Color _fillColor = Colors.grey.shade300;
   Color _iconColor = Colors.grey;
   late List<Message> history;
+  bool _isAnswering = false;
+
+
+
+
   List<PublishItem> publishData = generateSampleData();
   static List<PublishItem> generateSampleData(){
     List<PublishItem> output = [
@@ -49,7 +55,20 @@ class _chatBotState extends State<ChatBotScreen> {
       history.add(mess);
     });
   }
-
+  void updateAnswerState(bool value){
+    setState(() {
+      _isAnswering = value;
+    });
+  }
+  void updateControler(){
+    setState(() {
+      WidgetsBinding.instance.addPostFrameCallback((_){
+      if(historyControler.hasClients){
+        historyControler.jumpTo(historyControler.position.maxScrollExtent);
+      }
+    });
+    });
+  }
   @override
   void initState() {
     super.initState();
@@ -60,6 +79,7 @@ class _chatBotState extends State<ChatBotScreen> {
       });
     });
     this.history = widget.history;
+    _isAnswering = false;
   }
 
   @override
@@ -143,8 +163,16 @@ class _chatBotState extends State<ChatBotScreen> {
           child: Column(
             children: [
               Expanded(
-                child: ChatBotHistory(data: history),
+                child: ChatBotHistory(data: history, controller: historyControler),
               ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  _isAnswering ? Text("Answering..."): SizedBox(),
+                ],
+              ),
+              SizedBox(height: 10,),
+              //TEXT FIELD AREA 
               Row(
                 children: [
                   Expanded(
@@ -161,19 +189,24 @@ class _chatBotState extends State<ChatBotScreen> {
                         ),
                         suffixIcon: IconButton(
                           onPressed: () async {
+                            updateAnswerState(true);
                             Message userMess = Message(
                               role: MessageRole.user, 
                               createdDate: DateTime.now().millisecondsSinceEpoch, 
                               content: chatController.value.text
                             ); 
                             addMessageToHistory(userMess);
+                            updateControler();
                             // var response = await ChatBotManager().getReponseMessageFromBot(widget.assistant, chatController.value.text);
                             Message assisMess = Message(
                               role: MessageRole.assistant, 
                               createdDate: DateTime.now().millisecondsSinceEpoch, 
                               content: await ChatBotManager().getReponseMessageFromBot(widget.assistant, chatController.value.text)
                             );
+                            chatController.clear();
                             addMessageToHistory(assisMess);
+                            updateControler();
+                            updateAnswerState(false);
                           },
                           icon: Icon(
                             Icons.send,
@@ -226,4 +259,6 @@ class _chatBotState extends State<ChatBotScreen> {
       },
     );
   }
+
+
 }

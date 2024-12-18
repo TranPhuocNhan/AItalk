@@ -12,9 +12,11 @@ class BotManager {
   }  
 
   List<AiBot> searchAiBotWithKeyword(String keyword, List<AiBot> input){
+    String lowercaseKeyword = keyword.toLowerCase();
     List<AiBot> output = [];
     for(int i = 0; i < input.length; ++i){
-      if(input[i].assistantName.contains(keyword) || input[i].description.contains(keyword)){
+      if(input[i].assistantName.toLowerCase().contains(lowercaseKeyword) 
+      || input[i].description.toLowerCase().contains(lowercaseKeyword)){
         output.add(input[i]);
       }
     }

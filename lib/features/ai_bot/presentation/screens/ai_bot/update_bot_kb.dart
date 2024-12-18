@@ -7,6 +7,7 @@ import 'package:flutter_ai_app/features/knowledge_base/data/api_response/knowled
 import 'package:flutter_ai_app/features/knowledge_base/data/api_response/knowledge_response.dart';
 import 'package:flutter_ai_app/features/knowledge_base/data/services/knowledge-service.dart';
 import 'package:flutter_ai_app/utils/helper_functions.dart';
+import 'package:flutter_ai_app/views/home_view.dart';
 import 'package:get_it/get_it.dart';
 
 class UpdateBotKnowledgeBase extends StatefulWidget{
@@ -160,7 +161,7 @@ class _updateBotKBState  extends State<UpdateBotKnowledgeBase>{
           ),
           TextButton(
             onPressed: (){
-              Navigator.pushNamed(context, "/home");
+              Navigator.push(context, MaterialPageRoute(builder: (context) => HomeView.withSelectInput(selectInput: 3) ));
             }, 
             child: Text("Add Knowledge")
           ),

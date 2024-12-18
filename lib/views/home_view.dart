@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ai_app/features/ai_chat/presentation/providers/chat_provider.dart';
-import 'package:flutter_ai_app/features/ai_chat/presentation/screens/chat_content_view.dart';
 import 'package:flutter_ai_app/features/ai_chat/presentation/screens/chat_view.dart';
 import 'package:flutter_ai_app/features/ai_bot/presentation/screens/create_bot_view.dart';
 import 'package:flutter_ai_app/features/prompt/presentation/screens/prompt_library_screen.dart';
 import 'package:flutter_ai_app/features/thread/presentation/screens/thread_chat_history_view.dart';
 import 'package:flutter_ai_app/widgets/app_drawer.dart';
-import 'package:provider/provider.dart';
 
 class HomeView extends StatefulWidget {
-  HomeView({super.key});
+  final int selectInput;
+
+  HomeView({Key? key}) : selectInput = 0, super(key: key);
+  HomeView.withSelectInput({required this.selectInput, Key? key}) : super(key: key);
 
   @override
   State<HomeView> createState() => _HomeViewState();
@@ -23,6 +23,12 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
     BotDashBoard(),
   ];
   int _selectedIndex = 0;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    this._selectedIndex = widget.selectInput;
+  }
   @override
   Widget build(BuildContext context) {
     print("HomeView build");

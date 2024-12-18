@@ -16,6 +16,7 @@ class LoginManager {
       List<int> token = await userDataService.getTokenUsage();
       tokenManage.updateTotalToken(token[1]);
       tokenManage.updateRemainToken(token[0]);
+      tokenManage.updatePercentage();
       Navigator.pushNamed(context, '/home');
     }catch(err){
       HelperFunctions().showMessageDialog("Notification", err.toString(), context);

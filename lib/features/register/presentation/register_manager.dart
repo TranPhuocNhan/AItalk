@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ai_app/core/models/user.dart';
 import 'package:flutter_ai_app/core/services/auth_service.dart';
 import 'package:flutter_ai_app/core/services/user_data_service.dart';
 import 'package:flutter_ai_app/features/profile/presentation/providers/manage_token_provider.dart';
@@ -12,13 +11,14 @@ class RegisterManager {
   final UserDataService userDataService = GetIt.instance<UserDataService>();
   void handleActionRegister(Managetokenprovider tokenManage, String email, String password, String username, BuildContext context) async {
     try {
-      User result = await authService.signUpAccount(email, password, username);
+      await authService.signUpAccount(email, password, username);
       bool signinResult = await authService.signInAccount(
           email, password);
       if (signinResult) {
         List<int> token = await userDataService.getTokenUsage();
         tokenManage.updateTotalToken(token[1]);
         tokenManage.updateRemainToken(token[0]);
+        tokenManage.updatePercentage();
         Navigator.pushNamed(context, '/home');
       } else {
         showLoginResultDialog(context,
