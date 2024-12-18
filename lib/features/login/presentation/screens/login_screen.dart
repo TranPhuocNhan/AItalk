@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ai_app/features/login/data/login_manager.dart';
 import 'package:flutter_ai_app/utils/constant/Color.dart';
-import 'package:flutter_ai_app/views/login/login_input_group.dart';
+import 'package:flutter_ai_app/features/login/presentation/widgets/login_input_group.dart';
 class LoginScreen extends StatefulWidget{
   final BuildContext loginContext;
   LoginScreen({required this.loginContext});

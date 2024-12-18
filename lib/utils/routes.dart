@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ai_app/features/ai_bot/presentation/screens/ai_bot/ai_bot_view.dart';
-import 'package:flutter_ai_app/views/email_response/email_response_view.dart';
-import 'package:flutter_ai_app/views/profile/profile_screen.dart';
+import 'package:flutter_ai_app/features/email_response/presentation/screens/email_response_view.dart';
 import 'package:flutter_ai_app/views/home_view.dart';
 import 'package:flutter_ai_app/views/login/change_password.dart';
 import 'package:flutter_ai_app/views/login/forgot_password.dart';
-import 'package:flutter_ai_app/views/login/login_screen.dart';
-import 'package:flutter_ai_app/views/signup/signup_screen.dart';
+import 'package:flutter_ai_app/features/login/presentation/screens/login_screen.dart';
+import 'package:flutter_ai_app/features/register/presentation/screens/signup_screen.dart';
+import 'package:flutter_ai_app/features/profile/presentation/screens/profile_screen.dart';
 import 'package:flutter_ai_app/views/signup/verification.dart';
 import 'package:flutter_ai_app/views/splash/splash_screen.dart';
 

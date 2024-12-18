@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_ai_app/core/services/ai_bot_services.dart';
+import 'package:flutter_ai_app/features/ai_bot/data/services/ai_bot_services.dart';
 import 'package:flutter_ai_app/features/ai_bot/data/bot_manager.dart';
 import 'package:flutter_ai_app/utils/helper_functions.dart';
 import 'package:flutter_ai_app/utils/constant/Color.dart';

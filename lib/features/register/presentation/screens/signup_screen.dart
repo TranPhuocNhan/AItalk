@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:flutter_ai_app/views/signup/signup_input_group.dart';
+import 'package:flutter_ai_app/features/register/presentation/widgets/signup_input_group.dart';
 import 'package:flutter_ai_app/utils/constant/Color.dart';
 
 

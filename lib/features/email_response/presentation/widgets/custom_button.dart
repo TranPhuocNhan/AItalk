@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ai_app/features/email_response/data/email_style_manager.dart';
 import 'package:flutter_ai_app/utils/email_response_style.dart';
-import 'package:flutter_ai_app/features/email_response/presentation/email_style_provider.dart';
+import 'package:flutter_ai_app/features/email_response/presentation/providers/email_style_provider.dart';
 import 'package:flutter_ai_app/utils/constant/Color.dart';
 import 'package:provider/provider.dart';
 

@@ -55,35 +55,6 @@ class _SearchState extends State<SearchGroup>{
           ), 
         ),
         const SizedBox(width: 10,),
-        
-          GestureDetector(
-            onTap: (){
-
-            },
-            child: Expanded(
-              child: Container(
-                padding: EdgeInsets.all(8),
-                child: Row(
-                  children: [
-                    const Icon(
-                      Icons.search,
-                      color: Colors.white,  
-                    ),
-                    const Text(
-                      'Search',
-                      style: TextStyle(
-                        color: Colors.white
-                      ),
-                    )
-                  ],
-                ),
-                decoration: BoxDecoration(
-                  color: ColorPalette().bigIcon,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ) ,
-            )
-          ),
       ],
     );
   }

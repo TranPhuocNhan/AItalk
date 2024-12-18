@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ai_app/core/services/ai_bot_services.dart';
+import 'package:flutter_ai_app/features/ai_bot/data/services/ai_bot_services.dart';
 import 'package:flutter_ai_app/features/knowledge_base/data/api_response/knowledge_res_dto.dart';
 import 'package:flutter_ai_app/utils/constant/Color.dart';
 import 'package:flutter_ai_app/utils/helper_functions.dart';

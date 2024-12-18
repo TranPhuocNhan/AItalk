@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ai_app/core/services/user_data_service.dart';
-import 'package:flutter_ai_app/features/profile/presentation/manage_token_provider.dart';
+import 'package:flutter_ai_app/features/profile/presentation/providers/manage_token_provider.dart';
 import 'package:flutter_ai_app/views/splash/PageContent.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';

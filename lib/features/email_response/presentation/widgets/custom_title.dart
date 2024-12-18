@@ -9,6 +9,7 @@ class CustomTitle extends StatelessWidget{
       this.title = data;
       this.mainIcon = icon;
     }
+  
   @override
   Widget build(BuildContext context) {
     return Row(

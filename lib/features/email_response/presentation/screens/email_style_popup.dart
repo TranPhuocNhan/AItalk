@@ -1,13 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ai_app/utils/email_response_style.dart';
-import 'package:flutter_ai_app/features/email_response/presentation/email_style_provider.dart';
+import 'package:flutter_ai_app/features/email_response/presentation/providers/email_style_provider.dart';
 import 'package:flutter_ai_app/utils/formality_enum.dart';
 import 'package:flutter_ai_app/utils/length_enum.dart';
 import 'package:flutter_ai_app/utils/tone_enum.dart';
 import 'package:flutter_ai_app/utils/constant/Color.dart';
-import 'package:flutter_ai_app/views/email_response/custom_button.dart';
-import 'package:flutter_ai_app/views/email_response/custom_title.dart';
+import 'package:flutter_ai_app/features/email_response/presentation/widgets/custom_button.dart';
+import 'package:flutter_ai_app/features/email_response/presentation/widgets/custom_title.dart';
 import 'package:provider/provider.dart';
 
 class CustomMailDialog extends StatefulWidget {

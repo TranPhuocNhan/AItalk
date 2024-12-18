@@ -3,7 +3,6 @@ import 'package:injectable/injectable.dart';
 class EmailResponse{
   final String email;
   final int remainUsage;
-  @singleton 
   EmailResponse({
     required this.email,
     required this.remainUsage,

@@ -1,4 +1,4 @@
-import 'package:flutter_ai_app/features/email_response/presentation/email_style_provider.dart';
+import 'package:flutter_ai_app/features/email_response/presentation/providers/email_style_provider.dart';
 import 'package:flutter_ai_app/utils/email_response_style.dart';
 
 class EmailStyleManager {

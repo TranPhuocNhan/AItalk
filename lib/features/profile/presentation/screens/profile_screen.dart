@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ai_app/views/profile/account_card.dart';
-import 'package:flutter_ai_app/views/profile/token_usage_card.dart';
+import 'package:flutter_ai_app/features/profile/presentation/widgets/account_card.dart';
+import 'package:flutter_ai_app/features/profile/presentation/widgets/token_usage_card.dart';
 import 'package:flutter_ai_app/utils/constant/Color.dart';
 import 'package:flutter_ai_app/widgets/app_drawer.dart';
 import 'package:url_launcher/url_launcher.dart';

@@ -1,4 +1,4 @@
-import 'package:flutter_ai_app/core/services/ai_bot_services.dart';
+import 'package:flutter_ai_app/features/ai_bot/data/services/ai_bot_services.dart';
 import 'package:get_it/get_it.dart';
 
 class BotKnowledgeManager {

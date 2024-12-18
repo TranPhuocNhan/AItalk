@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ai_app/core/models/ai_bot/message.dart';
+import 'package:flutter_ai_app/features/ai_bot/data/models/message.dart';
 import 'package:flutter_ai_app/utils/constant/Color.dart';
 import 'package:flutter_ai_app/utils/message_role_enum.dart';
 

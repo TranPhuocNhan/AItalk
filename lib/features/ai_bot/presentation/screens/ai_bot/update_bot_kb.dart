@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ai_app/core/models/ai_bot/ai_%20bot.dart';
-import 'package:flutter_ai_app/core/services/ai_bot_services.dart';
+import 'package:flutter_ai_app/features/ai_bot/data/models/ai_%20bot.dart';
+import 'package:flutter_ai_app/features/ai_bot/data/services/ai_bot_services.dart';
 import 'package:flutter_ai_app/features/ai_bot/data/bot_knowledge_manager.dart';
 import 'package:flutter_ai_app/features/ai_bot/presentation/screens/ai_bot/select_kb_dialog.dart';
 import 'package:flutter_ai_app/features/knowledge_base/data/api_response/knowledge_res_dto.dart';

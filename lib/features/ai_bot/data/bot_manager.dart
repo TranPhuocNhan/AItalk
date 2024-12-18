@@ -1,5 +1,5 @@
-import 'package:flutter_ai_app/core/models/ai_bot/ai_%20bot.dart';
-import 'package:flutter_ai_app/core/models/ai_bot/assistant_request.dart';
+import 'package:flutter_ai_app/features/ai_bot/data/models/ai_%20bot.dart';
+import 'package:flutter_ai_app/features/ai_bot/data/models/assistant_request.dart';
 
 class BotManager {
   int getPositionOfBotInList(String id, List<AiBot> lstData){

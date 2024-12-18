@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:flutter_ai_app/core/models/email/email_request.dart';
-import 'package:flutter_ai_app/core/models/email/email_response.dart';
-import 'package:flutter_ai_app/core/models/email/suggest_idea_request.dart';
+import 'package:flutter_ai_app/features/email_response/data/models/email_request.dart';
+import 'package:flutter_ai_app/features/email_response/data/models/email_response.dart';
+import 'package:flutter_ai_app/features/email_response/data/models/suggest_idea_request.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 class EmailResponseService {

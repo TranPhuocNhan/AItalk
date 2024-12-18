@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ai_app/core/models/ai_bot/ai_%20bot.dart';
-import 'package:flutter_ai_app/core/models/ai_bot/message.dart';
+import 'package:flutter_ai_app/features/ai_bot/data/models/ai_%20bot.dart';
+import 'package:flutter_ai_app/features/ai_bot/data/models/message.dart';
+import 'package:flutter_ai_app/features/ai_bot/data/services/ai_bot_services.dart';
 import 'package:flutter_ai_app/features/ai_bot/data/chat_bot_manager.dart';
+import 'package:flutter_ai_app/features/ai_bot/data/models/publish_item.dart';
 import 'package:flutter_ai_app/features/ai_bot/presentation/screens/ai_bot/chat_bot_history.dart';
 import 'package:flutter_ai_app/utils/constant/Color.dart';
+import 'package:flutter_ai_app/utils/helper_functions.dart';
 import 'package:flutter_ai_app/utils/message_role_enum.dart';
+import 'package:get_it/get_it.dart';
 
 class ChatBotScreen extends StatefulWidget {
   final AiBot assistant;
@@ -18,12 +22,23 @@ class ChatBotScreen extends StatefulWidget {
 }
 
 class _chatBotState extends State<ChatBotScreen> {
+
+  final AiBotService aiBotService = GetIt.instance<AiBotService>();
+
   TextEditingController chatController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
   Color _fillColor = Colors.grey.shade300;
   Color _iconColor = Colors.grey;
   late List<Message> history;
-
+  List<PublishItem> publishData = generateSampleData();
+  static List<PublishItem> generateSampleData(){
+    List<PublishItem> output = [
+      new PublishItem(imgLink: "assets/images/telegram.png", name: "Telegram"),
+      new PublishItem(imgLink: "assets/images/slack.png", name: "Slack"),
+      new PublishItem(imgLink: "assets/images/messenger.png", name: "Messenger"),
+    ];
+    return output;
+  }
   void updateListHistory(List<Message> update){
     setState(() {
       history = update;
@@ -49,7 +64,6 @@ class _chatBotState extends State<ChatBotScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print("ENTER CHAT BOT");
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -66,6 +80,62 @@ class _chatBotState extends State<ChatBotScreen> {
           },
           icon: const Icon(Icons.arrow_back_ios_sharp),
         ),
+        actions: [
+          PopupMenuButton<String>(
+            icon: Row(
+              children: [
+                Icon(Icons.publish_rounded),
+                SizedBox(width: 10,),
+                Text("Publish"),
+              ],
+            ),
+            itemBuilder: (BuildContext context){
+              return[
+                PopupMenuItem(
+                  value: "telegram",
+                  child: Row(
+                    children: [
+                      Image.asset(publishData[0].imgLink),
+                      const SizedBox(width: 10,),
+                      Text(publishData[0].name),
+                    ],
+                  )
+                ),
+                PopupMenuItem(
+                  value: "slack",
+                  child: Row(
+                    children: [
+                      Image.asset(publishData[1].imgLink),
+                      const SizedBox(width: 10,),
+                      Text(publishData[1].name),
+                    ],
+                  )
+                ),
+                PopupMenuItem(
+                  value: "messenger",
+                  child: Row(
+                    children: [
+                      Image.asset(publishData[2].imgLink),
+                      const SizedBox(width: 10,),
+                      Text(publishData[2].name),
+                    ],
+                  )
+                ),
+              ];
+            },
+            onSelected: (value) async{
+              try{
+                String link = await ChatBotManager().handlePublishValue(value, widget.assistant.id);
+                if(link != ""){
+                  showRedirectDialog(link);
+                }
+              }catch(err){
+                HelperFunctions().showMessageDialog("Publish to ${value}", err.toString(), context);
+              }
+              
+            },
+          )
+        ],
       ),
       body: Center(
         child: Padding(
@@ -91,7 +161,6 @@ class _chatBotState extends State<ChatBotScreen> {
                         ),
                         suffixIcon: IconButton(
                           onPressed: () async {
-                            print("sent message");
                             Message userMess = Message(
                               role: MessageRole.user, 
                               createdDate: DateTime.now().millisecondsSinceEpoch, 
@@ -123,6 +192,38 @@ class _chatBotState extends State<ChatBotScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  void showRedirectDialog(String url){
+    showDialog(
+      context: context, 
+      builder: (BuildContext context){
+        return AlertDialog(
+          title: Text("Publication Submitted"),
+          content: Text(url),
+          actions: [
+            TextButton(
+              onPressed: (){
+                Navigator.pop(context);
+              }, 
+              child: Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () async{
+                try{
+                  Navigator.pop(context);
+                  // HelperFunctions().showSnackbarMessage("-->${url}<--",context);
+                  ChatBotManager().launchUrl(url);
+                }catch(err){
+                  HelperFunctions().showSnackbarMessage(err.toString(), context);
+                }
+              }, 
+              child: Text("Open"),
+            ),
+          ],
+        );
+      },
     );
   }
 }

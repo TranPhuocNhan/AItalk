@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_ai_app/core/models/ai_bot/ai_%20bot.dart';
-import 'package:flutter_ai_app/core/models/ai_bot/message.dart';
-import 'package:flutter_ai_app/core/services/ai_bot_services.dart';
+import 'package:flutter_ai_app/features/ai_bot/data/models/ai_%20bot.dart';
+import 'package:flutter_ai_app/features/ai_bot/data/models/message.dart';
+import 'package:flutter_ai_app/features/ai_bot/data/services/ai_bot_services.dart';
 import 'package:flutter_ai_app/features/ai_bot/data/bot_manager.dart';
 import 'package:flutter_ai_app/features/ai_bot/presentation/screens/ai_bot/ai_bot_popup_menu.dart';
 import 'package:flutter_ai_app/features/ai_bot/presentation/screens/ai_bot/chat_bot_screen.dart';
@@ -124,8 +124,8 @@ class _AIBotState extends State<AIBotView> {
                   child: Center(
                 child: lstData.length == 0
                     ? Image.asset(
-                        // "assets/images/empty_icon.png",
-                        "images/empty_icon.png",
+                        "assets/images/empty_icon.png",
+                        // "images/empty_icon.png",
                         width: 200,
                       )
                     : Container(
