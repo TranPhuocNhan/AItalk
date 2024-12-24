@@ -1,4 +1,5 @@
 import 'package:flutter_ai_app/features/ai_bot/data/services/ai_bot_services.dart';
+import 'package:flutter_ai_app/features/ai_bot/data/services/bot_integration_services.dart';
 import 'package:flutter_ai_app/features/ai_chat/domains/services/ai_chat_service.dart';
 import 'package:flutter_ai_app/core/services/auth_service.dart';
 import 'package:flutter_ai_app/core/services/conversation_history_service.dart';
@@ -31,6 +32,13 @@ class ApiServiceModule {
     final GetIt getIt = GetIt.instance;
     getIt.registerSingleton<AiBotService>(
         AiBotService(knowledgeLink: "https://knowledge-api.dev.jarvis.cx"));
+  }
+  
+  static Future<void> configureBotIntegrationModuleInjection() async{
+    final GetIt getIt = GetIt.instance;
+    getIt.registerSingleton<BotIntegrationServices>(
+      BotIntegrationServices(knowledgeLink: "https://knowledge-api.dev.jarvis.cx")
+    );
   }
 
   static Future<void> configureAIChatModuleInjection() async {

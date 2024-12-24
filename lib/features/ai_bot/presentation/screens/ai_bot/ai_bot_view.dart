@@ -1,14 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ai_app/features/ai_bot/data/models/ai_%20bot.dart';
+import 'package:flutter_ai_app/features/ai_bot/data/models/configuration_response.dart';
 import 'package:flutter_ai_app/features/ai_bot/data/models/message.dart';
 import 'package:flutter_ai_app/features/ai_bot/data/services/ai_bot_services.dart';
 import 'package:flutter_ai_app/features/ai_bot/data/bot_manager.dart';
-import 'package:flutter_ai_app/features/ai_bot/presentation/screens/ai_bot/ai_bot_popup_menu.dart';
+import 'package:flutter_ai_app/features/ai_bot/data/services/bot_integration_services.dart';
+import 'package:flutter_ai_app/features/ai_bot/presentation/widgets/ai_bot/ai_bot_popup_menu.dart';
 import 'package:flutter_ai_app/features/ai_bot/presentation/screens/ai_bot/chat_bot_screen.dart';
 import 'package:flutter_ai_app/features/ai_bot/presentation/screens/ai_bot/create_bot_screen.dart';
 import 'package:flutter_ai_app/features/ai_bot/presentation/screens/ai_bot/edit_bot_screen.dart';
-import 'package:flutter_ai_app/features/ai_bot/presentation/screens/ai_bot/search_group.dart';
+import 'package:flutter_ai_app/features/ai_bot/presentation/screens/ai_bot/publish_bot_screen.dart';
+import 'package:flutter_ai_app/features/ai_bot/presentation/widgets/ai_bot/search_group.dart';
 import 'package:flutter_ai_app/utils/constant/Color.dart';
 import 'package:flutter_ai_app/widgets/app_drawer.dart';
 import 'package:get_it/get_it.dart';
@@ -20,6 +23,7 @@ class AIBotView extends StatefulWidget {
 
 class _AIBotState extends State<AIBotView> {
   final AiBotService aiBotService = GetIt.instance<AiBotService>();
+  final BotIntegrationServices integrationServices = GetIt.instance<BotIntegrationServices>();
   List<AiBot> lstData = [];
   List<AiBot> actualData = [];
   int origin = 0;
@@ -195,7 +199,9 @@ class _AIBotState extends State<AIBotView> {
       handleDeleteAssistant(bot.id, bot.assistantName);
     } else if (selected.contains("chat")) {
       handleOpenChatAssistant(bot);
-    } else {
+    } else if(selected.contains('publish')) {
+      handleOpenPublishAssistant(bot);
+    } else{
       print("handleSelectedPopupCallback --> FAILED ");
     }
   }
@@ -240,6 +246,11 @@ class _AIBotState extends State<AIBotView> {
     List<Message> history = await aiBotService.retrieveMessageOfThread(input.openAiThreadIdPlay);
     Navigator.push(
         context, MaterialPageRoute(builder: (_) => ChatBotScreen(assistant: input, history: history.reversed.toList())));
+  }
+
+  void handleOpenPublishAssistant(AiBot input) async{
+    List<ConfigurationResponse> configurations = await integrationServices.getConfiguration(input.id);
+    Navigator.push(context, MaterialPageRoute(builder: (_) => PublishBotScreen(bot: input, configurations: configurations, integrationServices: integrationServices,)));
   }
 
   void deleteBotWithId(String id) {

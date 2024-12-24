@@ -4,7 +4,7 @@ import 'package:flutter_ai_app/features/ai_bot/data/models/message.dart';
 import 'package:flutter_ai_app/features/ai_bot/data/services/ai_bot_services.dart';
 import 'package:flutter_ai_app/features/ai_bot/data/chat_bot_manager.dart';
 import 'package:flutter_ai_app/features/ai_bot/data/models/publish_item.dart';
-import 'package:flutter_ai_app/features/ai_bot/presentation/screens/ai_bot/chat_bot_history.dart';
+import 'package:flutter_ai_app/features/ai_bot/presentation/widgets/ai_bot/chat_bot_history.dart';
 import 'package:flutter_ai_app/utils/constant/Color.dart';
 import 'package:flutter_ai_app/utils/helper_functions.dart';
 import 'package:flutter_ai_app/utils/message_role_enum.dart';
@@ -144,14 +144,14 @@ class _chatBotState extends State<ChatBotScreen> {
               ];
             },
             onSelected: (value) async{
-              try{
-                String link = await ChatBotManager().handlePublishValue(value, widget.assistant.id);
-                if(link != ""){
-                  showRedirectDialog(link);
-                }
-              }catch(err){
-                HelperFunctions().showMessageDialog("Publish to ${value}", err.toString(), context);
-              }
+              // try{
+              //   String link = await ChatBotManager().handlePublishValue(value, widget.assistant.id);
+              //   if(link != ""){
+              //     showRedirectDialog(link);
+              //   }
+              // }catch(err){
+              //   HelperFunctions().showMessageDialog("Publish to ${value}", err.toString(), context);
+              // }
               
             },
           )
@@ -246,8 +246,8 @@ class _chatBotState extends State<ChatBotScreen> {
               onPressed: () async{
                 try{
                   Navigator.pop(context);
-                  // HelperFunctions().showSnackbarMessage("-->${url}<--",context);
-                  ChatBotManager().launchUrl(url);
+                  // ChatBotManager().launchUrl(url);
+                  ChatBotManager().launchUrl1(url);
                 }catch(err){
                   HelperFunctions().showSnackbarMessage(err.toString(), context);
                 }

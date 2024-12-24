@@ -13,28 +13,28 @@
 
 enum Language{
   Arabic,
-  Auto,           //
+  Auto,           
   Chinese1,    //(HongKong),
   Chinese2,   //(Simplified),
   Chinese3,  //(Taiwan),
   Czech,
   Dutch,
-  English,      //
-  French,       //
-  German,       //
+  English,      
+  French,       
+  German,       
   Hindi,
   Indonesia,
-  Italian,      //
+  Italian,      
   Japanese,
   Korean,
   Persian,
   Polish,
   Portuguese1,   //(Brazil)
   Portuguese2,   // Portugal
-  Russian,        //
+  Russian,        
   Spanish,      //(Latin America and Caribbean)
   Thai,
   Turkish,
   Ukrainian,
-  Vietnamese,     //
+  Vietnamese,     
 }

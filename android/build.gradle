@@ -2,6 +2,7 @@ allprojects {
     repositories {
         google()
         mavenCentral()
+        jcenter()
     }
 }
 
@@ -20,10 +21,11 @@ buildscript {
     repositories{
         google()
         mavenCentral()
+        jcenter()
     }
     dependencies {
         classpath("com.google.gms:google-services:4.4.2")
     }
 }
 
-apply plugin: "com.google.gms.google-services"
+    // apply plugin: "com.google.gms.google-services"

@@ -37,7 +37,6 @@ class ShowDialogSupport {
           content: Text(message),
           actions: [
             TextButton(
-              //CHƯA TEST CHỨC NĂNG NÀY TRÊN MOBILE
               onPressed: () async{
                 await Clipboard.setData(ClipboardData(text: message)).then((_){
                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Copied")));

@@ -11,5 +11,6 @@ class ServiceInjection {
     await ApiServiceModule.configureEmailAIChatModuleInjection();
     await ApiServiceModule.configureAiBotModuleInjection();
     await ApiServiceModule.configureKnowledgeModuleInjection();
+    await ApiServiceModule.configureBotIntegrationModuleInjection();
   }
 }

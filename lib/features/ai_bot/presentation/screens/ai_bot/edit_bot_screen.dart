@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ai_app/features/ai_bot/data/models/ai_%20bot.dart';
 import 'package:flutter_ai_app/features/ai_bot/data/services/ai_bot_services.dart';
-import 'package:flutter_ai_app/features/ai_bot/presentation/screens/ai_bot/update_bot_kb.dart';
+import 'package:flutter_ai_app/features/ai_bot/presentation/widgets/ai_bot/update_bot_kb.dart';
 import 'package:flutter_ai_app/utils/helper_functions.dart';
 import 'package:flutter_ai_app/utils/constant/Color.dart';
 import 'package:get_it/get_it.dart';

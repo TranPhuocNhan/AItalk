@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ai_app/core/services/auth_service.dart';
 import 'package:flutter_ai_app/core/services/user_data_service.dart';
@@ -26,21 +29,35 @@ class LoginManager {
   // FAILED 
  
   Future<void> handleLoginWithGoogle(BuildContext context) async{
-    GoogleSignIn _googleSignIn = GoogleSignIn(
-      clientId: "348732758460-9afjr61qmljttpthraugt60rdk7l9gl8.apps.googleusercontent.com",
-      scopes: [
-        'https://www.googleapis.com/auth/userinfo.email',
-        'openid',
-      ],
-
-    );
+    
     try{
-      final googleUserAccount = await _googleSignIn.signIn();
-      if(googleUserAccount != null){
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(googleUserAccount.email)));
-      }else{
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("google user account is null")));
+      GoogleSignIn _googleSignIn = GoogleSignIn(
+        scopes: [
+          'email',
+        ],
+      );
+      if(kIsWeb || Platform.isAndroid){
+        _googleSignIn = GoogleSignIn(
+          scopes: [
+            'email',
+          ],
+        );
       }
+      final GoogleSignInAccount? googleSignInAccount = await GoogleSignIn().signIn();
+      final GoogleSignInAuthentication googleSignInAuthentication = await googleSignInAccount!.authentication;
+      HelperFunctions().showSnackbarMessage("ACCOUNT --> ${googleSignInAccount.email}",context);
+      HelperFunctions().showSnackbarMessage("AUTHENTICATION --> ${googleSignInAuthentication.idToken}",context);
+      
+      // HelperFunctions().showSnackbarMessage("server client id -> ${_googleSignIn.serverClientId}", context);
+      // HelperFunctions().showSnackbarMessage("Hosted domain --> ${_googleSignIn.hostedDomain}", context);
+      // final googleUserAccount = await _googleSignIn.signIn();
+      // if(googleUserAccount != null){
+      //   print("EMAIL --> ${googleUserAccount.email}");
+      //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(googleUserAccount.email)));
+      // }else{
+      //   print("GOOGLE USER ACCOUNT IS NULL!");
+      //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("google user account is null")));
+      // }
       // final googleAuth = await googleUserAccount?.authentication;
       // if(googleAuth != null){
       //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(googleAuth.idToken.toString() + "---" + googleAuth.accessToken.toString())));
@@ -49,7 +66,7 @@ class LoginManager {
       // }
     }catch(error){
       print(error);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error.toString())));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("ERROR --> ${error.toString()}")));
     } 
   }
 }

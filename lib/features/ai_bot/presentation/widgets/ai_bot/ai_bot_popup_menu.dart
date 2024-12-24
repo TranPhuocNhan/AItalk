@@ -59,6 +59,18 @@ class _AiBotPopupState extends State<AiBotPopupMenu> {
                 const Text('Chat'),
               ],
             ),
+          ),
+          PopupMenuItem(
+            value: "publish",
+            child: Row(
+              children: [
+                const Icon(Icons.publish_rounded),
+                const SizedBox(
+                  width: 10,
+                ),
+                const Text('publish'),
+              ],
+            ),
           )
         ];
       },
@@ -74,6 +86,10 @@ class _AiBotPopupState extends State<AiBotPopupMenu> {
           }
           case 'edit':{
             widget.handleSelectedCallback('edit', widget.data);
+            break;
+          }
+          case 'publish':{
+            widget.handleSelectedCallback('publish',widget.data);
             break;
           }
           default:{
