@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_ai_app/core/models/assistant.dart';
 import 'package:flutter_ai_app/features/ai_bot/data/models/ai_%20bot.dart';
 import 'package:flutter_ai_app/features/ai_bot/data/models/bot_thread.dart';
-import 'package:flutter_ai_app/features/ai_bot/data/models/message.dart';
 import 'package:flutter_ai_app/features/ai_bot/data/services/ai_bot_services.dart';
 import 'package:flutter_ai_app/features/ai_chat/domains/entities/conversation_thread.dart';
 import 'package:flutter_ai_app/features/ai_chat/presentation/providers/chat_provider.dart';

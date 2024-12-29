@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ai_app/core/models/assistant.dart';
 import 'package:flutter_ai_app/features/ai_bot/data/models/ai_%20bot.dart';
-import 'package:flutter_ai_app/features/ai_chat/domains/assistant_manager.dart';
 import 'package:flutter_ai_app/features/ai_chat/presentation/providers/chat_provider.dart';
 import 'package:flutter_ai_app/features/ai_chat/presentation/widgets/ai_selection_dropdown.dart';
-import 'package:flutter_ai_app/features/profile/presentation/screens/profile_screen.dart';
 import 'package:provider/provider.dart';
 
 class ToolsSection extends StatelessWidget {

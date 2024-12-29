@@ -11,7 +11,6 @@ import 'package:flutter_ai_app/features/ai_chat/domains/assistant_manager.dart';
 import 'package:flutter_ai_app/features/ai_chat/domains/entities/chat_message.dart';
 import 'package:flutter_ai_app/features/ai_chat/domains/entities/conversation.dart';
 import 'package:flutter_ai_app/features/ai_chat/presentation/providers/chat_provider.dart';
-import 'package:flutter_ai_app/features/ai_chat/presentation/screens/chat_view.dart';
 import 'package:flutter_ai_app/features/ai_chat/presentation/widgets/tools_section.dart';
 import 'package:flutter_ai_app/utils/message_role_enum.dart';
 import 'package:get_it/get_it.dart';

@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 
 class AiSelectionDropdown extends StatefulWidget {
   final List<AiBot> bots;
-  Function(bool, Assistant) onChange;
+  final Function(bool, Assistant) onChange;
   AiSelectionDropdown({
     // super.key
     required this.bots,
@@ -54,7 +54,7 @@ class _AiSelectionDropdownState extends State<AiSelectionDropdown> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Image.asset(
-                    selectedAssistant!.imagePath,
+                    selectedAssistant.imagePath,
                     width: 24,
                     height: 24,
                     fit: BoxFit.cover,

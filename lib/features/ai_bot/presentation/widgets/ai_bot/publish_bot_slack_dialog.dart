@@ -149,7 +149,10 @@ class PublishBotSlackDialog {
                   text: TextSpan(children: [
                 TextSpan(
                     text: "Token",
-                    style: TextStyle(fontWeight: FontWeight.bold)),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    )),
                 TextSpan(
                     text: " *",
                     style: TextStyle(
@@ -180,7 +183,10 @@ class PublishBotSlackDialog {
                   text: TextSpan(children: [
                 TextSpan(
                     text: "Client Id",
-                    style: TextStyle(fontWeight: FontWeight.bold)),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    )),
                 TextSpan(
                     text: " *",
                     style: TextStyle(
@@ -211,7 +217,10 @@ class PublishBotSlackDialog {
                   text: TextSpan(children: [
                 TextSpan(
                     text: "Client Secret",
-                    style: TextStyle(fontWeight: FontWeight.bold)),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,  
+                    )),
                 TextSpan(
                     text: " *",
                     style: TextStyle(
@@ -242,7 +251,10 @@ class PublishBotSlackDialog {
                   text: TextSpan(children: [
                 TextSpan(
                     text: "Signing Secret",
-                    style: TextStyle(fontWeight: FontWeight.bold)),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,  
+                    )),
                 TextSpan(
                     text: " *",
                     style: TextStyle(
