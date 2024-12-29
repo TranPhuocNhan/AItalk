@@ -45,15 +45,6 @@ class _ProfileState extends State<ProfileScreen>{
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               TokenUsageCard(),
-              Padding(padding: EdgeInsets.all(5),
-                child: const Text(
-                  "Account",
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
               AccountCard(),
               Container(
                 margin: EdgeInsets.only(top: 20, bottom: 20),

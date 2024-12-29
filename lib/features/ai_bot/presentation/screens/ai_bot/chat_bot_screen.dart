@@ -201,7 +201,7 @@ class _chatBotState extends State<ChatBotScreen> {
                             Message assisMess = Message(
                               role: MessageRole.assistant, 
                               createdDate: DateTime.now().millisecondsSinceEpoch, 
-                              content: await ChatBotManager().getReponseMessageFromBot(widget.assistant, chatController.value.text)
+                              content: await ChatBotManager().getResponseMessageFromBot(widget.assistant, chatController.value.text, widget.assistant.openAiThreadIdPlay)
                             );
                             chatController.clear();
                             addMessageToHistory(assisMess);

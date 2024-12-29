@@ -3,6 +3,7 @@ import 'package:flutter_ai_app/features/ai_chat/presentation/screens/chat_view.d
 import 'package:flutter_ai_app/features/ai_bot/presentation/screens/create_bot_view.dart';
 import 'package:flutter_ai_app/features/prompt/presentation/screens/prompt_library_screen.dart';
 import 'package:flutter_ai_app/features/thread/presentation/screens/thread_chat_history_view.dart';
+import 'package:flutter_ai_app/utils/constant/Color.dart';
 import 'package:flutter_ai_app/widgets/app_drawer.dart';
 
 class HomeView extends StatefulWidget {
@@ -52,6 +53,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
     return Scaffold(
       appBar: AppBar(
         title: Text(appBarTitle),
+        backgroundColor: ColorPalette().bgColor,
       ),
       drawer: AppDrawer(
         selected: 0,

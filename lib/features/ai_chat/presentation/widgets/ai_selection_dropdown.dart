@@ -1,16 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ai_app/core/models/assistant.dart';
+import 'package:flutter_ai_app/features/ai_bot/data/models/ai_%20bot.dart';
 import 'package:flutter_ai_app/features/ai_chat/presentation/providers/chat_provider.dart';
 import 'package:provider/provider.dart';
 
 class AiSelectionDropdown extends StatefulWidget {
-  AiSelectionDropdown({super.key});
+  final List<AiBot> bots;
+  Function(bool, Assistant) onChange;
+  AiSelectionDropdown({
+    // super.key
+    required this.bots,
+    required this.onChange,
+  });
 
   @override
   State<AiSelectionDropdown> createState() => _AiSelectionDropdownState();
 }
 
 class _AiSelectionDropdownState extends State<AiSelectionDropdown> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+  
   @override
   Widget build(BuildContext context) {
     final chatProvider = Provider.of<ChatProvider>(context);
@@ -61,6 +74,10 @@ class _AiSelectionDropdownState extends State<AiSelectionDropdown> {
             ),
             onSelected: (Assistant assistant) {
               chatProvider.selectAssistant(assistant);
+              if(chatProvider.selectedAssistant.isDefault != chatProvider.previousAssistant.isDefault){
+                widget.onChange(true, chatProvider.selectedAssistant);
+              }
+              //open new chat here
             },
             itemBuilder: (BuildContext context) {
               return Assistant.assistants.map((assistant) {
@@ -92,6 +109,7 @@ class _AiSelectionDropdownState extends State<AiSelectionDropdown> {
                 );
               }).toList();
             })
+
       ],
     );
   }

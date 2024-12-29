@@ -9,9 +9,9 @@ class ChatBotManager {
   final AiBotService aiBotService = GetIt.instance<AiBotService>();
   final BotIntegrationServices botIntegrationServices = GetIt.instance<BotIntegrationServices>();
 
-  Future<String> getReponseMessageFromBot(AiBot assistant, String message) async{
+  Future<String> getResponseMessageFromBot(AiBot assistant, String message, String thread) async{
     try{
-      return await aiBotService.askAssistant(assistant, message);
+      return await aiBotService.askAssistant(assistant, message, thread);
     }catch(err){
       throw err.toString();
     }
