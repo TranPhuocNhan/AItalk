@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ai_app/features/ai_chat/presentation/screens/chat_view.dart';
 import 'package:flutter_ai_app/features/ai_bot/presentation/screens/create_bot_view.dart';
+import 'package:flutter_ai_app/features/knowledge_base/presentation/screens/knowledge_tab.dart';
 import 'package:flutter_ai_app/features/prompt/presentation/screens/prompt_library_screen.dart';
 import 'package:flutter_ai_app/features/thread/presentation/screens/thread_chat_history_view.dart';
 import 'package:flutter_ai_app/widgets/app_drawer.dart';
@@ -8,8 +9,11 @@ import 'package:flutter_ai_app/widgets/app_drawer.dart';
 class HomeView extends StatefulWidget {
   final int selectInput;
 
-  HomeView({Key? key}) : selectInput = 0, super(key: key);
-  HomeView.withSelectInput({required this.selectInput, Key? key}) : super(key: key);
+  HomeView({Key? key})
+      : selectInput = 0,
+        super(key: key);
+  HomeView.withSelectInput({required this.selectInput, Key? key})
+      : super(key: key);
 
   @override
   State<HomeView> createState() => _HomeViewState();
@@ -20,7 +24,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
     ChatView(),
     ThreadChatHistory(),
     PromptLibraryScreen(),
-    BotDashBoard(),
+    KnowledgeTab(),
   ];
   int _selectedIndex = 0;
   @override
@@ -29,6 +33,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
     super.initState();
     this._selectedIndex = widget.selectInput;
   }
+
   @override
   Widget build(BuildContext context) {
     print("HomeView build");
@@ -82,7 +87,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.edit),
-            label: 'AI Bot',
+            label: 'Knowledge',
           ),
         ],
         selectedItemColor: Colors.teal[600], // Xanh ngọc đậm

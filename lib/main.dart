@@ -14,14 +14,18 @@ import 'package:flutter_ai_app/features/email_response/presentation/providers/em
 import 'package:flutter_ai_app/features/prompt/presentation/providers/prompt_provider.dart';
 import 'package:flutter_ai_app/utils/routes.dart';
 import 'package:get_it/get_it.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
+  // WidgetsFlutterBinding.ensureInitialized();
+  // MobileAds.instance.initialize();
   await ServiceInjection.ConfigureServiceInjection();
   ChatManager chatManager = ChatManager();
   PromptManager promptManager = PromptManager();
   KnowledgeManager knowledgeManager = KnowledgeManager();
+
   runApp(
     MultiProvider(providers: [
       ChangeNotifierProvider(create: (_) => ProcessingProvider()),
@@ -45,10 +49,9 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-
-  // // update token after refresh/resumed app 
-  // final tokenManage = Provider.of<Managetokenprovider>(context);
-  // updateTokenValue(tokenManage);
+    // // update token after refresh/resumed app
+    // final tokenManage = Provider.of<Managetokenprovider>(context);
+    // updateTokenValue(tokenManage);
     // // update token after refresh/resumed app
     // final tokenManage = Provider.of<Managetokenprovider>(context);
     // updateTokenValue(tokenManage);

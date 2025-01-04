@@ -61,9 +61,9 @@ class _BotDashBoardState extends State<BotDashBoard>
         bottom: TabBar(
           controller: tabController,
           tabs: [
-            Tab(
-              text: "Bots",
-            ),
+            // Tab(
+            //   text: "Bots",
+            // ),
             Tab(
               text: "Knowledge",
             ),
@@ -81,7 +81,7 @@ class _BotDashBoardState extends State<BotDashBoard>
             controller: tabController,
             children: [
               // Tab Bots
-              _buildBotsTab(),
+              // _buildBotsTab(),
               // Tab Knowledge
               KnowledgeTab(),
             ],

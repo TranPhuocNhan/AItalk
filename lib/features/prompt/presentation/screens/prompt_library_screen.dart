@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_ai_app/core/models/assistant.dart';
 import 'package:flutter_ai_app/features/ai_chat/data/models/assistant_dto.dart';
 import 'package:flutter_ai_app/features/ai_chat/domains/entities/chat_message.dart';
+import 'package:flutter_ai_app/features/ai_chat/presentation/screens/chat_content_view.dart';
 import 'package:flutter_ai_app/features/prompt/data/prompt.dart';
 import 'package:flutter_ai_app/features/ai_chat/presentation/providers/chat_provider.dart';
 import 'package:flutter_ai_app/features/prompt/presentation/providers/prompt_provider.dart';
@@ -23,6 +24,7 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
   final _searchController = TextEditingController();
   List<Prompt> filteredPrompts = [];
   List<Prompt> filteredFavoritePrompts = [];
+  List<Prompt> filteredMyPrompts = [];
   late TabController tabController;
 
   @override
@@ -40,6 +42,8 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
             Provider.of<PromptProvider>(context, listen: false).publicPrompts;
         filteredFavoritePrompts =
             Provider.of<PromptProvider>(context, listen: false).favoritePrompts;
+        filteredMyPrompts =
+            Provider.of<PromptProvider>(context, listen: false).privatePrompts;
       });
     });
     tabController.addListener(() {
@@ -52,6 +56,10 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
           filteredFavoritePrompts =
               Provider.of<PromptProvider>(context, listen: false)
                   .favoritePrompts;
+        } else if (tabController.index == 0) {
+          filteredMyPrompts =
+              Provider.of<PromptProvider>(context, listen: false)
+                  .privatePrompts;
         }
       });
     });
@@ -108,7 +116,8 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
             final prompt = Prompt(
               id: "",
               isFavorite: false,
-              isPublic: result["isPublic"],
+              isPublic:
+                  result["isPublic"], // Đảm bảo các key tồn tại trong result
               category: result["category"],
               content: result["content"],
               description: result["description"],
@@ -127,14 +136,19 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
   // List of prompts for "My Prompt" tab
   Widget _buildMyPromptList(
       List<Prompt> privatePrompts, PromptProvider promptProvider) {
-    return ListView.builder(
-      padding: EdgeInsets.all(16),
-      itemCount: privatePrompts.length,
-      itemBuilder: (context, index) {
-        final prompt = privatePrompts[index];
-        return _buildPromptItem(prompt, promptProvider);
-      },
-    );
+    return Column(children: [
+      _buildSearchBar(),
+      Expanded(
+        child: ListView.builder(
+          padding: EdgeInsets.all(16),
+          itemCount: filteredMyPrompts.length,
+          itemBuilder: (context, index) {
+            final prompt = filteredMyPrompts[index];
+            return _buildPromptItem(prompt, promptProvider);
+          },
+        ),
+      )
+    ]);
   }
 
   Widget _buildPublicPromptList(
@@ -293,6 +307,19 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
                             .contains(value.toLowerCase()))
                         .toList();
               }
+            } else if (tabController.index == 0) {
+              if (value.isEmpty) {
+                filteredMyPrompts =
+                    Provider.of<PromptProvider>(context, listen: false)
+                        .privatePrompts;
+              } else {
+                filteredMyPrompts =
+                    Provider.of<PromptProvider>(context, listen: false)
+                        .privatePrompts
+                        .where((prompt) => (prompt.title?.toLowerCase() ?? "")
+                            .contains(value.toLowerCase()))
+                        .toList();
+              }
             }
           });
         },
@@ -306,23 +333,42 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
       child: ListTile(
         onTap: () async {
           promptProvider.setSelectedPrompt(prompt);
+
           final result = await showDialog(
               context: context,
               builder: (BuildContext context) => PromptDialog());
-          if (result != null) {
-            final chatProvider =
-                Provider.of<ChatProvider>(context, listen: false);
-            chatProvider.sendFirstMessage(ChatMessage(
-                assistant: AssistantDTO(
-                    id: chatProvider.selectedAssistant?.id ??
-                        Assistant.assistants.first.id,
-                    model: 'dify',
-                    name: chatProvider.selectedAssistant?.name ??
-                        Assistant.assistants.first.name),
-                role: "user",
-                content: result));
-            chatProvider.setSelectedScreenIndex(0);
-            chatProvider.toggleChatContentView();
+          final chatProvider =
+              Provider.of<ChatProvider>(context, listen: false);
+          if (result != null && result.isNotEmpty) {
+            final content = result['content'] as String;
+
+            final message = ChatMessage(
+              assistant: AssistantDTO(
+                id: chatProvider.selectedAssistant?.id ??
+                    Assistant.assistants.first.id,
+                model: 'dify',
+                name: chatProvider.selectedAssistant?.name ??
+                    Assistant.assistants.first.name,
+              ),
+              role: "user",
+              content: content,
+            );
+
+            chatProvider.addUserMessage(
+                message); // Thêm tin nhắn vào danh sách tin nhắn của người dùng
+
+            try {
+              // Gửi tin nhắn
+              await chatProvider.sendFirstMessage(message);
+
+              // Dọn dẹp và chuyển hướng đến ChatContentView
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ChatContentView()),
+              );
+            } catch (e) {
+              print("Error sending first message: $e");
+            }
           }
         },
         title: Text(prompt.title ?? ''),
