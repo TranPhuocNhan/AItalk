@@ -7,6 +7,7 @@ import 'package:flutter_ai_app/features/ai_chat/data/models/api_response/convers
 import 'package:flutter_ai_app/features/ai_chat/domains/services/ai_chat_service.dart';
 import 'package:flutter_ai_app/core/services/conversation_history_service.dart';
 import 'package:flutter_ai_app/features/ai_chat/domains/services/send_message_service.dart';
+import 'package:flutter_ai_app/features/profile/presentation/providers/manage_token_provider.dart';
 import 'package:get_it/get_it.dart';
 
 class ChatManager {
@@ -38,6 +39,7 @@ class ChatManager {
     required String content,
     required List<ChatMessage> messages,
     required String conversationId,
+    required Managetokenprovider tokenProvider
   }) async {
     final metadata = AIChatMetadata(
       conversation: ChatConversation(
@@ -57,19 +59,21 @@ class ChatManager {
       jarvisGuid: jarvisGuid,
     );
 
+    // print("remain token --> ${response.remainingUsage}");
+    tokenProvider.updateRemainTokenWithoutNotify(response.remainingUsage);
     if (response.getMessage.isNotEmpty) {
       return await fetchConversationHistory(
         conversationId: conversationId,
         assistantId: assistantId,
         assistantModel: assistantModel,
-        jarvisGuid: jarvisGuid,
+        jarvisGuid: jarvisGuid
       );
     }
 
     return null;
   }
 
-  Future<AIChatResponse?> sendFirstMessage({
+  Future<AIChatResponse> sendFirstMessage({
     required AssistantDTO assistant,
     required String content,
     required String jarvisGuid,

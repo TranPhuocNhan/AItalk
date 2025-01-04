@@ -37,8 +37,9 @@ class SendMessageService {
     if (response.statusCode == 200) {
       return AIChatResponse.fromJson(jsonDecode(response.body));
     } else {
-      throw Exception(
-          'Failed to send message. Status code: ${response.statusCode}, Response: ${response.body}');
+      throw response.body;
+      // throw Exception(
+      //     'Failed to send message. Status code: ${response.statusCode}, Response: ${response.body}');
     }
   }
 }

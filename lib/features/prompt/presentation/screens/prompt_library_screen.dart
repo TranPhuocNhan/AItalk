@@ -9,6 +9,7 @@ import 'package:flutter_ai_app/features/prompt/presentation/providers/prompt_pro
 import 'package:flutter_ai_app/features/prompt/presentation/widgets/create_prompt.dart';
 import 'package:flutter_ai_app/features/prompt/presentation/widgets/edit_prompt_form.dart';
 import 'package:flutter_ai_app/utils/category_prompt_map.dart';
+import 'package:flutter_ai_app/utils/constant/Color.dart';
 import 'package:flutter_ai_app/widgets/banner_ads.dart';
 import 'package:provider/provider.dart';
 
@@ -129,7 +130,8 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
           }
         },
         child: Icon(Icons.add),
-        backgroundColor: Colors.purple,
+        // backgroundColor: Colors.purple,
+        backgroundColor: ColorPalette().bigIcon,
       ),
     );
   }

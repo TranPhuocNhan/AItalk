@@ -5,6 +5,7 @@ import 'package:flutter_ai_app/features/knowledge_base/data/api_response/knowled
 import 'package:flutter_ai_app/features/knowledge_base/data/api_response/knowledge_response.dart';
 import 'package:flutter_ai_app/features/knowledge_base/presentation/providers/knowledge_provider.dart';
 import 'package:flutter_ai_app/features/knowledge_base/presentation/widgets/update_knowledge_dialog.dart';
+import 'package:flutter_ai_app/utils/constant/Color.dart';
 import 'package:provider/provider.dart';
 
 class KnowledgeTab extends StatefulWidget {
@@ -185,7 +186,8 @@ class _KnowledgeTabState extends State<KnowledgeTab> {
         color: Colors.white,
       ),
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.blue,
+        // backgroundColor: Colors.blue,
+        backgroundColor: ColorPalette().bigIcon,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(20)),
         ),

@@ -7,7 +7,6 @@ import 'package:flutter_ai_app/features/ai_chat/presentation/widgets/ai_section.
 import 'package:flutter_ai_app/features/ai_chat/presentation/widgets/chat_section.dart';
 import 'package:flutter_ai_app/features/ai_chat/presentation/widgets/free_unlimited_section.dart';
 import 'package:flutter_ai_app/features/ai_chat/presentation/widgets/tools_section.dart';
-import 'package:flutter_ai_app/features/ai_chat/presentation/widgets/upload_and_writing_agent_section.dart';
 
 class ChatView extends StatefulWidget {
   ChatView({super.key});

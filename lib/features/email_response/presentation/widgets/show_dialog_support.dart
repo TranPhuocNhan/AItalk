@@ -56,7 +56,7 @@ class ShowDialogSupport {
     );
   }
 
-  void showDialogNotifyEmailRspIdea(List<String> ideas, BuildContext context){
+  void showDialogNotifyEmailRspIdea(List<String> ideas, BuildContext context, Function(String) onUpdate){
     Navigator.pop(context);
     showDialog(
       context: context, 
@@ -78,6 +78,12 @@ class ShowDialogSupport {
                 return ListTile(
                   title: Text(ideas[index]),
                   leading: Icon(Icons.check_circle_outline),
+                  trailing: IconButton(
+                    onPressed: (){
+                      onUpdate(ideas[index]);
+                      Navigator.pop(context);
+                    }, 
+                    icon: Icon(Icons.forward_to_inbox_rounded)),
                 );
               }
             ),

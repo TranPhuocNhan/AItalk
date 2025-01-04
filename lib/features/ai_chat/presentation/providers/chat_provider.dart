@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_ai_app/core/models/assistant.dart';
 import 'package:flutter_ai_app/features/ai_bot/data/models/ai_%20bot.dart';
 import 'package:flutter_ai_app/features/ai_bot/data/models/bot_thread.dart';
@@ -11,6 +14,8 @@ import 'package:flutter_ai_app/features/ai_chat/domains/entities/conversation.da
 import 'package:flutter_ai_app/features/ai_chat/domains/entities/conversation_thread.dart';
 import 'package:flutter_ai_app/core/services/conversation_thread_service.dart';
 import 'package:flutter_ai_app/features/ai_chat/domains/chat_manager.dart';
+import 'package:flutter_ai_app/features/profile/presentation/providers/manage_token_provider.dart';
+import 'package:flutter_ai_app/utils/helper_functions.dart';
 import 'package:get_it/get_it.dart';
 
 class ChatProvider extends ChangeNotifier {
@@ -248,7 +253,7 @@ class ChatProvider extends ChangeNotifier {
         [];
   }
 
-  Future<void> sendMessage(String content) async {
+  Future<void> sendMessage(String content, Managetokenprovider tokenProvider, BuildContext context) async {
     // print("sendMessage");
     try {
       // Thêm tin nhắn của người dùng vào danh sách hiển thị
@@ -270,6 +275,7 @@ class ChatProvider extends ChangeNotifier {
         assistantName:
             _selectedAssistant?.name ?? Assistant.assistants.first.name,
         conversationId: _selectedThreadId ?? "",
+        tokenProvider: tokenProvider
       );
 
       if (response != null) {
@@ -279,10 +285,13 @@ class ChatProvider extends ChangeNotifier {
         notifyListeners();
       }
     } catch (error) {
+      Map<String,dynamic> decodedError = jsonDecode(error.toString());
+      
+
       print("Failed to send message in ChatProvider: $error");
       _removePendingResponse(
           content); // Loại bỏ trạng thái "đang chờ" nếu có lỗi
-      throw Exception("Failed to send message in ChatProvider");
+      throw  decodedError.containsKey('details') ? decodedError['details'].first['issue'] : "Something wrong!";
     }
   }
 
@@ -299,7 +308,7 @@ class ChatProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> sendFirstMessage(ChatMessage message) async {
+  Future<int> sendFirstMessage(ChatMessage message) async {
     // print("sendFirstMessage");
     try {
       setLoading(true);
@@ -310,6 +319,7 @@ class ChatProvider extends ChangeNotifier {
         content: message.content,
         jarvisGuid: jarvisGuid,
       );
+      print("REMAIN TOKEN --> ${response.remainingUsage}");
 
       if (response != null) {
         // Cập nhật ID của cuộc hội thoại
@@ -329,6 +339,7 @@ class ChatProvider extends ChangeNotifier {
 
       notifyListeners();
       setLoading(false);
+      return response.remainingUsage;
     } catch (error) {
       print("Failed to send first message: $error");
       setLoading(false);

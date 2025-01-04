@@ -56,13 +56,13 @@ class _NavDrawerState extends State<NavDrawer> {
       ),
       selected: _selectedIndex == index,
       onTap: () {
-        Navigator.pop(context);
+        // Navigator.pop(context);
 
-        showDialog(
-            context: context,
-            builder: (builder) {
-              return BotDashBoard();
-            });
+        // showDialog(
+        //     context: context,
+        //     builder: (builder) {
+        //       return BotDashBoard();
+        //     });
       },
     );
   }

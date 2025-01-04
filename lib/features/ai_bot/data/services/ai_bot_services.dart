@@ -157,8 +157,7 @@ class AiBotService {
     );
 
     if(response.statusCode == 200){
-      var responseData = response.body.toString();           
-      return responseData;
+      return utf8.decode(response.bodyBytes);
     }else{
       Map<String, dynamic> decodedData = jsonDecode(response.body);
       if(decodedData.containsKey('message')){

@@ -100,62 +100,7 @@ class _chatBotState extends State<ChatBotScreen> {
           },
           icon: const Icon(Icons.arrow_back_ios_sharp),
         ),
-        actions: [
-          PopupMenuButton<String>(
-            icon: Row(
-              children: [
-                Icon(Icons.publish_rounded),
-                SizedBox(width: 10,),
-                Text("Publish"),
-              ],
-            ),
-            itemBuilder: (BuildContext context){
-              return[
-                PopupMenuItem(
-                  value: "telegram",
-                  child: Row(
-                    children: [
-                      Image.asset(publishData[0].imgLink),
-                      const SizedBox(width: 10,),
-                      Text(publishData[0].name),
-                    ],
-                  )
-                ),
-                PopupMenuItem(
-                  value: "slack",
-                  child: Row(
-                    children: [
-                      Image.asset(publishData[1].imgLink),
-                      const SizedBox(width: 10,),
-                      Text(publishData[1].name),
-                    ],
-                  )
-                ),
-                PopupMenuItem(
-                  value: "messenger",
-                  child: Row(
-                    children: [
-                      Image.asset(publishData[2].imgLink),
-                      const SizedBox(width: 10,),
-                      Text(publishData[2].name),
-                    ],
-                  )
-                ),
-              ];
-            },
-            onSelected: (value) async{
-              // try{
-              //   String link = await ChatBotManager().handlePublishValue(value, widget.assistant.id);
-              //   if(link != ""){
-              //     showRedirectDialog(link);
-              //   }
-              // }catch(err){
-              //   HelperFunctions().showMessageDialog("Publish to ${value}", err.toString(), context);
-              // }
-              
-            },
-          )
-        ],
+        
       ),
       body: Center(
         child: Padding(
@@ -197,13 +142,13 @@ class _chatBotState extends State<ChatBotScreen> {
                             ); 
                             addMessageToHistory(userMess);
                             updateControler();
-                            // var response = await ChatBotManager().getReponseMessageFromBot(widget.assistant, chatController.value.text);
+                            String temp = chatController.value.text;
+                            chatController.clear();
                             Message assisMess = Message(
                               role: MessageRole.assistant, 
                               createdDate: DateTime.now().millisecondsSinceEpoch, 
-                              content: await ChatBotManager().getResponseMessageFromBot(widget.assistant, chatController.value.text, widget.assistant.openAiThreadIdPlay)
+                              content: await ChatBotManager().getResponseMessageFromBot(widget.assistant, temp, widget.assistant.openAiThreadIdPlay)
                             );
-                            chatController.clear();
                             addMessageToHistory(assisMess);
                             updateControler();
                             updateAnswerState(false);

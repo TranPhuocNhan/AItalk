@@ -61,6 +61,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
         backgroundColor: ColorPalette().bgColor,
       ),
       drawer: AppDrawer(
+        
         selected: 0,
       ),
       body: IndexedStack(
@@ -68,6 +69,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
         children: _widgetOptions,
       ),
       bottomNavigationBar: BottomNavigationBar(
+        
         currentIndex: _selectedIndex,
         onTap: (int index) {
           setState(() {
