@@ -15,6 +15,3 @@ Dự án này phát triển một hệ thống chat với AI mang tên AITalk c
 - Milestone1: https://youtu.be/7HI0C9jVQ5w
 - Mileseton2: https://youtu.be/6wiKcso2Hpo
 
-
-## NOTES:
-- nếu cần lấy giá trị accessToken và refreshToken từ signin External client có thể vào SharedPreference ("externalAccessToken" và "externalRefreshToken") để lấy => không cần thực hiện signinExternalClient

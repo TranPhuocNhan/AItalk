@@ -28,7 +28,7 @@ class ChatManager {
       assistantModel: assistantModel,
       jarvisGuid: jarvisGuid,
     );
-  }
+  } 
 
   Future<ConversationHistoryResponse?> sendMessage({
     required String assistantId,

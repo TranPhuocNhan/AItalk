@@ -23,11 +23,22 @@ class _AccountCardState extends State<AccountCard>{
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Colors.lightGreen.shade50,
+      // color: Colors.lightGreen.shade50,
+      color: ColorPalette().bgColor,
       child: Padding(
         padding: EdgeInsets.all(0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Padding(
+              padding: EdgeInsets.all(10),
+              child: Text(
+              "Account",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),),
             ListTile(
               leading: Container(
                 decoration: BoxDecoration(

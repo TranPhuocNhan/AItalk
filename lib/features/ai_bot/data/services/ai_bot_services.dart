@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter_ai_app/features/ai_bot/data/models/ai_%20bot.dart';
 import 'package:flutter_ai_app/features/ai_bot/data/models/assistant_request.dart';
+import 'package:flutter_ai_app/features/ai_bot/data/models/bot_thread.dart';
 import 'package:flutter_ai_app/features/ai_bot/data/models/message.dart';
 import 'package:flutter_ai_app/features/knowledge_base/data/api_response/knowledge_response.dart';
 import 'package:http/http.dart' as http;
@@ -96,6 +98,7 @@ class AiBotService {
     }
 
   }
+  
   Future<AiBot> updateAssistant(String assistantId, String assistantName, String assistantInstructions, String assistantDescription) async{
    // GET TOKEN
     final prefs = await SharedPreferences.getInstance();
@@ -130,7 +133,7 @@ class AiBotService {
     }
   }
 
-  Future<String> askAssistant(AiBot assistant, String message) async{
+  Future<String> askAssistant(AiBot assistant, String message, String threadId) async{
      // GET TOKEN
     final prefs = await SharedPreferences.getInstance();
     String? kbAccessToken = "";
@@ -147,14 +150,14 @@ class AiBotService {
       },
       body: jsonEncode({
         "message": message,
-        "openAiThreadId": assistant.openAiThreadIdPlay,
+        // "openAiThreadId": assistant.openAiThreadIdPlay,
+        "openAiThreadId": threadId,
         "additionalInstruction": assistant.instructions,
       }),
     );
 
     if(response.statusCode == 200){
       var responseData = response.body.toString();           
-      print("RESPONSE FROM BOT: ${responseData}");
       return responseData;
     }else{
       Map<String, dynamic> decodedData = jsonDecode(response.body);
@@ -201,6 +204,63 @@ class AiBotService {
 
   }
 
+  Future<BotThread> createNewThread(String assistantId, String firstMessage) async{
+    // GET TOKEN
+    final prefs = await SharedPreferences.getInstance();
+    String? kbAccessToken = "";
+    kbAccessToken = await prefs.getString("externalAccessToken");
+    if(kbAccessToken == null) throw "Can not get access token!";
+    // request api 
+    var response = await http.post(
+      Uri.parse("$knowledgeLink/kb-core/v1/ai-assistant/thread"),
+      headers : <String, String>{
+        'x-jarvis-guid': '',
+        'Authorization': 'Bearer ${kbAccessToken}',
+        'Content-Type': 'application/json'
+      },
+      body: jsonEncode({
+        "assistantId": assistantId,
+        "firstMessage": firstMessage,
+      })
+    );
+    if(response.statusCode == 201){
+      Map<String,dynamic> decodedData = jsonDecode(response.body);
+      return BotThread.FromJsonToBotThread(decodedData);
+    }else{
+      Map<String, dynamic> decodedData = jsonDecode(response.body);
+      if(decodedData.containsKey('message')) throw decodedData['message'];
+      else throw "Something Wrong!";
+    }
+  }
+
+  Future<List<BotThread>> getListThreadOfAssistant(String assistantId) async{
+    // GET TOKEN
+    final prefs = await SharedPreferences.getInstance();
+    String? kbAccessToken = "";
+    kbAccessToken = await prefs.getString("externalAccessToken");
+    if(kbAccessToken == null) throw "Can not get access token!";
+    // request api 
+    var response = await http.get(
+      Uri.parse("$knowledgeLink/kb-core/v1/ai-assistant/${assistantId}/threads"),
+      headers: <String,String>{
+        'x-jarvis-guid': '',
+        'Authorization': 'Bearer ${kbAccessToken}'
+      },
+    );
+    if(response.statusCode == 200){
+      Map<String,dynamic> decodedData = jsonDecode(response.body);
+      List<dynamic> threads = decodedData['data'];
+      List<BotThread> output = [];
+      for(var thread in threads){
+        output.add(BotThread.FromJsonToBotThread(thread));
+      }
+      return output;
+    }else{
+      Map<String, dynamic> decodedData = jsonDecode(response.body);
+      if(decodedData.containsKey('message')) throw decodedData['message'];
+      else throw "Something wrong!";
+    }
+  } 
   // knowledge base services 
   Future<KnowledgeResponse> getImportedKnowledge(String assistantId) async{
       // GET TOKEN
