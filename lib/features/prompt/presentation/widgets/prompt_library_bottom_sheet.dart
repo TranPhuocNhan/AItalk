@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ai_app/core/models/assistant.dart';
+import 'package:flutter_ai_app/features/ai_chat/data/models/assistant_dto.dart';
+import 'package:flutter_ai_app/features/ai_chat/domains/entities/chat_message.dart';
+import 'package:flutter_ai_app/features/ai_chat/presentation/providers/chat_provider.dart';
+import 'package:flutter_ai_app/features/ai_chat/presentation/screens/chat_content_view.dart';
 import 'package:flutter_ai_app/features/prompt/data/prompt.dart';
 import 'package:flutter_ai_app/features/prompt/presentation/providers/prompt_provider.dart';
 import 'package:flutter_ai_app/features/prompt/presentation/widgets/prompt_dialog.dart';
@@ -162,8 +167,38 @@ class _PromptLibraryBottomDialogState extends State<PromptLibraryBottomDialog>
             context: context,
             builder: (context) => PromptDialog(),
           );
-          if (result != null) {
-            print("result from prompt dialog: $result");
+          final chatProvider =
+              Provider.of<ChatProvider>(context, listen: false);
+          if (result != null && result.isNotEmpty) {
+            final content = result['content'] as String;
+
+            final message = ChatMessage(
+              assistant: AssistantDTO(
+                id: chatProvider.selectedAssistant?.id ??
+                    Assistant.assistants.first.id,
+                model: 'dify',
+                name: chatProvider.selectedAssistant?.name ??
+                    Assistant.assistants.first.name,
+              ),
+              role: "user",
+              content: content,
+            );
+
+            chatProvider.addUserMessage(
+                message); // Thêm tin nhắn vào danh sách tin nhắn của người dùng
+
+            try {
+              // Gửi tin nhắn
+              await chatProvider.sendFirstMessage(message);
+
+              // Dọn dẹp và chuyển hướng đến ChatContentView
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ChatContentView()),
+              );
+            } catch (e) {
+              print("Error sending first message: $e");
+            }
           }
         },
         title: Text(prompt.title ?? ''),

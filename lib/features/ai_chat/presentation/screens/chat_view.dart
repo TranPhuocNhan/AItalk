@@ -65,7 +65,6 @@ class _ChatViewState extends State<ChatView>
                 ),
                 AISection(),
                 AISearchSection(),
-                UpLoadAndWritingAgentSection(),
                 FreeUnlimitedSection(),
                 ToolsSection(bots: bots, onUpdate: onUpdate,),
                 ChatSection(bots: bots,),

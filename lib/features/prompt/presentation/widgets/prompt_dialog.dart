@@ -15,14 +15,16 @@ class PromptDialog extends StatefulWidget {
 class _PromptDialogState extends State<PromptDialog> {
   Prompt? selectedPrompt;
   TextEditingController _textController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     final promptProvider = Provider.of<PromptProvider>(context);
     selectedPrompt = promptProvider.selectedPrompt;
+
+    // Sử dụng biểu thức chính quy để tìm các phần placeholder trong nội dung
     RegExp regExp = RegExp(r'\[.*?\]');
     Iterable<RegExpMatch> matches =
         regExp.allMatches(selectedPrompt?.content ?? '');
-
     List<String> _placeHolder = matches.map((e) => e.group(0) ?? '').toList();
 
     return AlertDialog(
@@ -79,7 +81,8 @@ class _PromptDialogState extends State<PromptDialog> {
               decoration: InputDecoration(
                 labelText: "Input Text",
                 hintText: _placeHolder.isNotEmpty
-                    ? _placeHolder.join(' ')
+                    ? _placeHolder.join(
+                        ', ') // Hiển thị các placeholder phân cách bằng dấu phẩy
                     : 'Input Text',
               ),
             ),
@@ -96,8 +99,7 @@ class _PromptDialogState extends State<PromptDialog> {
         ElevatedButton(
             onPressed: () {
               List<String> _userInput = _textController.text
-                  .split('] ') // Tách chuỗi bằng khoảng trắng
-                  .map((e) => e.replaceAll('[', '')) // Xóa [ và ]
+                  .split(', ') // Tách chuỗi bằng dấu phẩy
                   .toList(); // Chuyển về dạng danh sách
 
               print("user input: $_userInput");
@@ -114,7 +116,14 @@ class _PromptDialogState extends State<PromptDialog> {
                 }
               }
 
-              Navigator.pop(context, result);
+              Navigator.pop(context, {
+                "isPublic": false,
+                "category": "CategoryName",
+                "content": result,
+                "description": "Some description",
+                "language": "en",
+                "title": "Title",
+              });
             },
             child: Text('Send')),
       ],

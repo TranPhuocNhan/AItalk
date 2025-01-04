@@ -64,7 +64,7 @@ class _EditPromptFormState extends State<EditPromptForm> {
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 20),
-              _buildCategoryField(categoryPromptMap.values.toList(),
+              _buildCategoryField(categoryPromptMap.keys.toList(),
                   categoryPromptMap[categoryController.text] ?? ''),
               SizedBox(height: 20),
               _buildTextField('Content', contentController, maxLines: 3),
@@ -102,22 +102,13 @@ class _EditPromptFormState extends State<EditPromptForm> {
                   ElevatedButton(
                     onPressed: () {
                       final updatedData = {
-                        "category": categoryPromptMap.keys
-                            .firstWhere(
-                              (key) =>
-                                  categoryPromptMap[key] ==
-                                  categoryController.text,
-                              orElse: () =>
-                                  '', // Trả về giá trị mặc định nếu không tìm thấy
-                            )
-                            .toString(),
+                        "category": categoryController.text,
                         "content": contentController.text,
                         "description": descriptionController.text,
                         "isPublic": isPublic,
                         "language": languageController.text,
                         "title": titleController.text,
                       };
-                      print("updatedData: $updatedData");
 
                       Navigator.pop(context, updatedData);
                       ScaffoldMessenger.of(context).showSnackBar(

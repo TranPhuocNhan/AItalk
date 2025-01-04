@@ -70,7 +70,7 @@ class _ChatSectionState extends State<ChatSection> {
         role: "user",
         content: messageContent,
       );
-
+      print("message2: $message");
       chatProvider.addUserMessage(message);
 
       try {
@@ -103,18 +103,6 @@ class _ChatSectionState extends State<ChatSection> {
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       child: Row(
         children: [
-          IconButton(
-            icon: const Icon(Icons.attach_file),
-            onPressed: () {
-              // Handle file attachment
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.mic),
-            onPressed: () {
-              // Handle voice input
-            },
-          ),
           Expanded(
               child: TextField(
             controller: _controller,

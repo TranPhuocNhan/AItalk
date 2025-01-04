@@ -15,9 +15,11 @@ class PromptProvider extends ChangeNotifier {
   String _selectedCategory = "All";
   bool _isLoading = false;
   List<String> _categories = categoryPromptMap.values.toList();
+  List<String> _categoryKeys = categoryPromptMap.keys.toList();
   Prompt? _selectedPrompt;
 
   List<String> get categories => _categories;
+  List<String> get categoryKeys => _categoryKeys;
   List<Prompt> get favoritePrompts => _favoritePrompts;
   List<Prompt> get publicPrompts => _publicPrompts;
   List<Prompt> get privatePrompts => _privatePrompts;

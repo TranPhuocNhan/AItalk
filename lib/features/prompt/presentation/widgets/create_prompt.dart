@@ -90,7 +90,7 @@ class _PromptFormState extends State<PromptForm> {
               Icon(Icons.emoji_events, color: Colors.purple),
               SizedBox(width: 10),
               Text(
-                "Create a Prompt, Win Monica Pro",
+                "Create a Prompt",
                 style: TextStyle(
                     color: Colors.purple, fontWeight: FontWeight.bold),
               ),
@@ -127,7 +127,7 @@ class _PromptFormState extends State<PromptForm> {
             labelText: "Category",
             border: OutlineInputBorder(),
           ),
-          items: promptProvider.categories
+          items: promptProvider.categoryKeys
               .map((category) => DropdownMenuItem(
                     value: category,
                     child: Text(category),

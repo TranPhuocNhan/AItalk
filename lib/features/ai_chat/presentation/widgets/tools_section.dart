@@ -19,31 +19,7 @@ class ToolsSection extends StatelessWidget {
     return Card(
       child: Row(
         children: [
-          _buildAISelectionDropdownButton(chatProvider),
-          IconButton(
-            onPressed: () {
-              // Handle Copy Icon
-            },
-            icon: const Icon(Icons.copy),
-          ),
-          IconButton(
-            onPressed: () {
-              // Handle Upload Image Icon
-            },
-            icon: const Icon(Icons.image),
-          ),
-          IconButton(
-            onPressed: () {
-              // Handle Upload Pdf Icon
-            },
-            icon: const Icon(Icons.picture_as_pdf),
-          ),
-          IconButton(
-            onPressed: () {
-              // Handle Cut Icon
-            },
-            icon: const Icon(Icons.cut),
-          ),
+          _buildAISelectionDropdownButton(),
         ],
       ),
     );
