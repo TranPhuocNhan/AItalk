@@ -9,6 +9,7 @@ import 'package:flutter_ai_app/features/prompt/presentation/providers/prompt_pro
 import 'package:flutter_ai_app/features/prompt/presentation/widgets/create_prompt.dart';
 import 'package:flutter_ai_app/features/prompt/presentation/widgets/edit_prompt_form.dart';
 import 'package:flutter_ai_app/utils/category_prompt_map.dart';
+import 'package:flutter_ai_app/widgets/banner_ads.dart';
 import 'package:provider/provider.dart';
 
 import '../widgets/prompt_dialog.dart';
@@ -71,7 +72,7 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
     print("PromptLibraryScreen build...");
     return Scaffold(
       appBar: AppBar(
-        title: null,
+        title: MyBannerAdsWidget(),
         automaticallyImplyLeading: false,
         bottom: TabBar(
           controller: tabController,
@@ -364,7 +365,7 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
               // Dọn dẹp và chuyển hướng đến ChatContentView
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ChatContentView()),
+                MaterialPageRoute(builder: (context) => ChatContentView(assistant: chatProvider.selectedAssistant,)),
               );
             } catch (e) {
               print("Error sending first message: $e");

@@ -47,6 +47,7 @@ dependencies:
   intl: ^0.18.0
   google_sign_in: ^5.4.2 # for google sign-in
   google_mobile_ads: ^5.2.0
+  flutter_ads_plugin: ^0.0.6
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -194,7 +194,7 @@ class _PromptLibraryBottomDialogState extends State<PromptLibraryBottomDialog>
               // Dọn dẹp và chuyển hướng đến ChatContentView
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ChatContentView()),
+                MaterialPageRoute(builder: (context) => ChatContentView(assistant: chatProvider.selectedAssistant,)),
               );
             } catch (e) {
               print("Error sending first message: $e");

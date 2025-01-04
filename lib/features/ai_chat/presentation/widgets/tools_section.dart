@@ -19,7 +19,7 @@ class ToolsSection extends StatelessWidget {
     return Card(
       child: Row(
         children: [
-          _buildAISelectionDropdownButton(),
+          _buildAISelectionDropdownButton(chatProvider),
         ],
       ),
     );

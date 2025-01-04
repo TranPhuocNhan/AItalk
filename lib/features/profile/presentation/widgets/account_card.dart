@@ -60,9 +60,9 @@ class _AccountCardState extends State<AccountCard>{
             const Divider(),
             GestureDetector(
               onTap: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>
-                  VerifyEmailScreen(context: context, email: "abc123@gmail.com")
-                ));
+                // Navigator.push(context, MaterialPageRoute(builder: (context)=>
+                //   VerifyEmailScreen(context: context, email: "abc123@gmail.com")
+                // ));
               },
               child:ListTile(
                 leading: Container(

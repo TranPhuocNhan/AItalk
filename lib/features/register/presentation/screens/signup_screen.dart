@@ -51,7 +51,7 @@ class _SignupState extends State<SignUpScreen>{
                         color: ColorPalette().headerColor
                       ),
                     ),
-                    const SizedBox(height: 20,),
+                    const SizedBox(height: 50,),
                     SignupInputGroup(),
                     const SizedBox(height: 100,),
                   ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ads_plugin/flutter_ads_plugin.dart';
 import 'package:flutter_ai_app/features/email_response/data/models/email_request.dart';
 import 'package:flutter_ai_app/features/email_response/data/models/email_response.dart';
 import 'package:flutter_ai_app/features/email_response/data/models/suggest_idea_request.dart';
@@ -42,10 +43,21 @@ class _EmailResponseState extends State<EmailResponseScreen>{
       )
     ).toList();  
   }
+  void showInterstitialAd() {
+    FlutterAdsInterstitial.show(
+      onError: (e) {
+        // TODO: Handle error
+      },
+      onAdClosed: () {
+        // TODO: Handle ad close
+      },
+    );
+  }
 
   @override
   void initState() {
     super.initState();
+    showInterstitialAd();
     _focusNode.addListener((){
       setState(() {
         _fillColor = _focusNode.hasFocus ? Colors.white : Colors.grey.shade300;

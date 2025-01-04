@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_ads_plugin/flutter_ads_plugin.dart';
 import 'package:flutter_ai_app/features/ai_bot/data/models/ai_%20bot.dart';
 import 'package:flutter_ai_app/features/ai_bot/data/models/configuration_response.dart';
 import 'package:flutter_ai_app/features/ai_bot/data/models/message.dart';
@@ -65,6 +66,7 @@ class _AIBotState extends State<AIBotView> {
   @override
   void initState() {
     super.initState();
+    showInterstitialAd();
     fetchData();
     updateDataCallback = (bool update) {
       if (update) {
@@ -86,6 +88,16 @@ class _AIBotState extends State<AIBotView> {
     handlePopupSelectedCallback = (String selected, AiBot data) {
       handleSelectedPopupCallback(selected, data);
     };
+  }
+  void showInterstitialAd() {
+    FlutterAdsInterstitial.show(
+      onError: (e) {
+        // TODO: Handle error
+      },
+      onAdClosed: () {
+        // TODO: Handle ad close
+      },
+    );
   }
 
   @override
@@ -164,7 +176,7 @@ class _AIBotState extends State<AIBotView> {
                               );
                             }),
                       ),
-              ))
+              )),
             ],
           ),
         ),
