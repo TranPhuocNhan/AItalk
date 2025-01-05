@@ -36,7 +36,6 @@ class PromptProvider extends ChangeNotifier {
   Future<void> fetchPrivatePrompts() async {
     print("fetchPrivatePrompts");
     _isLoading = true;
-    notifyListeners();
     final GetPromptResponse response = await _promptManager.fetchPrompts(
       query: "",
       offset: 0,
@@ -44,6 +43,7 @@ class PromptProvider extends ChangeNotifier {
       isPublic: false,
     );
     _privatePrompts = response.items;
+
     _isLoading = false;
     notifyListeners();
   }

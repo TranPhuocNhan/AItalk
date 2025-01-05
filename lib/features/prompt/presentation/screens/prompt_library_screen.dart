@@ -37,14 +37,6 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
       Provider.of<PromptProvider>(context, listen: false).fetchPublicPrompts();
       Provider.of<PromptProvider>(context, listen: false)
           .fetchFavoritePrompts();
-      setState(() {
-        filteredPrompts =
-            Provider.of<PromptProvider>(context, listen: false).publicPrompts;
-        filteredFavoritePrompts =
-            Provider.of<PromptProvider>(context, listen: false).favoritePrompts;
-        filteredMyPrompts =
-            Provider.of<PromptProvider>(context, listen: false).privatePrompts;
-      });
     });
     tabController.addListener(() {
       setState(() {
@@ -67,7 +59,10 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
 
   @override
   Widget build(BuildContext context) {
-    final promptProvider = Provider.of<PromptProvider>(context);
+    final promptProvider = Provider.of<PromptProvider>(context, listen: true);
+    filteredPrompts = promptProvider.publicPrompts;
+    filteredFavoritePrompts = promptProvider.favoritePrompts;
+    filteredMyPrompts = promptProvider.privatePrompts;
     print("PromptLibraryScreen build...");
     return Scaffold(
       appBar: AppBar(
@@ -124,7 +119,7 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
               language: result["language"],
               title: result["title"],
             );
-            await promptProvider.createPrompt(prompt);
+            final response = await promptProvider.createPrompt(prompt);
           }
         },
         child: Icon(Icons.add),
