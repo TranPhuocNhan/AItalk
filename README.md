@@ -12,8 +12,10 @@ Dự án này phát triển một hệ thống chat với AI mang tên AITalk c
 
 ## Link demo dự án:
 
-- Milestone1: https://youtu.be/7HI0C9jVQ5w
-- Mileseton2: https://youtu.be/6wiKcso2Hpo
+- Milestone 1: https://youtu.be/7HI0C9jVQ5w
+- Milestone 2: https://youtu.be/6wiKcso2Hpo
+- Milestone 3:
+- Link báo cáo: https://docs.google.com/document/d/1N1OFi4bZHH0kwn6x0bubz85fAbaCVX18/
 
 
 ## generate keystore 
