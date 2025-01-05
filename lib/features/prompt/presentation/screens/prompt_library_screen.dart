@@ -133,7 +133,7 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
   Widget _buildMyPromptList(
       List<Prompt> privatePrompts, PromptProvider promptProvider) {
     return Column(children: [
-      _buildSearchBar(),
+      _buildSearchBar(promptProvider),
       Expanded(
         child: ListView.builder(
           padding: EdgeInsets.all(16),
@@ -154,7 +154,7 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
       PromptProvider promptProvider) {
     return Column(
       children: [
-        _buildSearchBar(),
+        _buildSearchBar(promptProvider),
         _buildCategoryList(categories, selectedCategory, promptProvider),
         Expanded(
           child: ListView.builder(
@@ -295,7 +295,7 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
     );
   }
 
-  Widget _buildSearchBar() {
+  Widget _buildSearchBar(PromptProvider promptProvider) {
     return Padding(
       padding: EdgeInsets.all(8),
       child: TextField(
@@ -313,14 +313,11 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
           setState(() {
             searchQuery = _searchController.text;
             if (tabController.index == 0) {
-              Provider.of<PromptProvider>(context, listen: false)
-                  .updateSearchMyPromptQuery(searchQuery);
+              promptProvider.updateSearchMyPromptQuery(searchQuery);
             } else if (tabController.index == 1) {
-              Provider.of<PromptProvider>(context, listen: false)
-                  .updateSearchPublicPromptQuery(searchQuery);
+              promptProvider.updateSearchPublicPromptQuery(searchQuery);
             } else if (tabController.index == 2) {
-              Provider.of<PromptProvider>(context, listen: false)
-                  .updateSearchFavoritePromptQuery(searchQuery);
+              promptProvider.updateSearchFavoritePromptQuery(searchQuery);
             }
           });
         },
@@ -423,29 +420,11 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
         label: Text(category),
         selected: selectedCategory == category,
         onSelected: (bool selected) {
-          setState(() {
-            if (selected) {
-              if (_searchController.text.isNotEmpty) {
-                filteredPrompts = promptProvider.publicPrompts
-                    .where((prompt) =>
-                        prompt.category?.toLowerCase() ==
-                            category.toLowerCase() &&
-                        (prompt.title?.toLowerCase() ?? "")
-                            .contains(_searchController.text.toLowerCase()))
-                    .toList();
-              } else {
-                filteredPrompts = promptProvider.publicPrompts
-                    .where((prompt) =>
-                        prompt.category?.toLowerCase() ==
-                        category.toLowerCase())
-                    .toList();
-              }
-              promptProvider.updateSelectedCategory(category);
-            } else {
-              filteredPrompts = promptProvider.publicPrompts;
-              promptProvider.updateSelectedCategory('All');
-            }
-          });
+          if (selected) {
+            promptProvider.updateSelectedCategory(category);
+          } else {
+            promptProvider.updateSelectedCategory("All");
+          }
         },
       ),
     );
@@ -455,7 +434,7 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
       List<Prompt> favoritePrompts, PromptProvider promptProvider) {
     return Column(
       children: [
-        _buildSearchBar(),
+        _buildSearchBar(promptProvider),
         Expanded(
           child: ListView.builder(
             padding: EdgeInsets.all(16),

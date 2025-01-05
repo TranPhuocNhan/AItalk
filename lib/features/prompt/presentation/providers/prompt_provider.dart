@@ -58,11 +58,16 @@ class PromptProvider extends ChangeNotifier {
   }
 
   List<Prompt> getFilteredPublicPrompts() {
-    if (_searchPublicPromptQuery.isEmpty) return _publicPrompts;
     return _publicPrompts
         .where((prompt) =>
-            (prompt.title?.toLowerCase().contains(_searchPublicPromptQuery) ??
-                false))
+            (_searchPublicPromptQuery.isEmpty ||
+                (prompt.title
+                        ?.toLowerCase()
+                        .contains(_searchPublicPromptQuery.toLowerCase()) ??
+                    false)) &&
+            (_selectedCategory == "All" ||
+                (prompt.category?.toLowerCase() ==
+                    _selectedCategory.toLowerCase())))
         .toList();
   }
 
