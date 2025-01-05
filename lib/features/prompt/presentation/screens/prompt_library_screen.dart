@@ -64,7 +64,10 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
   @override
   Widget build(BuildContext context) {
     final promptProvider = Provider.of<PromptProvider>(context);
-
+    filteredPrompts = promptProvider.getFilteredPublicPrompts();
+    filteredFavoritePrompts = promptProvider.getFilteredFavoritePrompts();
+    filteredMyPrompts = promptProvider.getFilteredPrivatePrompts();
+    print("PromptLibraryScreen build...");
     return Stack(
       children: [
         Scaffold(
@@ -131,7 +134,6 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
             ),
           ),
       ],
-
     );
   }
 
@@ -214,7 +216,10 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
               // Clean up and navigate to ChatContentView
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ChatContentView()),
+                MaterialPageRoute(
+                    builder: (context) => ChatContentView(
+                          assistant: chatProvider.selectedAssistant,
+                        )),
               );
             } catch (e) {
               print("Error sending first message: $e");
@@ -368,7 +373,10 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
               // Dọn dẹp và chuyển hướng đến ChatContentView
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ChatContentView(assistant: chatProvider.selectedAssistant,)),
+                MaterialPageRoute(
+                    builder: (context) => ChatContentView(
+                          assistant: chatProvider.selectedAssistant,
+                        )),
               );
             } catch (e) {
               print("Error sending first message: $e");
