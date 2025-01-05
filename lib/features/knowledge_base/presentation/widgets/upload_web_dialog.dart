@@ -143,6 +143,16 @@ class _UploadWebDialogState extends State<UploadWebDialog> {
       BuildContext context, KnowledgeProvider knowledgeProvider) {
     return ElevatedButton(
       onPressed: () {
+        // check xem các trường dữ liêu đã được điền chưa
+        if (_nameController.text.isEmpty || _urlController.text.isEmpty) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Please fill all fields"),
+              backgroundColor: Colors.red,
+            ),
+          );
+          return;
+        }
         knowledgeProvider.uploadKnowledgeFromWeb(
           id: widget.knowledge.id,
           unitName: _nameController.text,

@@ -8,6 +8,7 @@ import 'package:flutter_ai_app/features/prompt/data/prompt.dart';
 import 'package:flutter_ai_app/features/prompt/presentation/providers/prompt_provider.dart';
 import 'package:flutter_ai_app/features/prompt/presentation/widgets/prompt_dialog.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_ai_app/utils/category_prompt_map.dart';
 
 class PromptLibraryBottomDialog extends StatefulWidget {
   @override
@@ -17,121 +18,114 @@ class PromptLibraryBottomDialog extends StatefulWidget {
 
 class _PromptLibraryBottomDialogState extends State<PromptLibraryBottomDialog>
     with SingleTickerProviderStateMixin {
-  late TabController _tabController;
   final _searchController = TextEditingController();
   List<Prompt> filteredPrompts = [];
   List<Prompt> filteredFavoritePrompts = [];
+  List<Prompt> filteredMyPrompts = [];
+  late TabController tabController;
 
   @override
   void initState() {
     super.initState();
+    tabController = TabController(length: 3, vsync: this);
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final promptProvider =
-          Provider.of<PromptProvider>(context, listen: false);
-      promptProvider.fetchPrivatePrompts();
-      promptProvider.fetchPublicPrompts();
-      promptProvider.fetchFavoritePrompts();
-
-      setState(() {
-        filteredPrompts = promptProvider.publicPrompts;
-        filteredFavoritePrompts = promptProvider.favoritePrompts;
-      });
+      Provider.of<PromptProvider>(context, listen: false).fetchPrivatePrompts();
+      Provider.of<PromptProvider>(context, listen: false).fetchPublicPrompts();
+      Provider.of<PromptProvider>(context, listen: false)
+          .fetchFavoritePrompts();
     });
-
-    _tabController = TabController(length: 3, vsync: this);
-    _tabController.addListener(() {
+    tabController.addListener(() {
       setState(() {
         _searchController.clear();
-        final promptProvider =
-            Provider.of<PromptProvider>(context, listen: false);
-        if (_tabController.index == 1) {
-          filteredPrompts = promptProvider.publicPrompts;
-        } else if (_tabController.index == 2) {
-          filteredFavoritePrompts = promptProvider.favoritePrompts;
+        if (tabController.index == 1) {
+          filteredPrompts =
+              Provider.of<PromptProvider>(context, listen: false).publicPrompts;
+        } else if (tabController.index == 2) {
+          filteredFavoritePrompts =
+              Provider.of<PromptProvider>(context, listen: false)
+                  .favoritePrompts;
+        } else if (tabController.index == 0) {
+          filteredMyPrompts =
+              Provider.of<PromptProvider>(context, listen: false)
+                  .privatePrompts;
         }
       });
     });
   }
 
+  String searchQuery = "";
+
   @override
   Widget build(BuildContext context) {
-    final promptProvider = Provider.of<PromptProvider>(context);
-
-    return SafeArea(
-      child: Container(
-        height: MediaQuery.of(context).size.height * 0.85,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-        ),
-        child: Column(
-          children: [
-            _buildHeader(),
-            TabBar(
-              controller: _tabController,
-              tabs: [
+    final promptProvider = Provider.of<PromptProvider>(context, listen: true);
+    filteredPrompts = promptProvider.getFilteredPublicPrompts();
+    filteredFavoritePrompts = promptProvider.getFilteredFavoritePrompts();
+    filteredMyPrompts = promptProvider.getFilteredPrivatePrompts();
+    return Stack(children: [
+      Scaffold(
+          appBar: AppBar(
+            title: null,
+            automaticallyImplyLeading: false,
+            bottom: TabBar(
+              controller: tabController,
+              tabs: const [
                 Tab(text: 'My Prompt'),
                 Tab(text: 'Public Prompt'),
                 Tab(text: 'Favorite Prompt'),
               ],
             ),
-            Expanded(
-              child: TabBarView(
-                controller: _tabController,
-                children: [
-                  promptProvider.isLoading
-                      ? Center(child: CircularProgressIndicator())
-                      : _buildMyPromptList(
-                          promptProvider.privatePrompts, promptProvider),
-                  promptProvider.isLoading
-                      ? Center(child: CircularProgressIndicator())
-                      : _buildPublicPromptList(
-                          promptProvider.publicPrompts,
-                          promptProvider.categories,
-                          promptProvider.selectedCategory,
-                          promptProvider),
-                  promptProvider.isLoading
-                      ? Center(child: CircularProgressIndicator())
-                      : _buildFavoritePromptList(
-                          promptProvider.favoritePrompts, promptProvider),
-                ],
+          ),
+          body: TabBarView(
+            controller: tabController,
+            children: [
+              // Tab My Prompt
+              _buildMyPromptList(
+                promptProvider.getFilteredPrivatePrompts(),
+                promptProvider,
               ),
-            ),
-          ],
+
+              // Tab Public Prompt
+              _buildPublicPromptList(
+                promptProvider.getFilteredPublicPrompts(),
+                promptProvider.categories,
+                promptProvider.selectedCategory,
+                promptProvider,
+              ),
+
+              // Tab Favorite Prompt
+              _buildFavoritePromptList(
+                promptProvider.getFilteredFavoritePrompts(),
+                promptProvider,
+              ),
+            ],
+          )),
+      if (promptProvider.isLoading)
+        Container(
+          color: Colors.black.withOpacity(0.5),
+          child: Center(
+            child: CircularProgressIndicator(),
+          ),
         ),
-      ),
-    );
+    ]);
   }
 
-  Widget _buildHeader() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            "Prompt Library",
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          IconButton(
-            icon: Icon(Icons.close),
-            onPressed: () => Navigator.pop(context),
-          ),
-        ],
-      ),
-    );
-  }
-
+  // List of prompts for "My Prompt" tab
   Widget _buildMyPromptList(
       List<Prompt> privatePrompts, PromptProvider promptProvider) {
-    return ListView.builder(
-      padding: EdgeInsets.all(16),
-      itemCount: privatePrompts.length,
-      itemBuilder: (context, index) {
-        final prompt = privatePrompts[index];
-        return _buildPromptItem(prompt, promptProvider);
-      },
-    );
+    return Column(children: [
+      _buildSearchBar(promptProvider),
+      Expanded(
+        child: ListView.builder(
+          padding: EdgeInsets.all(16),
+          itemCount: filteredMyPrompts.length,
+          itemBuilder: (context, index) {
+            final prompt = filteredMyPrompts[index];
+            return _buildPromptItem(prompt, promptProvider);
+          },
+        ),
+      )
+    ]);
   }
 
   Widget _buildPublicPromptList(
@@ -141,7 +135,7 @@ class _PromptLibraryBottomDialogState extends State<PromptLibraryBottomDialog>
       PromptProvider promptProvider) {
     return Column(
       children: [
-        _buildSearchBar(),
+        _buildSearchBar(promptProvider),
         _buildCategoryList(categories, selectedCategory, promptProvider),
         Expanded(
           child: ListView.builder(
@@ -149,14 +143,15 @@ class _PromptLibraryBottomDialogState extends State<PromptLibraryBottomDialog>
             itemCount: filteredPrompts.length,
             itemBuilder: (context, index) {
               final prompt = filteredPrompts[index];
-              return _buildPromptItem(prompt, promptProvider);
+              return _buildPublicPromptItem(prompt, promptProvider);
             },
           ),
-        ),
+        )
       ],
     );
   }
 
+  // Widget to build each individual prompt item
   Widget _buildPromptItem(Prompt prompt, PromptProvider promptProvider) {
     return Card(
       margin: EdgeInsets.symmetric(vertical: 8),
@@ -164,9 +159,120 @@ class _PromptLibraryBottomDialogState extends State<PromptLibraryBottomDialog>
         onTap: () async {
           promptProvider.setSelectedPrompt(prompt);
           final result = await showDialog(
-            context: context,
-            builder: (context) => PromptDialog(),
-          );
+              context: context,
+              builder: (BuildContext context) => PromptDialog());
+
+          final chatProvider =
+              Provider.of<ChatProvider>(context, listen: false);
+          if (result != null && result.isNotEmpty) {
+            final content = result['content'] as String;
+
+            final message = ChatMessage(
+              assistant: AssistantDTO(
+                id: chatProvider.selectedAssistant?.id ??
+                    Assistant.assistants.first.id,
+                model: 'dify',
+                name: chatProvider.selectedAssistant?.name ??
+                    Assistant.assistants.first.name,
+              ),
+              role: "user",
+              content: content,
+            );
+
+            chatProvider
+                .addUserMessage(message); // Add message to user's message list
+
+            try {
+              // Send message
+              await chatProvider.sendFirstMessage(message);
+
+              // Clean up and navigate to ChatContentView
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ChatContentView()),
+              );
+            } catch (e) {
+              print("Error sending first message: $e");
+            }
+          }
+        },
+        title: Text(prompt.title ?? ''),
+        subtitle: Text(prompt.description ?? ''),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Chip(
+              label: Text(categoryPromptMap[prompt.category] ?? ''),
+              labelStyle:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              backgroundColor: Colors.blue.shade400,
+              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                  side: BorderSide(color: Colors.transparent, width: 0),
+                  borderRadius: BorderRadius.circular(10)),
+            ),
+            if (prompt.isFavorite) Icon(Icons.star, color: Colors.amber),
+            SizedBox(width: 10),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCategoryList(List<String> categories, String selectedCategory,
+      PromptProvider promptProvider) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      padding: EdgeInsets.symmetric(vertical: 8),
+      child: Row(
+        children: categories.map((category) {
+          return _buildFilterItem(category, selectedCategory, promptProvider);
+        }).toList(),
+      ),
+    );
+  }
+
+  Widget _buildSearchBar(PromptProvider promptProvider) {
+    return Padding(
+      padding: EdgeInsets.all(8),
+      child: TextField(
+        controller: _searchController,
+        decoration: InputDecoration(
+          hintText: 'Search',
+          prefixIcon: Icon(Icons.search),
+          border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: BorderSide.none),
+          fillColor: Colors.grey[200],
+          filled: true,
+        ),
+        onChanged: (value) {
+          setState(() {
+            searchQuery = _searchController.text;
+            if (tabController.index == 0) {
+              promptProvider.updateSearchMyPromptQuery(searchQuery);
+            } else if (tabController.index == 1) {
+              promptProvider.updateSearchPublicPromptQuery(searchQuery);
+            } else if (tabController.index == 2) {
+              promptProvider.updateSearchFavoritePromptQuery(searchQuery);
+            }
+          });
+        },
+      ),
+    );
+  }
+
+  Widget _buildPublicPromptItem(Prompt prompt, PromptProvider promptProvider) {
+    return Card(
+      margin: EdgeInsets.symmetric(vertical: 8),
+      child: ListTile(
+        onTap: () async {
+          promptProvider.setSelectedPrompt(prompt);
+
+          final result = await showDialog(
+              context: context,
+              builder: (BuildContext context) => PromptDialog());
           final chatProvider =
               Provider.of<ChatProvider>(context, listen: false);
           if (result != null && result.isNotEmpty) {
@@ -203,56 +309,60 @@ class _PromptLibraryBottomDialogState extends State<PromptLibraryBottomDialog>
         },
         title: Text(prompt.title ?? ''),
         subtitle: Text(prompt.description ?? ''),
-      ),
-    );
-  }
-
-  Widget _buildCategoryList(List<String> categories, String selectedCategory,
-      PromptProvider promptProvider) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: categories.map((category) {
-          return ChoiceChip(
-            label: Text(category),
-            selected: selectedCategory == category,
-            onSelected: (selected) {
-              setState(() {
-                filteredPrompts = selected
-                    ? promptProvider.publicPrompts
-                        .where((p) => p.category == category)
-                        .toList()
-                    : promptProvider.publicPrompts;
-              });
-            },
-          );
-        }).toList(),
-      ),
-    );
-  }
-
-  Widget _buildSearchBar() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: TextField(
-        controller: _searchController,
-        decoration: InputDecoration(
-          hintText: "Search",
-          prefixIcon: Icon(Icons.search),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide.none,
-          ),
-          filled: true,
-          fillColor: Colors.grey[200],
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Chip(
+              label: Text(categoryPromptMap[prompt.category] ?? ''),
+              labelStyle:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              backgroundColor: Colors.blue.shade400,
+              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                  side: BorderSide(color: Colors.transparent, width: 0),
+                  borderRadius: BorderRadius.circular(10)),
+            ),
+            IconButton(
+                onPressed: () async {
+                  if (prompt.isFavorite) {
+                    prompt.setIsFavorite(false);
+                    await promptProvider.removeFavoritePrompt(prompt.id);
+                  } else {
+                    prompt.setIsFavorite(true);
+                    await promptProvider.addFavoritePrompt(prompt.id);
+                  }
+                },
+                icon: Icon(
+                  Icons.star,
+                  color: prompt.isFavorite ? Colors.amber : Colors.grey,
+                )),
+            SizedBox(width: 10),
+            IconButton(
+              icon: Icon(Icons.edit),
+              onPressed: () {
+                // Copy action
+              },
+            ),
+          ],
         ),
-        onChanged: (value) {
-          setState(() {
-            filteredPrompts = filteredPrompts
-                .where(
-                    (p) => p.title!.toLowerCase().contains(value.toLowerCase()))
-                .toList();
-          });
+      ),
+    );
+  }
+
+  Widget _buildFilterItem(
+      String category, String selectedCategory, PromptProvider promptProvider) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 1),
+      child: ChoiceChip(
+        label: Text(category),
+        selected: selectedCategory == category,
+        onSelected: (bool selected) {
+          if (selected) {
+            promptProvider.updateSelectedCategory(category);
+          } else {
+            promptProvider.updateSelectedCategory("All");
+          }
         },
       ),
     );
@@ -260,12 +370,20 @@ class _PromptLibraryBottomDialogState extends State<PromptLibraryBottomDialog>
 
   Widget _buildFavoritePromptList(
       List<Prompt> favoritePrompts, PromptProvider promptProvider) {
-    return ListView.builder(
-      itemCount: favoritePrompts.length,
-      itemBuilder: (context, index) {
-        final prompt = favoritePrompts[index];
-        return _buildPromptItem(prompt, promptProvider);
-      },
+    return Column(
+      children: [
+        _buildSearchBar(promptProvider),
+        Expanded(
+          child: ListView.builder(
+            padding: EdgeInsets.all(16),
+            itemCount: filteredFavoritePrompts.length,
+            itemBuilder: (context, index) {
+              final prompt = filteredFavoritePrompts[index];
+              return _buildPublicPromptItem(prompt, promptProvider);
+            },
+          ),
+        )
+      ],
     );
   }
 }

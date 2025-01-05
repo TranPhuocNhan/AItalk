@@ -17,6 +17,9 @@ class PromptProvider extends ChangeNotifier {
   List<String> _categories = categoryPromptMap.values.toList();
   List<String> _categoryKeys = categoryPromptMap.keys.toList();
   Prompt? _selectedPrompt;
+  String _searchMyPromptQuery = "";
+  String _searchPublicPromptQuery = "";
+  String _searchFavoritePromptQuery = "";
 
   List<String> get categories => _categories;
   List<String> get categoryKeys => _categoryKeys;
@@ -27,6 +30,56 @@ class PromptProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
   Prompt? get selectedPrompt => _selectedPrompt;
 
+  void updateSearchMyPromptQuery(String query) {
+    print("updateSearchMyPromptQuery");
+    _searchMyPromptQuery = query;
+    notifyListeners();
+  }
+
+  void updateSearchPublicPromptQuery(String query) {
+    print("updateSearchPublicPromptQuery");
+    _searchPublicPromptQuery = query;
+    notifyListeners();
+  }
+
+  void updateSearchFavoritePromptQuery(String query) {
+    print("updateSearchFavoritePromptQuery");
+    _searchFavoritePromptQuery = query;
+    notifyListeners();
+  }
+
+  List<Prompt> getFilteredPrivatePrompts() {
+    if (_searchMyPromptQuery.isEmpty) return _privatePrompts;
+    return _privatePrompts
+        .where((prompt) =>
+            (prompt.title?.toLowerCase().contains(_searchMyPromptQuery) ??
+                false))
+        .toList();
+  }
+
+  List<Prompt> getFilteredPublicPrompts() {
+    return _publicPrompts
+        .where((prompt) =>
+            (_searchPublicPromptQuery.isEmpty ||
+                (prompt.title
+                        ?.toLowerCase()
+                        .contains(_searchPublicPromptQuery.toLowerCase()) ??
+                    false)) &&
+            (_selectedCategory == "All" ||
+                (prompt.category?.toLowerCase() ==
+                    _selectedCategory.toLowerCase())))
+        .toList();
+  }
+
+  List<Prompt> getFilteredFavoritePrompts() {
+    if (_searchFavoritePromptQuery.isEmpty) return _favoritePrompts;
+    return _favoritePrompts
+        .where((prompt) =>
+            (prompt.title?.toLowerCase().contains(_searchFavoritePromptQuery) ??
+                false))
+        .toList();
+  }
+
   void setSelectedPrompt(Prompt prompt) {
     print("setSelectedPrompt");
     _selectedPrompt = prompt;
@@ -36,7 +89,6 @@ class PromptProvider extends ChangeNotifier {
   Future<void> fetchPrivatePrompts() async {
     print("fetchPrivatePrompts");
     _isLoading = true;
-    notifyListeners();
     final GetPromptResponse response = await _promptManager.fetchPrompts(
       query: "",
       offset: 0,
@@ -44,6 +96,7 @@ class PromptProvider extends ChangeNotifier {
       isPublic: false,
     );
     _privatePrompts = response.items;
+
     _isLoading = false;
     notifyListeners();
   }

@@ -39,14 +39,6 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
       Provider.of<PromptProvider>(context, listen: false).fetchPublicPrompts();
       Provider.of<PromptProvider>(context, listen: false)
           .fetchFavoritePrompts();
-      setState(() {
-        filteredPrompts =
-            Provider.of<PromptProvider>(context, listen: false).publicPrompts;
-        filteredFavoritePrompts =
-            Provider.of<PromptProvider>(context, listen: false).favoritePrompts;
-        filteredMyPrompts =
-            Provider.of<PromptProvider>(context, listen: false).privatePrompts;
-      });
     });
     tabController.addListener(() {
       setState(() {
@@ -67,72 +59,79 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
     });
   }
 
+  String searchQuery = "";
+
   @override
   Widget build(BuildContext context) {
     final promptProvider = Provider.of<PromptProvider>(context);
-    print("PromptLibraryScreen build...");
-    return Scaffold(
-      appBar: AppBar(
-        title: MyBannerAdsWidget(),
-        automaticallyImplyLeading: false,
-        bottom: TabBar(
-          controller: tabController,
-          tabs: const [
-            Tab(text: 'My Prompt'),
-            Tab(text: 'Public Prompt'),
-            Tab(text: 'Favorite Prompt'),
-          ],
+
+    return Stack(
+      children: [
+        Scaffold(
+          appBar: AppBar(
+            title: null,
+            automaticallyImplyLeading: false,
+            bottom: TabBar(
+              controller: tabController,
+              tabs: const [
+                Tab(text: 'My Prompt'),
+                Tab(text: 'Public Prompt'),
+                Tab(text: 'Favorite Prompt'),
+              ],
+            ),
+          ),
+          body: TabBarView(
+            controller: tabController,
+            children: [
+              _buildMyPromptList(
+                promptProvider.getFilteredPrivatePrompts(),
+                promptProvider,
+              ),
+              _buildPublicPromptList(
+                promptProvider.getFilteredPublicPrompts(),
+                promptProvider.categories,
+                promptProvider.selectedCategory,
+                promptProvider,
+              ),
+              _buildFavoritePromptList(
+                promptProvider.getFilteredFavoritePrompts(),
+                promptProvider,
+              ),
+            ],
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () async {
+              final result = await showDialog(
+                  context: context, builder: (context) => PromptForm());
+              if (result != null) {
+                final prompt = Prompt(
+                  id: "",
+                  isFavorite: false,
+                  isPublic: result["isPublic"],
+                  category: result["category"],
+                  content: result["content"],
+                  description: result["description"],
+                  language: result["language"],
+                  title: result["title"],
+                );
+                await promptProvider.createPrompt(prompt);
+              }
+            },
+            child: Icon(Icons.add),
+            backgroundColor: Colors.purple,
+          ),
         ),
-      ),
-      body: TabBarView(
-        controller: tabController,
-        children: [
-          // Tab My Prompt
-          promptProvider.isLoading
-              ? Center(child: CircularProgressIndicator())
-              : _buildMyPromptList(
-                  promptProvider.privatePrompts, promptProvider),
+        if (promptProvider.isLoading)
+          Positioned.fill(
+            child: Container(
+              color: Colors.black.withOpacity(0.5),
+              child: const Center(
+                child: CircularProgressIndicator(),
+              ),
+            ),
+          ),
+      ],
 
-          // Tab Public Prompt
-          promptProvider.isLoading
-              ? Center(child: CircularProgressIndicator())
-              : _buildPublicPromptList(
-                  promptProvider.publicPrompts,
-                  promptProvider.categories,
-                  promptProvider.selectedCategory,
-                  promptProvider),
-
-          // Tab Favorite Prompt
-          promptProvider.isLoading
-              ? Center(child: CircularProgressIndicator())
-              : _buildFavoritePromptList(
-                  promptProvider.favoritePrompts, promptProvider),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          // Add new prompt action
-          final result = await showDialog(
-              context: context, builder: (context) => PromptForm());
-          if (result != null) {
-            final prompt = Prompt(
-              id: "",
-              isFavorite: false,
-              isPublic:
-                  result["isPublic"], // Đảm bảo các key tồn tại trong result
-              category: result["category"],
-              content: result["content"],
-              description: result["description"],
-              language: result["language"],
-              title: result["title"],
-            );
-            await promptProvider.createPrompt(prompt);
-          }
-        },
-        child: Icon(Icons.add),
-        // backgroundColor: Colors.purple,
-        backgroundColor: ColorPalette().bigIcon,
-      ),
     );
   }
 
@@ -140,7 +139,7 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
   Widget _buildMyPromptList(
       List<Prompt> privatePrompts, PromptProvider promptProvider) {
     return Column(children: [
-      _buildSearchBar(),
+      _buildSearchBar(promptProvider),
       Expanded(
         child: ListView.builder(
           padding: EdgeInsets.all(16),
@@ -161,7 +160,7 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
       PromptProvider promptProvider) {
     return Column(
       children: [
-        _buildSearchBar(),
+        _buildSearchBar(promptProvider),
         _buildCategoryList(categories, selectedCategory, promptProvider),
         Expanded(
           child: ListView.builder(
@@ -187,6 +186,40 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
           final result = await showDialog(
               context: context,
               builder: (BuildContext context) => PromptDialog());
+
+          final chatProvider =
+              Provider.of<ChatProvider>(context, listen: false);
+          if (result != null && result.isNotEmpty) {
+            final content = result['content'] as String;
+
+            final message = ChatMessage(
+              assistant: AssistantDTO(
+                id: chatProvider.selectedAssistant?.id ??
+                    Assistant.assistants.first.id,
+                model: 'dify',
+                name: chatProvider.selectedAssistant?.name ??
+                    Assistant.assistants.first.name,
+              ),
+              role: "user",
+              content: content,
+            );
+
+            chatProvider
+                .addUserMessage(message); // Add message to user's message list
+
+            try {
+              // Send message
+              await chatProvider.sendFirstMessage(message);
+
+              // Clean up and navigate to ChatContentView
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ChatContentView()),
+              );
+            } catch (e) {
+              print("Error sending first message: $e");
+            }
+          }
         },
         title: Text(prompt.title ?? ''),
         subtitle: Text(prompt.description ?? ''),
@@ -268,7 +301,7 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
     );
   }
 
-  Widget _buildSearchBar() {
+  Widget _buildSearchBar(PromptProvider promptProvider) {
     return Padding(
       padding: EdgeInsets.all(8),
       child: TextField(
@@ -284,45 +317,13 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
         ),
         onChanged: (value) {
           setState(() {
-            if (tabController.index == 1) {
-              if (value.isEmpty) {
-                filteredPrompts =
-                    Provider.of<PromptProvider>(context, listen: false)
-                        .publicPrompts;
-              } else {
-                filteredPrompts =
-                    Provider.of<PromptProvider>(context, listen: false)
-                        .publicPrompts
-                        .where((prompt) => (prompt.title?.toLowerCase() ?? "")
-                            .contains(value.toLowerCase()))
-                        .toList();
-              }
+            searchQuery = _searchController.text;
+            if (tabController.index == 0) {
+              promptProvider.updateSearchMyPromptQuery(searchQuery);
+            } else if (tabController.index == 1) {
+              promptProvider.updateSearchPublicPromptQuery(searchQuery);
             } else if (tabController.index == 2) {
-              if (value.isEmpty) {
-                filteredFavoritePrompts =
-                    Provider.of<PromptProvider>(context, listen: false)
-                        .favoritePrompts;
-              } else {
-                filteredFavoritePrompts =
-                    Provider.of<PromptProvider>(context, listen: false)
-                        .favoritePrompts
-                        .where((prompt) => (prompt.title?.toLowerCase() ?? "")
-                            .contains(value.toLowerCase()))
-                        .toList();
-              }
-            } else if (tabController.index == 0) {
-              if (value.isEmpty) {
-                filteredMyPrompts =
-                    Provider.of<PromptProvider>(context, listen: false)
-                        .privatePrompts;
-              } else {
-                filteredMyPrompts =
-                    Provider.of<PromptProvider>(context, listen: false)
-                        .privatePrompts
-                        .where((prompt) => (prompt.title?.toLowerCase() ?? "")
-                            .contains(value.toLowerCase()))
-                        .toList();
-              }
+              promptProvider.updateSearchFavoritePromptQuery(searchQuery);
             }
           });
         },
@@ -425,29 +426,11 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
         label: Text(category),
         selected: selectedCategory == category,
         onSelected: (bool selected) {
-          setState(() {
-            if (selected) {
-              if (_searchController.text.isNotEmpty) {
-                filteredPrompts = promptProvider.publicPrompts
-                    .where((prompt) =>
-                        prompt.category?.toLowerCase() ==
-                            category.toLowerCase() &&
-                        (prompt.title?.toLowerCase() ?? "")
-                            .contains(_searchController.text.toLowerCase()))
-                    .toList();
-              } else {
-                filteredPrompts = promptProvider.publicPrompts
-                    .where((prompt) =>
-                        prompt.category?.toLowerCase() ==
-                        category.toLowerCase())
-                    .toList();
-              }
-              promptProvider.updateSelectedCategory(category);
-            } else {
-              filteredPrompts = promptProvider.publicPrompts;
-              promptProvider.updateSelectedCategory('All');
-            }
-          });
+          if (selected) {
+            promptProvider.updateSelectedCategory(category);
+          } else {
+            promptProvider.updateSelectedCategory("All");
+          }
         },
       ),
     );
@@ -457,7 +440,7 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
       List<Prompt> favoritePrompts, PromptProvider promptProvider) {
     return Column(
       children: [
-        _buildSearchBar(),
+        _buildSearchBar(promptProvider),
         Expanded(
           child: ListView.builder(
             padding: EdgeInsets.all(16),

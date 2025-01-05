@@ -148,16 +148,34 @@ class _ConfluenceDialogState extends State<ConfluenceDialog> {
           print(_confluenceUsernameController.text);
           print(_confluenceAccessTokenController.text);
 
+          // Kieemr tra xem có đủ thông tin không nếu không thông báo lỗi
+          if (_nameController.text.isEmpty ||
+              _wikiPageUrlController.text.isEmpty ||
+              _confluenceUsernameController.text.isEmpty ||
+              _confluenceAccessTokenController.text.isEmpty) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("Please fill all fields"),
+                backgroundColor: Colors.red,
+              ),
+            );
+            return;
+          }
           // Hành động khi nhấn nút
-          await knowledgeProvider.uploadKnowledgeFromConfluence(
+          final response =
+              await knowledgeProvider.uploadKnowledgeFromConfluence(
             knowledgeId: widget.knowledge.id,
             unitName: _nameController.text,
             wikiPageUrl: _wikiPageUrlController.text,
             confluenceUsername: _confluenceUsernameController.text,
             confluenceAccessToken: _confluenceAccessTokenController.text,
           );
+
           print("Before 1");
           print("Connect button pressed");
+
+          // Đóng dialog
+          Navigator.pop(context);
         },
         style: ElevatedButton.styleFrom(
           padding: EdgeInsets.symmetric(vertical: 15),

@@ -204,8 +204,13 @@ class _ChatContentViewState extends State<ChatContentView> {
         IconButton(
           icon: const Icon(Icons.add, color: Colors.white),
           onPressed: () {
-            Navigator.pop(context);
-            // print("New Chat is clicked! - Back to Home Screen");
+            // Navigator.pushReplacement(
+            //   context,
+            //   MaterialPageRoute(builder: (context) => HomeView()),
+            // );
+            Navigator.pop(context, 0);
+            print("New Chat is clicked! - Back to Home Screen");
+
           },
         ),
       ],
@@ -318,15 +323,20 @@ class _ChatContentViewState extends State<ChatContentView> {
       padding: const EdgeInsets.all(8.0),
       child: Row(
         children: [
-          IconButton(
-              onPressed: () {
-                chatProvider.newChat();
+          PopupMenuButton(
+              icon: const Icon(Icons.add, color: Colors.grey),
+              onSelected: (value) {
+                if (value == 'Add') {
+                  chatProvider.newChat();
+                  Navigator.pop(context);
+                }
               },
-              icon: Icon(
-                Icons.add,
-                color: Colors.grey,
-              )),
-          //TEXTFIELD AREA
+              itemBuilder: (BuildContext context) => [
+                    PopupMenuItem<String>(
+                      value: 'Add',
+                      child: Text("New Chat"),
+                    ),
+                  ]),
           Expanded(
             child: TextField(
               focusNode: _focusNode,

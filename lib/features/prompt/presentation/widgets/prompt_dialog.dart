@@ -133,7 +133,7 @@ class _PromptDialogState extends State<PromptDialog> {
   Widget _buildLanguageField(String language) {
     return DropdownButtonFormField(
       decoration: InputDecoration(
-        labelText: language,
+        labelText: "Language Output",
         border: OutlineInputBorder(),
       ),
       items: Language.values

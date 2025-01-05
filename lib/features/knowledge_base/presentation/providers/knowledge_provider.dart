@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_ai_app/features/knowledge_base/data/api_response/knowledge_res_dto.dart';
 import 'package:flutter_ai_app/features/knowledge_base/data/api_response/knowledge_response.dart';
 import 'package:flutter_ai_app/features/knowledge_base/data/api_response/knowledge_unit_dto.dart';
 import 'package:flutter_ai_app/features/knowledge_base/data/api_response/knowledge_unit_response.dart';
@@ -18,6 +19,7 @@ class KnowledgeProvider with ChangeNotifier {
   final KnowledgeService knowledgeService = GetIt.instance<KnowledgeService>();
 
   final String jarvisGuid = "361331f8-fc9b-4dfe-a3f7-6d9a1e8b289b";
+  String _searchQuery = "";
   KnowledgeResponse? _knowledges;
   List<KnowledgeUnitDto> _units = [];
 
@@ -32,6 +34,25 @@ class KnowledgeProvider with ChangeNotifier {
     } catch (e) {
       throw Exception('(Provider) Failed to get knowledges: $e');
     }
+  }
+
+  void filterKnowledges(String query) {
+    _searchQuery = query;
+    notifyListeners();
+  }
+
+  List<KnowledgeResDto>? get filteredKnowledges {
+    if (knowledges == null) return null;
+    if (_searchQuery.isEmpty) return knowledges!.data;
+    return knowledges!.data
+        .where((knowledge) =>
+            knowledge.knowledgeName
+                .toLowerCase()
+                .contains(_searchQuery.toLowerCase()) ||
+            knowledge.description
+                .toLowerCase()
+                .contains(_searchQuery.toLowerCase()))
+        .toList();
   }
 
   Future<void> createKnowledge({
