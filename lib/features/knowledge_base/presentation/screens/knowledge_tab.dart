@@ -38,6 +38,8 @@ class _KnowledgeTabState extends State<KnowledgeTab> {
       padding: EdgeInsets.all(16.0),
       child: Column(
         children: [
+          _buildSearchBar(knowledgeProvider),
+          SizedBox(height: 20),
           _buildToolKnowledgeSection(knowledgeProvider),
           SizedBox(height: 20),
           knowledges == null
@@ -211,6 +213,22 @@ class _KnowledgeTabState extends State<KnowledgeTab> {
           },
         );
       },
+    );
+  }
+
+  Widget _buildSearchBar(KnowledgeProvider knowledgeProvider) {
+    return TextField(
+      onChanged: (query) {
+        knowledgeProvider
+            .filterKnowledges(query); // Lọc dữ liệu khi thay đổi từ khóa
+      },
+      decoration: InputDecoration(
+        hintText: "Search knowledge...",
+        prefixIcon: Icon(Icons.search),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+      ),
     );
   }
 

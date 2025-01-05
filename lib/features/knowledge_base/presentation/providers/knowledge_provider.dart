@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_ai_app/features/knowledge_base/data/api_response/knowledge_res_dto.dart';
 import 'package:flutter_ai_app/features/knowledge_base/data/api_response/knowledge_response.dart';
 import 'package:flutter_ai_app/features/knowledge_base/data/api_response/knowledge_unit_dto.dart';
 import 'package:flutter_ai_app/features/knowledge_base/data/api_response/knowledge_unit_response.dart';
@@ -19,19 +20,42 @@ class KnowledgeProvider with ChangeNotifier {
 
   final String jarvisGuid = "361331f8-fc9b-4dfe-a3f7-6d9a1e8b289b";
   KnowledgeResponse? _knowledges;
+  List<KnowledgeResDto>? _filteredKnowledges; // Dữ liệu đã lọc
   List<KnowledgeUnitDto> _units = [];
 
   KnowledgeResponse? get knowledges => _knowledges;
+  List<KnowledgeResDto>? get filteredKnowledges => _filteredKnowledges;
   List<KnowledgeUnitDto> get units => _units;
 
   Future<void> getKnowledges() async {
     try {
       final response = await _knowledgeManager.getKnowledges();
       _knowledges = response;
+      _filteredKnowledges = response.data;
       notifyListeners();
     } catch (e) {
       throw Exception('(Provider) Failed to get knowledges: $e');
     }
+  }
+
+  void filterKnowledges(String query) {
+    if (_knowledges == null || _knowledges!.data.isEmpty) return;
+
+    if (query.isEmpty) {
+      // Nếu từ khóa trống, hiển thị toàn bộ dữ liệu
+      _filteredKnowledges = _knowledges!.data;
+    } else {
+      // Lọc dựa trên từ khóa (không phân biệt chữ hoa/thường)
+      _filteredKnowledges = _knowledges!.data
+          .where((knowledge) =>
+              knowledge.knowledgeName
+                  .toLowerCase()
+                  .contains(query.toLowerCase()) ||
+              knowledge.description.toLowerCase().contains(query.toLowerCase()))
+          .toList();
+    }
+
+    notifyListeners();
   }
 
   Future<void> createKnowledge({

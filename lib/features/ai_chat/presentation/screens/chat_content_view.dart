@@ -66,7 +66,7 @@ class _ChatContentViewState extends State<ChatContentView> {
             //   context,
             //   MaterialPageRoute(builder: (context) => HomeView()),
             // );
-            Navigator.pop(context);
+            Navigator.pop(context, 0);
             print("New Chat is clicked! - Back to Home Screen");
           },
         ),
@@ -183,15 +183,13 @@ class _ChatContentViewState extends State<ChatContentView> {
               onSelected: (value) {
                 if (value == 'Add') {
                   chatProvider.newChat();
+                  Navigator.pop(context);
                 }
               },
               itemBuilder: (BuildContext context) => [
                     PopupMenuItem<String>(
                       value: 'Add',
                       child: Text("New Chat"),
-                    ),
-                    PopupMenuItem<String>(
-                      child: Text("Record Voice"),
                     ),
                   ]),
           Expanded(

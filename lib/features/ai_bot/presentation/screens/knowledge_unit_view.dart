@@ -126,8 +126,8 @@ class _KnowledgeUnitViewState extends State<KnowledgeUnitView> {
             DataColumn(label: Text('Size')),
             DataColumn(label: Text('Create Time')),
             DataColumn(label: Text('Latest Update')),
-            DataColumn(label: Text('Enable')),
-            DataColumn(label: Text('Action')),
+            // DataColumn(label: Text('Enable')),
+            // DataColumn(label: Text('Action')),
           ],
           rows: units.map((unit) {
             return _buildUnitRow(unit.name, unit.type, unit.size.toString(),
@@ -162,18 +162,18 @@ class _KnowledgeUnitViewState extends State<KnowledgeUnitView> {
         DataCell(Text(size)),
         DataCell(Text(createTime)),
         DataCell(Text(latestUpdate)),
-        DataCell(Switch(
-          value: isEnabled,
-          onChanged: (value) {
-            // Toggle switch
-          },
-        )),
-        DataCell(IconButton(
-          icon: Icon(Icons.delete, color: Colors.red),
-          onPressed: () {
-            // Action to delete unit
-          },
-        )),
+        // DataCell(Switch(
+        //   value: isEnabled,
+        //   onChanged: (value) {
+        //     // Toggle switch
+        //   },
+        // )),
+        // DataCell(IconButton(
+        //   icon: Icon(Icons.delete, color: Colors.red),
+        //   onPressed: () {
+        //     // Action to delete unit
+        //   },
+        // )),
       ],
     );
   }
