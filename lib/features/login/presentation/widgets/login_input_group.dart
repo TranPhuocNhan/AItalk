@@ -43,6 +43,7 @@ class _LoginInputState extends State<LoginInputGroup>{
           child: Form(
             key: usernameKey,
             child: TextFormField(
+              keyboardType: TextInputType.emailAddress,
               controller:emailController,
               validator: _validate,
               decoration: InputDecoration(

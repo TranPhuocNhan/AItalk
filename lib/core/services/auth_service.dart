@@ -29,8 +29,12 @@ class AuthService {
       var user = User.fromSignupJson(jsonDecode(response.body));
       return user;
     } else {
-      var issue = handleResponse(response.body);
-      throw Exception(issue);
+      Map<String, dynamic> json = jsonDecode(response.body);
+      if(json.containsKey('details')){
+        throw json['details'].first['issue'];
+      }else{
+        throw "Fail to register!";
+      }
     }
   }
 
@@ -63,8 +67,8 @@ class AuthService {
       }
     } else {
       Map<String, dynamic> json = jsonDecode(response.body);
-      if(json.containsKey('message')){
-        throw json['message'];
+      if(json.containsKey('details')){
+        throw json['details'].first['issue'];
       }else{
         throw "There something wrong!!";
       }
