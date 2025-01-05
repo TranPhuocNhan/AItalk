@@ -111,6 +111,16 @@ class _UploadFileDialogState extends State<UploadFileDialog> {
       ElevatedButton(
         onPressed: () async {
           // Action for creating assistant (handle form submission here)
+          // Check if file is selected or not will be display error
+          if (_fileName == null || _fileBytes == null) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Please select a file to upload'),
+                backgroundColor: Colors.red,
+              ),
+            );
+            return;
+          }
 
           await knowledgeProvider.uploadKnowledgeFromFile(
             id: widget.knowledge.id,

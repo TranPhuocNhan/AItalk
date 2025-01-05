@@ -118,6 +118,18 @@ class _SlackUploadDialogState extends State<UploadSlackDialog> {
       width: double.infinity, // Để nút rộng theo chiều ngang
       child: ElevatedButton(
         onPressed: () {
+          // Check dữ liệu và thông báo lỗi trước khi gửi
+          if (slackNameController.text.isEmpty ||
+              slackWorkspaceController.text.isEmpty ||
+              botTokenController.text.isEmpty) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("Please fill all fields"),
+                backgroundColor: Colors.red,
+              ),
+            );
+            return;
+          }
           // lây dữ liệu từ các text controller và gửi lên server
           knowledgeProvider.uploadKnowledgeFromSlack(
             knowledgeId: widget.knowledge.id,
@@ -127,6 +139,7 @@ class _SlackUploadDialogState extends State<UploadSlackDialog> {
           );
           // Hành động khi nhấn nút Upload
           print("Upload button pressed");
+          Navigator.of(context).pop(); // Đóng dialog
         },
         style: ElevatedButton.styleFrom(
           padding: EdgeInsets.symmetric(vertical: 15),
