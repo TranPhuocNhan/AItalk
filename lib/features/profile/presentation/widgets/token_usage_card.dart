@@ -13,7 +13,8 @@ class _TokenUsageState extends State<TokenUsageCard>{
   Widget build(BuildContext context) {
     final tokenManage = Provider.of<Managetokenprovider>(context);
     return Card(
-      color: Colors.lightGreen.shade50 ,
+      // color: Colors.lightGreen.shade50 ,
+      color: ColorPalette().bgColor,
       child: Padding(
         padding: EdgeInsets.all(10),
         child: Column(

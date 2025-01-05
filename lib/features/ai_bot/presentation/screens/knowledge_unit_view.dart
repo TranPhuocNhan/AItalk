@@ -3,6 +3,7 @@ import 'package:flutter_ai_app/features/ai_bot/presentation/widgets/unit_knowled
 import 'package:flutter_ai_app/features/knowledge_base/data/api_response/knowledge_res_dto.dart';
 import 'package:flutter_ai_app/features/knowledge_base/data/api_response/knowledge_unit_dto.dart';
 import 'package:flutter_ai_app/features/knowledge_base/presentation/providers/knowledge_provider.dart';
+import 'package:flutter_ai_app/utils/constant/Color.dart';
 import 'package:provider/provider.dart';
 
 class KnowledgeUnitView extends StatefulWidget {
@@ -50,7 +51,8 @@ class _KnowledgeUnitViewState extends State<KnowledgeUnitView> {
               color: Colors.white,
             ),
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue,
+              // backgroundColor: Colors.blue,
+              backgroundColor: ColorPalette().bigIcon,
               shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(10)),
               ),

@@ -16,5 +16,6 @@ Dự án này phát triển một hệ thống chat với AI mang tên AITalk c
 - Mileseton2: https://youtu.be/6wiKcso2Hpo
 
 
-## NOTES:
-- nếu cần lấy giá trị accessToken và refreshToken từ signin External client có thể vào SharedPreference ("externalAccessToken" và "externalRefreshToken") để lấy => không cần thực hiện signinExternalClient
+## generate keystore 
+- chạy commandline để tạo file upload-keystore.jks: keytool -genkeypair -v -keystore upload-keystore.jks -keyalg RSA -keysize 2048 -validity 10000 -alias upload
+- di chuyển file upload-keystore.jks vào thư mục android/app/upload-keystore.jks

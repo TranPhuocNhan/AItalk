@@ -19,8 +19,8 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
-  // WidgetsFlutterBinding.ensureInitialized();
-  // MobileAds.instance.initialize();
+  WidgetsFlutterBinding.ensureInitialized();
+  MobileAds.instance.initialize();
   await ServiceInjection.ConfigureServiceInjection();
   ChatManager chatManager = ChatManager();
   PromptManager promptManager = PromptManager();
@@ -49,12 +49,6 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    // // update token after refresh/resumed app
-    // final tokenManage = Provider.of<Managetokenprovider>(context);
-    // updateTokenValue(tokenManage);
-    // // update token after refresh/resumed app
-    // final tokenManage = Provider.of<Managetokenprovider>(context);
-    // updateTokenValue(tokenManage);
     return MaterialApp(
       title: 'Home Screen',
       theme: ThemeData(

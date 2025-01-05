@@ -43,6 +43,7 @@ class _LoginInputState extends State<LoginInputGroup>{
           child: Form(
             key: usernameKey,
             child: TextFormField(
+              keyboardType: TextInputType.emailAddress,
               controller:emailController,
               validator: _validate,
               decoration: InputDecoration(
@@ -123,28 +124,28 @@ class _LoginInputState extends State<LoginInputGroup>{
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row(
-              children: [
-                Checkbox(
-                  value: rememberCheck, 
-                  onChanged:(value){
-                    setState(() {
-                      rememberCheck = !rememberCheck;
-                    });
-                  },
-                ),
-                const Text("Remember Me"),
-                ],
-              ),
-            TextButton(
-              onPressed: (){
-                Navigator.pushNamed(context, "/forgot");
-              }, 
-              child: const Text(
-                "Forgot Password",
-                style: TextStyle(color: Colors.red),
-              )
-            )
+            // Row(
+            //   children: [
+            //     Checkbox(
+            //       value: rememberCheck, 
+            //       onChanged:(value){
+            //         setState(() {
+            //           rememberCheck = !rememberCheck;
+            //         });
+            //       },
+            //     ),
+            //     const Text("Remember Me"),
+            //     ],
+            //   ),
+            // TextButton(
+            //   onPressed: (){
+            //     Navigator.pushNamed(context, "/forgot");
+            //   }, 
+            //   child: const Text(
+            //     "Forgot Password",
+            //     style: TextStyle(color: Colors.red),
+            //   )
+            // )
           ],
         ),
 

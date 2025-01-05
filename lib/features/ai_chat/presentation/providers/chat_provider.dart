@@ -1,13 +1,22 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_ai_app/core/models/assistant.dart';
+import 'package:flutter_ai_app/features/ai_bot/data/models/ai_%20bot.dart';
+import 'package:flutter_ai_app/features/ai_bot/data/models/bot_thread.dart';
+import 'package:flutter_ai_app/features/ai_bot/data/services/ai_bot_services.dart';
 import 'package:flutter_ai_app/features/ai_chat/data/models/ai_chat_metadata.dart';
 import 'package:flutter_ai_app/features/ai_chat/data/models/assistant_dto.dart';
+import 'package:flutter_ai_app/features/ai_chat/domains/assistant_manager.dart';
 import 'package:flutter_ai_app/features/ai_chat/domains/entities/chat_message.dart';
 import 'package:flutter_ai_app/features/ai_chat/domains/entities/conversation.dart';
 import 'package:flutter_ai_app/features/ai_chat/domains/entities/conversation_thread.dart';
 import 'package:flutter_ai_app/core/services/conversation_thread_service.dart';
 import 'package:flutter_ai_app/features/ai_chat/domains/chat_manager.dart';
-import 'package:flutter_ai_app/utils/assistant_map.dart';
+import 'package:flutter_ai_app/features/profile/presentation/providers/manage_token_provider.dart';
+import 'package:flutter_ai_app/utils/helper_functions.dart';
+import 'package:get_it/get_it.dart';
 
 class ChatProvider extends ChangeNotifier {
   final ChatManager _chatManager;
@@ -16,24 +25,52 @@ class ChatProvider extends ChangeNotifier {
   final String assistantModel = "dify";
 
   final String aiChatApiLink = "https://api.dev.jarvis.cx/api/v1/ai-chat";
+  final AiBotService botService = GetIt.instance<AiBotService>();
 
   bool _isLoading = false;
 
+  //------------
+
+  void updateAssistants(List<AiBot> input){
+    if(assistants.length >= input.length + 5) return;
+    for(int i = 0; i < input.length; ++i){
+      Assistant assist = new Assistant(
+        name: input[i].assistantName, 
+        id: input[i].id, 
+        imagePath: "assets/images/chat_bot_icon.png",
+        isDefault: false,
+      );
+      _assistants.add(assist);
+    }
+    notifyListeners();
+  }
+  List<BotThread> _botThread = [];
+  BotThread? getThreadFromId(String id){
+    for(BotThread thread in _botThread){
+      if(thread.threadId == id){
+        return thread;
+      }
+    }
+    return null;
+  }
+  //------------
   final List<Assistant> _assistants = Assistant.assistants;
-  Assistant? _selectedAssistant = Assistant.assistants.first;
+  Assistant _selectedAssistant = Assistant.assistants.first;
+  Assistant _previousSelected = Assistant.assistants.first;
   bool _isChatContentView = false;
   List<Conversation>? _listConversationContent;
   AIChatMetadata? _metadata;
   String? _conversationId;
   String? _assistantId;
   String? _assistantModel;
-  List<ConversationThread>? _conversationThreads;
+  List<ConversationThread> _conversationThreads = [];
   String? _selectedThreadId;
   int _selectedScreenIndex = 0;
   bool get isLoading => _isLoading;
   final List<String> _pendingResponses = [];
 
-  Assistant? get selectedAssistant => _selectedAssistant;
+  Assistant get previousAssistant => _previousSelected;
+  Assistant get selectedAssistant => _selectedAssistant;
   bool get isChatContentView => _isChatContentView;
   List<Assistant> get assistants => _assistants;
   List<Conversation>? get listConversationContent => _listConversationContent;
@@ -43,42 +80,42 @@ class ChatProvider extends ChangeNotifier {
   int get selectedScreenIndex => _selectedScreenIndex;
 
   bool isMessagePending(String query) {
-    print("isMessagePending: $_pendingResponses");
+    // print("isMessagePending: $_pendingResponses");
     return _pendingResponses.contains(query);
   }
 
   void _addPendingResponse(String query) {
-    print("addPendingResponse: $_pendingResponses");
+    // print("addPendingResponse: $_pendingResponses");
     _pendingResponses.add(query);
     notifyListeners();
   }
 
   void _removePendingResponse(String query) {
-    print("removePendingResponse: $_pendingResponses");
+    // print("removePendingResponse: $_pendingResponses");
     _pendingResponses.remove(query);
     notifyListeners();
   }
 
   void setSelectedScreenIndex(int index) {
-    print("setSelectedScreenIndex: $index");
+    // print("setSelectedScreenIndex: $index");
     _selectedScreenIndex = index;
     notifyListeners();
   }
 
   void setLoading(bool value) {
-    print("setloading");
+    // print("setloading");
     _isLoading = value;
     notifyListeners();
   }
 
   void toggleChatContentView() {
-    print("togglechatconview");
+    // print("togglechatconview");
     _isChatContentView = !_isChatContentView;
     notifyListeners();
   }
 
   Future<void> onThreadSelected(String threadId) async {
-    print("onThreadSelected");
+    // print("onThreadSelected");
     setLoading(true);
     _selectedThreadId = threadId;
     _isChatContentView = true;
@@ -92,7 +129,7 @@ class ChatProvider extends ChangeNotifier {
   }
 
   Future<void> newChat() async {
-    print("newChat");
+    // print("newChat");
     setLoading(true);
     _isChatContentView = false;
     _selectedThreadId = null;
@@ -102,15 +139,26 @@ class ChatProvider extends ChangeNotifier {
   }
 
   void selectAssistant(Assistant assistant) {
-    print(" selectAssistant");
+    // print(" selectAssistant");
+    _previousSelected = _selectedAssistant;
     _selectedAssistant = assistant;
     notifyListeners();
   }
 
+  //----
+  bool checkThreadIsExist(List<ConversationThread> input, String id){
+    for(int i = 0; i < input.length; ++i){
+      if(input[i].id == id)
+        return  true;
+    }
+    return false;
+  }
+  //----
+
   Future<void> fetchConversationHistory(
       String conversationId, String assistantId) async {
     setLoading(true);
-    print(" fetchConversationHistory");
+    // print(" fetchConversationHistory");
     try {
       final response = await _chatManager.fetchConversationHistory(
         conversationId: conversationId,
@@ -128,8 +176,10 @@ class ChatProvider extends ChangeNotifier {
 
   Future<void> getConversationThread() async {
     setLoading(true);
-    print("getConversationThread");
+    // print("getConversationThread");
+    _conversationThreads = [];
     try {
+      //GET THREAD OF DEFAULT BOT 
       final conversationThreadService = ConversationThreadService(
         apiLink: 'https://api.dev.jarvis.cx/api/v1/ai-chat/conversations',
       );
@@ -139,7 +189,30 @@ class ChatProvider extends ChangeNotifier {
         jarvisGuid: '361331f8-fc9b-4dfe-a3f7-6d9a1e8b289b',
       );
       _conversationThreads = response.getItems;
-
+      // GET THREAD OF PERSONAL BOT 
+        List<AiBot> bots = await botService.getListAssistant();
+        for(AiBot bot in bots){
+          List<BotThread> threads = await botService.getListThreadOfAssistant(bot.id);
+          _botThread.addAll(threads);
+          for(BotThread thread in threads){
+            if(checkThreadIsExist(_conversationThreads, thread.threadId))
+              continue;
+            _conversationThreads.add(
+              new ConversationThread(
+                title: thread.threadName, 
+                id: thread.threadId, 
+                createdAt: thread.createdAt.millisecondsSinceEpoch ~/ 1000, 
+                isDefaultAssistant: false,
+                assistant: new Assistant(
+                  name: AsisstantManager().getAssistantNameFromId(bots, thread.assistantId) ?? "", 
+                  id: thread.assistantId, 
+                  imagePath: "assets/images/chat_bot_icon.png", 
+                  isDefault: false
+                ),
+              )
+            );
+          }
+        }
       notifyListeners();
     } catch (e) {
       print("Error in getConversationThread: $e");
@@ -148,7 +221,7 @@ class ChatProvider extends ChangeNotifier {
   }
 
   List<ChatMessage> _createChatMessagesFromContent() {
-    print(" _createChatMessagesFromContent");
+    // print(" _createChatMessagesFromContent");
     return _listConversationContent
             ?.map((item) {
               return [
@@ -180,8 +253,8 @@ class ChatProvider extends ChangeNotifier {
         [];
   }
 
-  Future<void> sendMessage(String content) async {
-    print("sendMessage");
+  Future<void> sendMessage(String content, Managetokenprovider tokenProvider, BuildContext context) async {
+    // print("sendMessage");
     try {
       // Thêm tin nhắn của người dùng vào danh sách hiển thị
       final userMessage = Conversation(query: content, answer: null);
@@ -202,6 +275,7 @@ class ChatProvider extends ChangeNotifier {
         assistantName:
             _selectedAssistant?.name ?? Assistant.assistants.first.name,
         conversationId: _selectedThreadId ?? "",
+        tokenProvider: tokenProvider
       );
 
       if (response != null) {
@@ -211,15 +285,18 @@ class ChatProvider extends ChangeNotifier {
         notifyListeners();
       }
     } catch (error) {
+      Map<String,dynamic> decodedError = jsonDecode(error.toString());
+      
+
       print("Failed to send message in ChatProvider: $error");
       _removePendingResponse(
           content); // Loại bỏ trạng thái "đang chờ" nếu có lỗi
-      throw Exception("Failed to send message in ChatProvider");
+      throw  decodedError.containsKey('details') ? decodedError['details'].first['issue'] : "Something wrong!";
     }
   }
 
   void addUserMessage(ChatMessage message) {
-    print(" addUserMessage");
+    // print(" addUserMessage");
     if (_listConversationContent == null) {
       _listConversationContent = [];
     }
@@ -231,8 +308,8 @@ class ChatProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> sendFirstMessage(ChatMessage message) async {
-    print("sendFirstMessage");
+  Future<int> sendFirstMessage(ChatMessage message) async {
+    // print("sendFirstMessage");
     try {
       setLoading(true);
 
@@ -242,6 +319,7 @@ class ChatProvider extends ChangeNotifier {
         content: message.content,
         jarvisGuid: jarvisGuid,
       );
+      print("REMAIN TOKEN --> ${response.remainingUsage}");
 
       if (response != null) {
         // Cập nhật ID của cuộc hội thoại
@@ -261,6 +339,7 @@ class ChatProvider extends ChangeNotifier {
 
       notifyListeners();
       setLoading(false);
+      return response.remainingUsage;
     } catch (error) {
       print("Failed to send first message: $error");
       setLoading(false);

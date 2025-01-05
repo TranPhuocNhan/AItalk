@@ -101,6 +101,7 @@ class _SignupInputState extends State<SignupInputGroup> {
             child: Form(
               key: emailKey,
               child: TextFormField(
+                keyboardType: TextInputType.emailAddress,
                 controller: emailController,
                 validator: _validate,
                 decoration: InputDecoration(

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ai_app/core/models/assistant.dart';
+import 'package:flutter_ai_app/features/ai_bot/data/models/ai_%20bot.dart';
+import 'package:flutter_ai_app/features/ai_chat/domains/assistant_manager.dart';
 import 'package:flutter_ai_app/features/ai_chat/presentation/widgets/ai_search_section.dart';
 import 'package:flutter_ai_app/features/ai_chat/presentation/widgets/ai_section.dart';
 import 'package:flutter_ai_app/features/ai_chat/presentation/widgets/chat_section.dart';
 import 'package:flutter_ai_app/features/ai_chat/presentation/widgets/free_unlimited_section.dart';
 import 'package:flutter_ai_app/features/ai_chat/presentation/widgets/tools_section.dart';
-import 'package:flutter_ai_app/features/ai_chat/presentation/widgets/upload_and_writing_agent_section.dart';
 
 class ChatView extends StatefulWidget {
   ChatView({super.key});
@@ -17,11 +19,32 @@ class _ChatViewState extends State<ChatView>
     with AutomaticKeepAliveClientMixin<ChatView> {
   @override
   bool get wantKeepAlive => true;
+  List<AiBot> bots = [];
 
+  late Function (bool, Assistant) onUpdate;
+  
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    handleGetAiBot();
+    onUpdate = (bool value, Assistant assistant){
+      if(value){
+        print("ENTER ON UPDATE AT CHAT VIEW");
+      }
+    };
+  }
+
+  void handleGetAiBot() async{
+    List<AiBot> data = await AsisstantManager().getAiBots();
+    setState(() {
+      bots = data;
+    });
+  }
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    print("ChatView build...");
+    // print("ChatView build...");
     return Row(
       children: [
         Expanded(
@@ -42,8 +65,8 @@ class _ChatViewState extends State<ChatView>
                 AISection(),
                 AISearchSection(),
                 FreeUnlimitedSection(),
-                ToolsSection(),
-                ChatSection(),
+                ToolsSection(bots: bots, onUpdate: onUpdate,),
+                ChatSection(bots: bots,),
               ],
             ),
           ),

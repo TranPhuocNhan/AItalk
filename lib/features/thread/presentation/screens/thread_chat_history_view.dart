@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ai_app/core/models/assistant.dart';
+import 'package:flutter_ai_app/features/ai_bot/data/models/ai_%20bot.dart';
+import 'package:flutter_ai_app/features/ai_bot/data/models/bot_thread.dart';
+import 'package:flutter_ai_app/features/ai_bot/data/services/ai_bot_services.dart';
 import 'package:flutter_ai_app/features/ai_chat/domains/entities/conversation_thread.dart';
 import 'package:flutter_ai_app/features/ai_chat/presentation/providers/chat_provider.dart';
 import 'package:flutter_ai_app/features/ai_chat/presentation/screens/chat_content_view.dart';
-import 'package:flutter_ai_app/features/knowledge_base/presentation/providers/knowledge_provider.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 class ThreadChatHistory extends StatefulWidget {
@@ -13,13 +17,14 @@ class ThreadChatHistory extends StatefulWidget {
 
 class _ThreadChatHistoryState extends State<ThreadChatHistory> {
   List<ConversationThread>? conversationThreads;
+  AiBotService botService = GetIt.instance<AiBotService>();
 
   @override
   void initState() {
     super.initState();
     // Gọi hàm getConversationThread khi widget khởi tạo
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      print("Fetching conversation threads..."); // Debug
+      // print("Fetching conversation threads..."); // Debug
       _fetchConversationThreads();
     });
   }
@@ -31,7 +36,7 @@ class _ThreadChatHistoryState extends State<ThreadChatHistory> {
 
   @override
   Widget build(BuildContext context) {
-    print("ThreadChatHistory build...");
+    // print("ThreadChatHistory build...");
     ChatProvider chatProvider = Provider.of<ChatProvider>(context);
     conversationThreads = chatProvider.conversationThreads;
 
@@ -87,10 +92,13 @@ class _ThreadChatHistoryState extends State<ThreadChatHistory> {
     final isSelected = thread.id == chatProvider.selectedThreadId;
 
     if (thread.createdAt != null) {
-      DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(
+      DateTime dateTime;
+      dateTime = DateTime.fromMillisecondsSinceEpoch(
         thread.createdAt! * 1000, // Convert seconds to milliseconds
         isUtc: true,
       );
+      
+      
 
       // Tự định dạng ngày giờ
       formattedDate =
@@ -111,14 +119,23 @@ class _ThreadChatHistoryState extends State<ThreadChatHistory> {
           ),
         ),
         trailing: Text(formattedDate),
-        onTap: () {
+        onTap: () async{
           chatProvider.onThreadSelected(thread.id ?? '');
-          print("Current selectedThreadId: ${thread.id}");
-
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => ChatContentView()),
-          );
+          // print("Current selectedThreadId: ${thread.id}");
+          if(thread.isDefaultAssistant){
+            // OPEN CHAT HISTORY OF DEFAULT BOT 
+            chatProvider.selectAssistant(Assistant.assistants.first);
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ChatContentView(assistant: chatProvider.selectedAssistant,)),
+            );
+          }else{
+            // OPEN CHAT HISTORY OF PERSONAL BOT 
+            List<AiBot> bots = await botService.getListAssistant();
+            BotThread? botThread = chatProvider.getThreadFromId(thread.id ?? '');
+            chatProvider.selectAssistant(thread.assistant!);
+            Navigator.push(context, MaterialPageRoute(builder: (_) => ChatContentView(assistant: thread.assistant!, bots: bots, thread: botThread,)));
+          }
         },
       ),
     );

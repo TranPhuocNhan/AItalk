@@ -118,7 +118,10 @@ class PublishBotMessengerDialog {
                   text: TextSpan(children: [
                 TextSpan(
                     text: "Messender Bot Token",
-                    style: TextStyle(fontWeight: FontWeight.bold)),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    )),
                 TextSpan(
                     text: " *",
                     style: TextStyle(
@@ -149,7 +152,10 @@ class PublishBotMessengerDialog {
                   text: TextSpan(children: [
                 TextSpan(
                     text: "Messender Bot Page Id",
-                    style: TextStyle(fontWeight: FontWeight.bold)),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    )),
                 TextSpan(
                     text: " *",
                     style: TextStyle(
@@ -180,7 +186,10 @@ class PublishBotMessengerDialog {
                   text: TextSpan(children: [
                 TextSpan(
                     text: "Messender Bot App Secret",
-                    style: TextStyle(fontWeight: FontWeight.bold)),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,  
+                    )),
                 TextSpan(
                     text: " *",
                     style: TextStyle(

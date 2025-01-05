@@ -50,7 +50,10 @@ class PublishBotTeleDialog {
                   text: TextSpan(children: [
                 TextSpan(
                     text: "Token",
-                    style: TextStyle(fontWeight: FontWeight.bold)),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    )),
                 TextSpan(
                     text: " *",
                     style: TextStyle(

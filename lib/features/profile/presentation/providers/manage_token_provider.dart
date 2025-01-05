@@ -11,6 +11,7 @@ class Managetokenprovider with ChangeNotifier{
   }
   void updateRemainTokenWithoutNotify(int value){
     _available = value;
+    updatePercentageWithoutNotify();
   }
   void updateTotalToken(int value){
     _totalTokens = value;

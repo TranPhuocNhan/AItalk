@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ads_plugin/flutter_ads_plugin.dart';
 import 'package:flutter_ai_app/features/email_response/data/models/email_request.dart';
 import 'package:flutter_ai_app/features/email_response/data/models/email_response.dart';
 import 'package:flutter_ai_app/features/email_response/data/models/suggest_idea_request.dart';
@@ -7,6 +8,7 @@ import 'package:flutter_ai_app/features/profile/presentation/providers/manage_to
 import 'package:flutter_ai_app/utils/LanguageConverter.dart';
 import 'package:flutter_ai_app/utils/email_response_converter.dart';
 import 'package:flutter_ai_app/utils/email_response_type.dart';
+import 'package:flutter_ai_app/utils/helper_functions.dart';
 import 'package:flutter_ai_app/utils/language_enum.dart';
 import 'package:flutter_ai_app/features/email_response/presentation/providers/email_style_provider.dart';
 import 'package:flutter_ai_app/utils/constant/Color.dart';
@@ -33,6 +35,7 @@ class _EmailResponseState extends State<EmailResponseScreen>{
   Color _fillColor = Colors.grey.shade300;
   Color _iconColor = Colors.grey;
   var selectedLanguage = Language.Auto;
+  late Function (String) onForwardEmailIdea;
 
 
   List<DropdownMenuItem<Language>> buildDropDownMenuItems(){
@@ -42,16 +45,35 @@ class _EmailResponseState extends State<EmailResponseScreen>{
       )
     ).toList();  
   }
+  void showInterstitialAd() {
+    FlutterAdsInterstitial.show(
+      onError: (e) {
+        // TODO: Handle error
+      },
+      onAdClosed: () {
+        // TODO: Handle ad close
+      },
+    );
+  }
 
   @override
   void initState() {
     super.initState();
+    showInterstitialAd();
     _focusNode.addListener((){
       setState(() {
         _fillColor = _focusNode.hasFocus ? Colors.white : Colors.grey.shade300;
         _iconColor = _focusNode.hasFocus ? ColorPalette().bigIcon : Colors.grey;
       });
     });
+    onForwardEmailIdea = (String idea){
+      //todo: something
+      setState(() {
+        mainIdeaController.text = idea;
+        emailType = EmailResponseType.ResponseEmail;      
+      });
+
+    };
   }
 
   @override
@@ -297,7 +319,7 @@ class _EmailResponseState extends State<EmailResponseScreen>{
       var email = emailController.value.text;
       var mainIdea = mainIdeaController.value.text;
       if(email == "" || mainIdea == ""){
-        ShowDialogSupport().showDialogNotifyEmailRsp("Please fill all text to receive response from AITalk!",  context);
+        HelperFunctions().showMessageDialog("Notification","Please fill all text field to receive response from AITalk!", context);
       }else{
         ShowDialogSupport().showProgressHandlingDialog(context);
         EmailRequest req = EmailRequest(
@@ -314,13 +336,13 @@ class _EmailResponseState extends State<EmailResponseScreen>{
             tokenManage.updateRemainTokenWithoutNotify(resp.remainUsage);
             tokenManage.updatePercentageWithoutNotify();
         }catch(err){
-           ShowDialogSupport().showDialogNotifyEmailRsp(err.toString(), context);
+          HelperFunctions().showMessageDialog("Failed Response Email", err.toString(), context);
         }
       }
     }else if(emailType == EmailResponseType.RequestReplyIdeas){
       var email = emailController.value.text;
       if(email == ""){
-        ShowDialogSupport().showDialogNotifyEmailRsp("Please fill email content to receive ideas response from AITalk!",  context);
+        HelperFunctions().showMessageDialog("Notification","Please fill email content to receive ideas response from AITalk!", context);
       }else{
         ShowDialogSupport().showProgressHandlingDialog(context);
         SuggestIdeaRequest req = SuggestIdeaRequest(
@@ -329,9 +351,9 @@ class _EmailResponseState extends State<EmailResponseScreen>{
         );
         try{
           List<String> resp = await emailResponseService.suggestEmailIdea(req);
-          ShowDialogSupport().showDialogNotifyEmailRspIdea(resp, context);
+          ShowDialogSupport().showDialogNotifyEmailRspIdea(resp, context, onForwardEmailIdea);
         }catch(err){
-          ShowDialogSupport().showDialogNotifyEmailRsp(err.toString(),   context);
+          HelperFunctions().showMessageDialog("Failed Get Idea", err.toString(), context);
         }
       }
     }
