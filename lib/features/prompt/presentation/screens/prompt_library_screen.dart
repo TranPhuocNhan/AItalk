@@ -131,7 +131,6 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
             ),
           ),
       ],
-
     );
   }
 
@@ -214,7 +213,10 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
               // Clean up and navigate to ChatContentView
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ChatContentView()),
+                MaterialPageRoute(
+                    builder: (context) => ChatContentView(
+                          assistant: chatProvider.selectedAssistant,
+                        )),
               );
             } catch (e) {
               print("Error sending first message: $e");
@@ -368,7 +370,10 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
               // Dọn dẹp và chuyển hướng đến ChatContentView
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ChatContentView(assistant: chatProvider.selectedAssistant,)),
+                MaterialPageRoute(
+                    builder: (context) => ChatContentView(
+                          assistant: chatProvider.selectedAssistant,
+                        )),
               );
             } catch (e) {
               print("Error sending first message: $e");
