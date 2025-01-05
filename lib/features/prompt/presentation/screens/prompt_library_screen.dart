@@ -57,12 +57,14 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
     });
   }
 
+  String searchQuery = "";
+
   @override
   Widget build(BuildContext context) {
     final promptProvider = Provider.of<PromptProvider>(context, listen: true);
-    filteredPrompts = promptProvider.publicPrompts;
-    filteredFavoritePrompts = promptProvider.favoritePrompts;
-    filteredMyPrompts = promptProvider.privatePrompts;
+    filteredPrompts = promptProvider.getFilteredPublicPrompts();
+    filteredFavoritePrompts = promptProvider.getFilteredFavoritePrompts();
+    filteredMyPrompts = promptProvider.getFilteredPrivatePrompts();
     print("PromptLibraryScreen build...");
     return Scaffold(
       appBar: AppBar(
@@ -81,25 +83,24 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
         controller: tabController,
         children: [
           // Tab My Prompt
-          promptProvider.isLoading
-              ? Center(child: CircularProgressIndicator())
-              : _buildMyPromptList(
-                  promptProvider.privatePrompts, promptProvider),
+          _buildMyPromptList(
+            promptProvider.getFilteredPrivatePrompts(),
+            promptProvider,
+          ),
 
           // Tab Public Prompt
-          promptProvider.isLoading
-              ? Center(child: CircularProgressIndicator())
-              : _buildPublicPromptList(
-                  promptProvider.publicPrompts,
-                  promptProvider.categories,
-                  promptProvider.selectedCategory,
-                  promptProvider),
+          _buildPublicPromptList(
+            promptProvider.getFilteredPublicPrompts(),
+            promptProvider.categories,
+            promptProvider.selectedCategory,
+            promptProvider,
+          ),
 
           // Tab Favorite Prompt
-          promptProvider.isLoading
-              ? Center(child: CircularProgressIndicator())
-              : _buildFavoritePromptList(
-                  promptProvider.favoritePrompts, promptProvider),
+          _buildFavoritePromptList(
+            promptProvider.getFilteredFavoritePrompts(),
+            promptProvider,
+          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -310,45 +311,16 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
         ),
         onChanged: (value) {
           setState(() {
-            if (tabController.index == 1) {
-              if (value.isEmpty) {
-                filteredPrompts =
-                    Provider.of<PromptProvider>(context, listen: false)
-                        .publicPrompts;
-              } else {
-                filteredPrompts =
-                    Provider.of<PromptProvider>(context, listen: false)
-                        .publicPrompts
-                        .where((prompt) => (prompt.title?.toLowerCase() ?? "")
-                            .contains(value.toLowerCase()))
-                        .toList();
-              }
+            searchQuery = _searchController.text;
+            if (tabController.index == 0) {
+              Provider.of<PromptProvider>(context, listen: false)
+                  .updateSearchMyPromptQuery(searchQuery);
+            } else if (tabController.index == 1) {
+              Provider.of<PromptProvider>(context, listen: false)
+                  .updateSearchPublicPromptQuery(searchQuery);
             } else if (tabController.index == 2) {
-              if (value.isEmpty) {
-                filteredFavoritePrompts =
-                    Provider.of<PromptProvider>(context, listen: false)
-                        .favoritePrompts;
-              } else {
-                filteredFavoritePrompts =
-                    Provider.of<PromptProvider>(context, listen: false)
-                        .favoritePrompts
-                        .where((prompt) => (prompt.title?.toLowerCase() ?? "")
-                            .contains(value.toLowerCase()))
-                        .toList();
-              }
-            } else if (tabController.index == 0) {
-              if (value.isEmpty) {
-                filteredMyPrompts =
-                    Provider.of<PromptProvider>(context, listen: false)
-                        .privatePrompts;
-              } else {
-                filteredMyPrompts =
-                    Provider.of<PromptProvider>(context, listen: false)
-                        .privatePrompts
-                        .where((prompt) => (prompt.title?.toLowerCase() ?? "")
-                            .contains(value.toLowerCase()))
-                        .toList();
-              }
+              Provider.of<PromptProvider>(context, listen: false)
+                  .updateSearchFavoritePromptQuery(searchQuery);
             }
           });
         },

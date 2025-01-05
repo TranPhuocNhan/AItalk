@@ -17,6 +17,9 @@ class PromptProvider extends ChangeNotifier {
   List<String> _categories = categoryPromptMap.values.toList();
   List<String> _categoryKeys = categoryPromptMap.keys.toList();
   Prompt? _selectedPrompt;
+  String _searchMyPromptQuery = "";
+  String _searchPublicPromptQuery = "";
+  String _searchFavoritePromptQuery = "";
 
   List<String> get categories => _categories;
   List<String> get categoryKeys => _categoryKeys;
@@ -26,6 +29,51 @@ class PromptProvider extends ChangeNotifier {
   String get selectedCategory => _selectedCategory;
   bool get isLoading => _isLoading;
   Prompt? get selectedPrompt => _selectedPrompt;
+
+  void updateSearchMyPromptQuery(String query) {
+    print("updateSearchMyPromptQuery");
+    _searchMyPromptQuery = query;
+    notifyListeners();
+  }
+
+  void updateSearchPublicPromptQuery(String query) {
+    print("updateSearchPublicPromptQuery");
+    _searchPublicPromptQuery = query;
+    notifyListeners();
+  }
+
+  void updateSearchFavoritePromptQuery(String query) {
+    print("updateSearchFavoritePromptQuery");
+    _searchFavoritePromptQuery = query;
+    notifyListeners();
+  }
+
+  List<Prompt> getFilteredPrivatePrompts() {
+    if (_searchMyPromptQuery.isEmpty) return _privatePrompts;
+    return _privatePrompts
+        .where((prompt) =>
+            (prompt.title?.toLowerCase().contains(_searchMyPromptQuery) ??
+                false))
+        .toList();
+  }
+
+  List<Prompt> getFilteredPublicPrompts() {
+    if (_searchPublicPromptQuery.isEmpty) return _publicPrompts;
+    return _publicPrompts
+        .where((prompt) =>
+            (prompt.title?.toLowerCase().contains(_searchPublicPromptQuery) ??
+                false))
+        .toList();
+  }
+
+  List<Prompt> getFilteredFavoritePrompts() {
+    if (_searchFavoritePromptQuery.isEmpty) return _favoritePrompts;
+    return _favoritePrompts
+        .where((prompt) =>
+            (prompt.title?.toLowerCase().contains(_searchFavoritePromptQuery) ??
+                false))
+        .toList();
+  }
 
   void setSelectedPrompt(Prompt prompt) {
     print("setSelectedPrompt");
