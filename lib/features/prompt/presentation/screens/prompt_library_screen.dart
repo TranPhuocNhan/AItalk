@@ -61,71 +61,74 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
 
   @override
   Widget build(BuildContext context) {
-    final promptProvider = Provider.of<PromptProvider>(context, listen: true);
-    filteredPrompts = promptProvider.getFilteredPublicPrompts();
-    filteredFavoritePrompts = promptProvider.getFilteredFavoritePrompts();
-    filteredMyPrompts = promptProvider.getFilteredPrivatePrompts();
-    print("PromptLibraryScreen build...");
-    return Scaffold(
-      appBar: AppBar(
-        title: null,
-        automaticallyImplyLeading: false,
-        bottom: TabBar(
-          controller: tabController,
-          tabs: const [
-            Tab(text: 'My Prompt'),
-            Tab(text: 'Public Prompt'),
-            Tab(text: 'Favorite Prompt'),
-          ],
+    final promptProvider = Provider.of<PromptProvider>(context);
+
+    return Stack(
+      children: [
+        Scaffold(
+          appBar: AppBar(
+            title: null,
+            automaticallyImplyLeading: false,
+            bottom: TabBar(
+              controller: tabController,
+              tabs: const [
+                Tab(text: 'My Prompt'),
+                Tab(text: 'Public Prompt'),
+                Tab(text: 'Favorite Prompt'),
+              ],
+            ),
+          ),
+          body: TabBarView(
+            controller: tabController,
+            children: [
+              _buildMyPromptList(
+                promptProvider.getFilteredPrivatePrompts(),
+                promptProvider,
+              ),
+              _buildPublicPromptList(
+                promptProvider.getFilteredPublicPrompts(),
+                promptProvider.categories,
+                promptProvider.selectedCategory,
+                promptProvider,
+              ),
+              _buildFavoritePromptList(
+                promptProvider.getFilteredFavoritePrompts(),
+                promptProvider,
+              ),
+            ],
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () async {
+              final result = await showDialog(
+                  context: context, builder: (context) => PromptForm());
+              if (result != null) {
+                final prompt = Prompt(
+                  id: "",
+                  isFavorite: false,
+                  isPublic: result["isPublic"],
+                  category: result["category"],
+                  content: result["content"],
+                  description: result["description"],
+                  language: result["language"],
+                  title: result["title"],
+                );
+                await promptProvider.createPrompt(prompt);
+              }
+            },
+            child: Icon(Icons.add),
+            backgroundColor: Colors.purple,
+          ),
         ),
-      ),
-      body: TabBarView(
-        controller: tabController,
-        children: [
-          // Tab My Prompt
-          _buildMyPromptList(
-            promptProvider.getFilteredPrivatePrompts(),
-            promptProvider,
+        if (promptProvider.isLoading)
+          Positioned.fill(
+            child: Container(
+              color: Colors.black.withOpacity(0.5),
+              child: const Center(
+                child: CircularProgressIndicator(),
+              ),
+            ),
           ),
-
-          // Tab Public Prompt
-          _buildPublicPromptList(
-            promptProvider.getFilteredPublicPrompts(),
-            promptProvider.categories,
-            promptProvider.selectedCategory,
-            promptProvider,
-          ),
-
-          // Tab Favorite Prompt
-          _buildFavoritePromptList(
-            promptProvider.getFilteredFavoritePrompts(),
-            promptProvider,
-          ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          // Add new prompt action
-          final result = await showDialog(
-              context: context, builder: (context) => PromptForm());
-          if (result != null) {
-            final prompt = Prompt(
-              id: "",
-              isFavorite: false,
-              isPublic:
-                  result["isPublic"], // Đảm bảo các key tồn tại trong result
-              category: result["category"],
-              content: result["content"],
-              description: result["description"],
-              language: result["language"],
-              title: result["title"],
-            );
-            final response = await promptProvider.createPrompt(prompt);
-          }
-        },
-        child: Icon(Icons.add),
-        backgroundColor: Colors.purple,
-      ),
+      ],
     );
   }
 

@@ -78,9 +78,22 @@ class _ChatSectionState extends State<ChatSection> {
   Widget build(BuildContext context) {
     final chatProvider = Provider.of<ChatProvider>(context);
 
-    return Column(
+    return Stack(
       children: [
-        _buildInputArea(chatProvider),
+        Column(
+          children: [
+            _buildInputArea(chatProvider),
+          ],
+        ),
+        if (chatProvider.isLoading)
+          Positioned.fill(
+            child: Container(
+              color: Colors.white.withOpacity(0.8),
+              child: const Center(
+                child: CircularProgressIndicator(),
+              ),
+            ),
+          ),
       ],
     );
   }
