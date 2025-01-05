@@ -184,6 +184,40 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
           final result = await showDialog(
               context: context,
               builder: (BuildContext context) => PromptDialog());
+
+          final chatProvider =
+              Provider.of<ChatProvider>(context, listen: false);
+          if (result != null && result.isNotEmpty) {
+            final content = result['content'] as String;
+
+            final message = ChatMessage(
+              assistant: AssistantDTO(
+                id: chatProvider.selectedAssistant?.id ??
+                    Assistant.assistants.first.id,
+                model: 'dify',
+                name: chatProvider.selectedAssistant?.name ??
+                    Assistant.assistants.first.name,
+              ),
+              role: "user",
+              content: content,
+            );
+
+            chatProvider
+                .addUserMessage(message); // Add message to user's message list
+
+            try {
+              // Send message
+              await chatProvider.sendFirstMessage(message);
+
+              // Clean up and navigate to ChatContentView
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ChatContentView()),
+              );
+            } catch (e) {
+              print("Error sending first message: $e");
+            }
+          }
         },
         title: Text(prompt.title ?? ''),
         subtitle: Text(prompt.description ?? ''),
