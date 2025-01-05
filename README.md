@@ -15,3 +15,6 @@ Dự án này phát triển một hệ thống chat với AI mang tên AITalk c
 - Milestone1: https://youtu.be/7HI0C9jVQ5w
 - Mileseton2: https://youtu.be/6wiKcso2Hpo
 
+
+## generate keystore 
+keytool -genkeypair -v -keystore upload-keystore.jks -keyalg RSA -keysize 2048 -validity 10000 -alias upload
