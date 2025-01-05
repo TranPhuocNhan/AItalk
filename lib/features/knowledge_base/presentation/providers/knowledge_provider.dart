@@ -19,19 +19,17 @@ class KnowledgeProvider with ChangeNotifier {
   final KnowledgeService knowledgeService = GetIt.instance<KnowledgeService>();
 
   final String jarvisGuid = "361331f8-fc9b-4dfe-a3f7-6d9a1e8b289b";
+  String _searchQuery = "";
   KnowledgeResponse? _knowledges;
-  List<KnowledgeResDto>? _filteredKnowledges; // Dữ liệu đã lọc
   List<KnowledgeUnitDto> _units = [];
 
   KnowledgeResponse? get knowledges => _knowledges;
-  List<KnowledgeResDto>? get filteredKnowledges => _filteredKnowledges;
   List<KnowledgeUnitDto> get units => _units;
 
   Future<void> getKnowledges() async {
     try {
       final response = await _knowledgeManager.getKnowledges();
       _knowledges = response;
-      _filteredKnowledges = response.data;
       notifyListeners();
     } catch (e) {
       throw Exception('(Provider) Failed to get knowledges: $e');
@@ -39,23 +37,22 @@ class KnowledgeProvider with ChangeNotifier {
   }
 
   void filterKnowledges(String query) {
-    if (_knowledges == null || _knowledges!.data.isEmpty) return;
-
-    if (query.isEmpty) {
-      // Nếu từ khóa trống, hiển thị toàn bộ dữ liệu
-      _filteredKnowledges = _knowledges!.data;
-    } else {
-      // Lọc dựa trên từ khóa (không phân biệt chữ hoa/thường)
-      _filteredKnowledges = _knowledges!.data
-          .where((knowledge) =>
-              knowledge.knowledgeName
-                  .toLowerCase()
-                  .contains(query.toLowerCase()) ||
-              knowledge.description.toLowerCase().contains(query.toLowerCase()))
-          .toList();
-    }
-
+    _searchQuery = query;
     notifyListeners();
+  }
+
+  List<KnowledgeResDto>? get filteredKnowledges {
+    if (knowledges == null) return null;
+    if (_searchQuery.isEmpty) return knowledges!.data;
+    return knowledges!.data
+        .where((knowledge) =>
+            knowledge.knowledgeName
+                .toLowerCase()
+                .contains(_searchQuery.toLowerCase()) ||
+            knowledge.description
+                .toLowerCase()
+                .contains(_searchQuery.toLowerCase()))
+        .toList();
   }
 
   Future<void> createKnowledge({

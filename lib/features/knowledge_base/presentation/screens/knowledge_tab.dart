@@ -16,6 +16,8 @@ class KnowledgeTab extends StatefulWidget {
 
 class _KnowledgeTabState extends State<KnowledgeTab> {
   List<KnowledgeResDto>? knowledges;
+  TextEditingController searchController = TextEditingController();
+  String searchQuery = "";
 
   @override
   void initState() {
@@ -32,7 +34,7 @@ class _KnowledgeTabState extends State<KnowledgeTab> {
     KnowledgeProvider knowledgeProvider =
         Provider.of<KnowledgeProvider>(context);
 
-    knowledges = knowledgeProvider.knowledges?.data;
+    knowledges = knowledgeProvider.filteredKnowledges;
 
     return Padding(
       padding: EdgeInsets.all(16.0),
@@ -218,17 +220,28 @@ class _KnowledgeTabState extends State<KnowledgeTab> {
 
   Widget _buildSearchBar(KnowledgeProvider knowledgeProvider) {
     return TextField(
-      onChanged: (query) {
-        knowledgeProvider
-            .filterKnowledges(query); // Lọc dữ liệu khi thay đổi từ khóa
-      },
+      controller: searchController,
       decoration: InputDecoration(
-        hintText: "Search knowledge...",
-        prefixIcon: Icon(Icons.search),
+        labelText: "Search Knowledge",
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(20),
         ),
+        suffixIcon: IconButton(
+          icon: Icon(Icons.search),
+          onPressed: () {
+            setState(() {
+              searchQuery = searchController.text;
+              knowledgeProvider.filterKnowledges(searchQuery);
+            });
+          },
+        ),
       ),
+      onChanged: (value) {
+        setState(() {
+          searchQuery = value;
+          knowledgeProvider.filterKnowledges(searchQuery);
+        });
+      },
     );
   }
 
