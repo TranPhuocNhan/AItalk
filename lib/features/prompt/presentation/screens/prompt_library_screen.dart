@@ -64,7 +64,10 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
   @override
   Widget build(BuildContext context) {
     final promptProvider = Provider.of<PromptProvider>(context);
-
+    filteredPrompts = promptProvider.getFilteredPublicPrompts();
+    filteredFavoritePrompts = promptProvider.getFilteredFavoritePrompts();
+    filteredMyPrompts = promptProvider.getFilteredPrivatePrompts();
+    print("PromptLibraryScreen build...");
     return Stack(
       children: [
         Scaffold(
