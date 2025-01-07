@@ -54,7 +54,6 @@ class _ChatContentViewState extends State<ChatContentView> {
 
   late Function(bool, Assistant) onUpdate;
 
-  
   @override
   void initState() {
     // TODO: implement initState
@@ -65,13 +64,12 @@ class _ChatContentViewState extends State<ChatContentView> {
         readingHistoryMessage();
       });
     }
-    // handle scroll message in default bot 
-    WidgetsBinding.instance.addPostFrameCallback((_){
-      Provider.of<ChatProvider>(context, listen: false).addListener((){
+    // handle scroll message in default bot
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<ChatProvider>(context, listen: false).addListener(() {
         _scrollToBottom();
       });
-    }); 
-
+    });
 
     onUpdate = (bool value, Assistant assistant) async {
       if (value) {
@@ -123,19 +121,14 @@ class _ChatContentViewState extends State<ChatContentView> {
     });
   }
 
-  void _scrollToBottom(){
-    if(_defaultHitoryController.hasClients){
+  void _scrollToBottom() {
+    if (_defaultHitoryController.hasClients) {
       _defaultHitoryController.animateTo(
-        _defaultHitoryController.position.maxScrollExtent, 
-        duration: const Duration(milliseconds: 300), 
-        curve: Curves.easeOut
-      );
+          _defaultHitoryController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut);
     }
   }
-
-  
-
-  
 
   @override
   Widget build(BuildContext context) {
@@ -210,7 +203,6 @@ class _ChatContentViewState extends State<ChatContentView> {
             // );
             Navigator.pop(context, 0);
             print("New Chat is clicked! - Back to Home Screen");
-
           },
         ),
       ],
@@ -353,9 +345,11 @@ class _ChatContentViewState extends State<ChatContentView> {
                     onPressed: () async {
                       //handle send message with default bot
                       if (widget.assistant.isDefault) {
-                        try{
-                          await chatProvider.sendMessage(_controller.text, tokenProvider, context);
-                        }catch(err){
+                        try {
+                          await chatProvider.sendMessage(
+                              _controller.text, tokenProvider, context);
+                          _controller.clear();
+                        } catch (err) {
                           HelperFunctions().showMessageDialog(
                             "Failed Send Message",
                             err.toString(),
@@ -406,6 +400,7 @@ class _ChatContentViewState extends State<ChatContentView> {
       ),
     );
   }
+
   void updateControler() {
     setState(() {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -433,6 +428,7 @@ class _ChatContentViewState extends State<ChatContentView> {
       _isAnswering = value;
     });
   }
+
   void handleGetAiBot() async {
     List<AiBot> data = await AsisstantManager().getAiBots();
     setState(() {
@@ -443,6 +439,7 @@ class _ChatContentViewState extends State<ChatContentView> {
   bool isDefaultBot() {
     return widget.assistant.isDefault;
   }
+
   void readingHistoryMessage() async {
     setState(() {
       isReadingHistory = true;
@@ -457,5 +454,4 @@ class _ChatContentViewState extends State<ChatContentView> {
       isReadingHistory = false;
     });
   }
-
 }

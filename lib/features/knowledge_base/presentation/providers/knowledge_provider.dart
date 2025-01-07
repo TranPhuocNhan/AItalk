@@ -42,9 +42,9 @@ class KnowledgeProvider with ChangeNotifier {
   }
 
   List<KnowledgeResDto>? get filteredKnowledges {
-    if (knowledges == null) return null;
-    if (_searchQuery.isEmpty) return knowledges!.data;
-    return knowledges!.data
+    if (_knowledges == null) return null;
+    if (_searchQuery.isEmpty) return _knowledges!.data;
+    return _knowledges!.data
         .where((knowledge) =>
             knowledge.knowledgeName
                 .toLowerCase()
@@ -60,7 +60,7 @@ class KnowledgeProvider with ChangeNotifier {
     required String description,
   }) async {
     try {
-      _knowledgeManager.createKnowledge(
+      await _knowledgeManager.createKnowledge(
         knowledgeName: knowledgeName,
         description: description,
       );
@@ -163,6 +163,7 @@ class KnowledgeProvider with ChangeNotifier {
     try {
       final response = await _knowledgeManager.getUnitsOfKnowledge(knowledgeId);
       _units = response.data;
+      await getKnowledges();
       notifyListeners();
     } catch (e) {
       throw Exception('(Provider) Failed to get units of knowledge: $e');
