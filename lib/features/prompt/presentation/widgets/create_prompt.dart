@@ -40,31 +40,28 @@ class _PromptFormState extends State<PromptForm> {
   }
 
   Widget _buildToggleButton() {
-    return Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(
-          child: RadioListTile<bool>(
-            title: Text('Private Prompt'),
-            value: false,
-            groupValue: isPublicPrompt,
-            onChanged: (value) {
-              setState(() {
-                isPublicPrompt = value!;
-              });
-            },
-          ),
+        RadioListTile<bool>(
+          title: Text('Private Prompt'),
+          value: false,
+          groupValue: isPublicPrompt,
+          onChanged: (value) {
+            setState(() {
+              isPublicPrompt = value!;
+            });
+          },
         ),
-        Expanded(
-          child: RadioListTile<bool>(
-            title: Text('Public Prompt'),
-            value: true,
-            groupValue: isPublicPrompt,
-            onChanged: (value) {
-              setState(() {
-                isPublicPrompt = value!;
-              });
-            },
-          ),
+        RadioListTile<bool>(
+          title: Text('Public Prompt'),
+          value: true,
+          groupValue: isPublicPrompt,
+          onChanged: (value) {
+            setState(() {
+              isPublicPrompt = value!;
+            });
+          },
         ),
       ],
     );

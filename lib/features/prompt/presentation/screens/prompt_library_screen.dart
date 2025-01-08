@@ -67,6 +67,8 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
     filteredPrompts = promptProvider.getFilteredPublicPrompts();
     filteredFavoritePrompts = promptProvider.getFilteredFavoritePrompts();
     filteredMyPrompts = promptProvider.getFilteredPrivatePrompts();
+
+    final chatProvider = Provider.of<ChatProvider>(context);
     print("PromptLibraryScreen build...");
     return Stack(
       children: [
@@ -121,10 +123,10 @@ class _PromptLibraryScreenState extends State<PromptLibraryScreen>
               }
             },
             child: Icon(Icons.add),
-            backgroundColor: Colors.purple,
+            backgroundColor: ColorPalette().bigIcon,
           ),
         ),
-        if (promptProvider.isLoading)
+        if (chatProvider.isLoading)
           Positioned.fill(
             child: Container(
               color: Colors.black.withOpacity(0.5),
