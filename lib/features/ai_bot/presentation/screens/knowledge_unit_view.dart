@@ -31,6 +31,9 @@ class _KnowledgeUnitViewState extends State<KnowledgeUnitView> {
   Widget build(BuildContext context) {
     final knowledgeProvider =
         Provider.of<KnowledgeProvider>(context, listen: true);
+    final updatedKnowledge = knowledgeProvider.knowledges?.data.firstWhere(
+        (k) => k.id == widget.knowledge.id,
+        orElse: () => widget.knowledge);
     units = knowledgeProvider.units;
     return Scaffold(
       appBar: AppBar(
@@ -40,7 +43,7 @@ class _KnowledgeUnitViewState extends State<KnowledgeUnitView> {
               showDialog(
                   context: context,
                   builder: (context) =>
-                      UnitKnowledgeDialog(knowledge: widget.knowledge));
+                      UnitKnowledgeDialog(knowledge: updatedKnowledge!));
             },
             label: Text(
               "Add Unit",
@@ -65,7 +68,7 @@ class _KnowledgeUnitViewState extends State<KnowledgeUnitView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildHeader(),
+            _buildHeader(updatedKnowledge!),
             SizedBox(height: 20),
             _buildUnitTable(),
             // Spacer(),
@@ -77,7 +80,7 @@ class _KnowledgeUnitViewState extends State<KnowledgeUnitView> {
   }
 
   // Widget Header: Hiển thị tên KB và thông tin về số đơn vị và kích thước
-  Widget _buildHeader() {
+  Widget _buildHeader(KnowledgeResDto knowledge) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -93,11 +96,9 @@ class _KnowledgeUnitViewState extends State<KnowledgeUnitView> {
                         TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 Row(
                   children: [
-                    _buildInfoChip(
-                        widget.knowledge.numUnits.toString(), Colors.blue),
+                    _buildInfoChip(knowledge.numUnits.toString(), Colors.blue),
                     SizedBox(width: 5),
-                    _buildInfoChip(
-                        widget.knowledge.totalSize.toString(), Colors.red),
+                    _buildInfoChip(knowledge.totalSize.toString(), Colors.red),
                   ],
                 ),
               ],
