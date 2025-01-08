@@ -10,6 +10,7 @@ import 'package:flutter_ai_app/features/ai_chat/domains/assistant_manager.dart';
 import 'package:flutter_ai_app/features/ai_chat/domains/entities/chat_message.dart';
 import 'package:flutter_ai_app/features/ai_chat/presentation/providers/chat_provider.dart';
 import 'package:flutter_ai_app/features/ai_chat/presentation/screens/chat_content_view.dart';
+import 'package:flutter_ai_app/features/profile/presentation/providers/manage_token_provider.dart';
 import 'package:flutter_ai_app/features/prompt/presentation/widgets/prompt_library_bottom_sheet.dart';
 import 'package:flutter_ai_app/utils/message_role_enum.dart';
 import 'package:get_it/get_it.dart';
@@ -55,7 +56,8 @@ class _ChatSectionState extends State<ChatSection> {
     );
   }
 
-  void _sendMessage(ChatProvider chatProvider) async {
+  void _sendMessage(
+      ChatProvider chatProvider, Managetokenprovider tokenProvider) async {
     final messageContent = _controller.text;
 
     if (messageContent.isNotEmpty) {
@@ -74,12 +76,16 @@ class _ChatSectionState extends State<ChatSection> {
       chatProvider.addUserMessage(message);
 
       try {
-        await chatProvider.sendFirstMessage(message);
-        _controller.clear(); 
+        int remain = await chatProvider.sendFirstMessage(message);
+        tokenProvider.updateRemainTokenWithoutNotify(remain);
+        _controller.clear();
         // Chuyển hướng đến ChatContentView
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => ChatContentView(assistant:  chatProvider.selectedAssistant!,)),
+          MaterialPageRoute(
+              builder: (context) => ChatContentView(
+                    assistant: chatProvider.selectedAssistant!,
+                  )),
         );
       } catch (e) {
         print("Error sending first message: $e");
@@ -90,12 +96,13 @@ class _ChatSectionState extends State<ChatSection> {
   @override
   Widget build(BuildContext context) {
     final chatProvider = Provider.of<ChatProvider>(context);
+    final tokenProvider = Provider.of<Managetokenprovider>(context);
 
     return Stack(
       children: [
         Column(
           children: [
-            _buildInputArea(chatProvider),
+            _buildInputArea(chatProvider, tokenProvider),
           ],
         ),
         if (chatProvider.isLoading)
@@ -111,7 +118,8 @@ class _ChatSectionState extends State<ChatSection> {
     );
   }
 
-  Widget _buildInputArea(ChatProvider chatProvider) {
+  Widget _buildInputArea(
+      ChatProvider chatProvider, Managetokenprovider tokenProvider) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       child: Row(
@@ -130,22 +138,24 @@ class _ChatSectionState extends State<ChatSection> {
           )),
           IconButton(
             onPressed: () {
-              if(chatProvider.selectedAssistant!.isDefault)
-                _sendMessage(chatProvider);
-              else{
+              if (chatProvider.selectedAssistant!.isDefault)
+                _sendMessage(chatProvider, tokenProvider);
+              else {
                 _sendMessageToPersonalBot(chatProvider);
               }
-            },  
+            },
             icon: const Icon(Icons.send),
           ),
         ],
       ),
     );
   }
-  void _sendMessageToPersonalBot(ChatProvider chatProvider) async{
+
+  void _sendMessageToPersonalBot(ChatProvider chatProvider) async {
     List<Message> history = [];
-    //create new thread with bot 
-    BotThread thread = await aiBotService.createNewThread(chatProvider.selectedAssistant.id, _controller.value.text);
+    //create new thread with bot
+    BotThread thread = await aiBotService.createNewThread(
+        chatProvider.selectedAssistant.id, _controller.value.text);
     Message userMess = Message(
       role: MessageRole.user,
       createdDate: DateTime.now().millisecondsSinceEpoch,
@@ -153,15 +163,22 @@ class _ChatSectionState extends State<ChatSection> {
     );
     history.add(userMess);
     Message assisMess = Message(
-      role: MessageRole.assistant, 
-      createdDate: DateTime.now().millisecondsSinceEpoch, 
-      content: await ChatBotManager().getResponseMessageFromBot(
-        AsisstantManager().findBotFromListData(widget.bots, chatProvider.selectedAssistant.id)!,
-        _controller.value.text,
-        thread.threadId,
-       ));
+        role: MessageRole.assistant,
+        createdDate: DateTime.now().millisecondsSinceEpoch,
+        content: await ChatBotManager().getResponseMessageFromBot(
+          AsisstantManager().findBotFromListData(
+              widget.bots, chatProvider.selectedAssistant.id)!,
+          _controller.value.text,
+          thread.threadId,
+        ));
     history.add(assisMess);
-    Navigator.push(context, MaterialPageRoute(builder: (_) => ChatContentView(assistant: chatProvider.selectedAssistant, bots: widget.bots,thread: thread,)));
-
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (_) => ChatContentView(
+                  assistant: chatProvider.selectedAssistant,
+                  bots: widget.bots,
+                  thread: thread,
+                )));
   }
 }

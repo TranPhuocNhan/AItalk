@@ -133,8 +133,7 @@ class _ChatContentViewState extends State<ChatContentView> {
   @override
   Widget build(BuildContext context) {
     final chatProvider = Provider.of<ChatProvider>(context);
-    final tokenProvider =
-        Provider.of<Managetokenprovider>(context, listen: false);
+    final tokenProvider = Provider.of<Managetokenprovider>(context);
 
     _listConversationContent = chatProvider.listConversationContent;
     return Scaffold(
