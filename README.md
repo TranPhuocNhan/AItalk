@@ -14,8 +14,9 @@ Dự án này phát triển một hệ thống chat với AI mang tên AITalk c
 
 - Milestone 1: https://youtu.be/7HI0C9jVQ5w
 - Milestone 2: https://youtu.be/6wiKcso2Hpo
-- Milestone 3: https://youtu.be/3qpOsgrEbYU
-- Link báo cáo: https://docs.google.com/document/d/1N1OFi4bZHH0kwn6x0bubz85fAbaCVX18/
+- Milestone 3: https://youtu.be/lYeso1x9TH4
+- Link báo cáo: https://drive.google.com/file/d/1yWoGsfYWwXQvXL2_rV6u2KPlEmVMUKQg/view?usp=sharing
+- Phiếu điểm: https://drive.google.com/file/d/1KqB1hBey3SidgBdEgx-uGdHcArBesm8V/view?usp=drive_link
 
 
 ## generate keystore 
